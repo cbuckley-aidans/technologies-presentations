@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Writing User Stories</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="presentation.css">
+</head>
+<body>
+
+<div id="progress"></div>
+
+
+<!-- ── S0: TITLE ────────────────────────────────────────────── -->
+<div class="scene" id="s0" style="align-items:center; justify-content:center; text-align:center;">
+  <div class="scene-title" style="font-size:clamp(2.4rem,6vw,4.5rem);">Writing<br><span class="hl">User Stories</span></div>
+  <div class="scene-rule" style="align-self:center;"></div>
+  <div class="reveal" id="s0-sub" style="font-size:clamp(0.9rem,1.8vw,1.2rem); color:var(--dim); max-width:520px; line-height:1.6;">
+    Who are we designing for, and what do they actually need?
+  </div>
+</div>
+
+
+<!-- ── S1: WHAT IS A USER STORY? ────────────────────────────── -->
+<div class="scene" id="s1">
+  <div class="checks"><img src="checksforunderstanding/silentsolo.png" alt="Silent Solo"></div>
+  <div class="scene-title">What is a <span class="hl">user story?</span></div>
+  <div class="scene-rule"></div>
+
+  <div style="display:flex; flex-direction:column; gap:12px; flex:1; min-height:0;">
+
+    <div class="reveal" id="s1-def">
+      <div class="def-card">
+        <div class="def-label">Definition</div>
+        <div class="def-body">A user story is a short statement that describes <strong style="color:var(--pink);">who</strong> your user is, <strong style="color:var(--pink);">what</strong> they want to do, and <strong style="color:var(--pink);">why</strong> it matters to them. It keeps your design focused on real people with real needs.</div>
+      </div>
+    </div>
+
+    <div class="reveal" id="s1-why">
+      <div class="callout"><strong>Why bother?</strong> It's easy to design for yourself. User stories force you to step into someone else's shoes and ask: what problem am I actually solving, and for whom?</div>
+    </div>
+
+    <div class="reveal" id="s1-note">
+      <div class="def-card" style="border-left:3px solid var(--pink);">
+        <div class="def-label">Key Idea</div>
+        <div class="def-body">User stories describe a <strong style="color:var(--pink);">goal</strong>, not a feature. You're not saying "the app needs a button." You're saying "the user needs to be able to do X quickly so they can Y."</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ── S2: THE FORMAT ────────────────────────────────────────── -->
+<div class="scene" id="s2">
+  <div class="eyebrow">I Do: The Format</div>
+  <div class="scene-title">As a... I want to... <span class="hl">so that...</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="concept-row" style="margin-top:0;">
+    <div class="concept-panel reveal" id="s2-who">
+      <div class="cp-label">As a...</div>
+      <div class="cp-main" style="font-size:clamp(1.1rem,2vw,1.6rem);">Who?</div>
+      <div style="width:100%; height:1px; background:rgba(255,255,255,0.1); margin:10px 0;"></div>
+      <div class="cp-sub">A specific type of user. Not just "a person" — be precise. A Year 8 student who plays sport. A teacher who moves between rooms.</div>
+    </div>
+
+    <div class="h-arrow reveal" id="s2-arr1">&#8594;</div>
+
+    <div class="concept-panel reveal" id="s2-what">
+      <div class="cp-label">I want to...</div>
+      <div class="cp-main" style="font-size:clamp(1.1rem,2vw,1.6rem);">What?</div>
+      <div style="width:100%; height:1px; background:rgba(255,255,255,0.1); margin:10px 0;"></div>
+      <div class="cp-sub">The action or goal. Focus on what they're trying to achieve, not on how your design will work.</div>
+    </div>
+
+    <div class="h-arrow reveal" id="s2-arr2">&#8594;</div>
+
+    <div class="concept-panel hi reveal" id="s2-why">
+      <div class="cp-label" style="color:var(--pink);">So that...</div>
+      <div class="cp-main" style="font-size:clamp(1.1rem,2vw,1.6rem); color:var(--pink);">Why?</div>
+      <div style="width:100%; height:1px; background:rgba(235,0,139,0.2); margin:10px 0;"></div>
+      <div class="cp-sub">The benefit or outcome. This is the most important part. It explains why the goal matters.</div>
+    </div>
+  </div>
+
+  <div class="reveal" id="s2-tip" style="margin-top:14px;">
+    <div class="callout"><strong>Tip:</strong> if you can't fill in the "so that" part, your story probably isn't specific enough yet.</div>
+  </div>
+</div>
+
+
+<!-- ── S3: WORKED EXAMPLE ────────────────────────────────────── -->
+<div class="scene" id="s3">
+  <div class="header-row">
+    <div>
+      <div class="eyebrow">Worked Example</div>
+      <div class="scene-title">From vague <span class="hl">to clear</span></div>
+    </div>
+    <div class="phase-pill" style="margin-top:8px;">I Do</div>
+  </div>
+  <div class="scene-rule"></div>
+
+  <div class="two-col" style="align-items:flex-start;">
+    <div class="col-l" style="gap:12px;">
+
+      <div class="reveal" id="s3-context" style="font-size:clamp(0.82rem,1.4vw,0.95rem); color:var(--dim);">
+        Project: design a <span class="mono-pink">school locker organiser</span>.
+      </div>
+
+      <div class="reveal" id="s3-bad">
+        <div class="def-card" style="border-left:3px solid rgba(235,0,139,0.4);">
+          <div class="def-label">❌ Too Vague</div>
+          <div class="def-body" style="font-size:clamp(0.9rem,1.6vw,1.1rem);">"As a student, I want a better locker so that my stuff is organised."</div>
+        </div>
+      </div>
+
+      <div class="steps-box reveal" id="s3-problems">
+        <div class="step-row reveal" id="s3-s1">
+          <div class="step-num">1</div>
+          <div>"A student" — which student? What makes them specific?</div>
+        </div>
+        <div class="step-row reveal" id="s3-s2">
+          <div class="step-num">2</div>
+          <div>"A better locker" is a solution, not a goal.</div>
+        </div>
+        <div class="step-row reveal" id="s3-s3">
+          <div class="step-num">3</div>
+          <div>"Organised" tells us nothing about the real problem.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-r" style="gap:12px;">
+
+      <div class="reveal" id="s3-good">
+        <div class="def-card" style="border-left:3px solid var(--pink);">
+          <div class="def-label">✓ Clear and Specific</div>
+          <div class="def-body" style="font-size:clamp(0.82rem,1.4vw,0.97rem); line-height:1.8;">
+            "As a <span class="hl">student who shares a locker</span>, I want to <span class="hl">quickly find my own books without disturbing my locker partner's things</span> so that <span class="hl">I'm not late to class.</span>"
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal" id="s3-good2">
+        <div class="def-card" style="border-left:3px solid var(--pink);">
+          <div class="def-label">✓ Another Angle — Same Project</div>
+          <div class="def-body" style="font-size:clamp(0.82rem,1.4vw,0.97rem); line-height:1.8;">
+            "As a <span class="hl">student who plays sport after school</span>, I want to <span class="hl">keep my gym kit separate from my school books</span> so that <span class="hl">my books don't get damp or smelly.</span>"
+          </div>
+        </div>
+      </div>
+
+      <div class="we-answer" id="s3-ans">Same project. <span style="color:white;">Different users, different needs.</span></div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ── S4: I DO — ANIMATED FIX ───────────────────────────────── -->
+<div class="scene" id="s4">
+  <div class="header-row">
+    <div>
+      <div class="eyebrow">I Do: Step by Step</div>
+      <div class="scene-title">Fixing a story <span class="hl">part by part</span></div>
+    </div>
+    <div class="phase-pill" style="margin-top:8px;">I Do</div>
+  </div>
+  <div class="scene-rule"></div>
+
+  <div style="display:flex; flex-direction:column; gap:14px; flex:1; min-height:0; justify-content:center;">
+
+    <!-- Three columns, each with a fixed label + single text cell -->
+    <div style="display:grid; grid-template-columns:1fr 1.5fr 1.5fr; gap:12px; align-items:start;">
+
+      <!-- WHO -->
+      <div style="display:flex; flex-direction:column; gap:6px;">
+        <div style="font-family:var(--mono); font-size:0.58rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--dim);">As a...</div>
+        <div id="s4-who" style="background:var(--navy2); border:1px solid rgba(255,255,255,0.1); border-radius:4px; padding:18px; font-size:clamp(0.95rem,1.6vw,1.15rem); font-weight:700; line-height:1.45; min-height:90px; transition:color 0.35s ease, border-color 0.35s ease;">
+          user
+        </div>
+      </div>
+
+      <!-- WHAT -->
+      <div style="display:flex; flex-direction:column; gap:6px;">
+        <div style="font-family:var(--mono); font-size:0.58rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--dim);">I want to...</div>
+        <div id="s4-what" style="background:var(--navy2); border:1px solid rgba(255,255,255,0.1); border-radius:4px; padding:18px; font-size:clamp(0.95rem,1.6vw,1.15rem); font-weight:700; line-height:1.45; min-height:90px; transition:color 0.35s ease, border-color 0.35s ease;">
+          see my homework
+        </div>
+      </div>
+
+      <!-- WHY -->
+      <div style="display:flex; flex-direction:column; gap:6px;">
+        <div style="font-family:var(--mono); font-size:0.58rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--dim);">So that...</div>
+        <div id="s4-why" style="background:var(--navy2); border:1px solid rgba(255,255,255,0.1); border-radius:4px; padding:18px; font-size:clamp(0.95rem,1.6vw,1.15rem); font-weight:700; line-height:1.45; min-height:90px; transition:color 0.35s ease, border-color 0.35s ease;">
+          I don't forget it
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Fixed-height reason strip -->
+    <div id="s4-reason" style="background:rgba(235,0,139,0.07); border-left:3px solid var(--pink); padding:14px 18px; border-radius:0 3px 3px 0; font-size:clamp(0.82rem,1.35vw,0.95rem); color:rgba(255,255,255,0.85); line-height:1.55; min-height:62px; opacity:0; transition:opacity 0.35s ease;"></div>
+
+  </div>
+</div>
+
+
+<!-- ── S5: WE DO — FIX IT ────────────────────────────────────── -->
+<div class="scene" id="s5">
+  <div class="checks">
+    <img src="checksforunderstanding/stopandjot.png" alt="Stop and Jot">
+    <img src="checksforunderstanding/coldcall.png" alt="Cold Call">
+  </div>
+  <div class="header-row">
+    <div class="scene-title">Fix It: <span class="hl">Rewrite</span></div>
+    <div class="phase-pill">We Do</div>
+  </div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s4-instr" style="font-style:italic; color:var(--dim); font-size:clamp(0.8rem,1.3vw,0.92rem); margin-bottom:14px;">
+    On your whiteboard, rewrite this user story so it clearly identifies who, what, and why. Chin your board when ready.
+  </div>
+
+  <div class="reveal" id="s4-bad">
+    <div class="def-card" style="border-left:3px solid rgba(235,0,139,0.5); margin-bottom:16px;">
+      <div class="def-label">❌ User Story to Fix: Homework Planner App</div>
+      <div class="def-body" style="font-size:clamp(1rem,2vw,1.35rem); line-height:1.5;">"As a user, I want the app to show my homework so I don't forget it."</div>
+    </div>
+  </div>
+
+  <div class="reveal" id="s4-scaffold">
+    <div class="algo-box">
+      <div style="font-family:var(--mono); font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--pink); margin-bottom:8px;">Scaffold: think about</div>
+      <ol>
+        <li>Who specifically is this user? What makes their situation distinct?</li>
+        <li>What do they actually need to <em>do</em> (not what the app does for them)?</li>
+        <li>What goes wrong in their life when this need isn't met?</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="bottom-bar reveal" id="s4-bottom">
+    <div class="bottom-bar-text">Cold call: two or three rewrites to compare. What changed, and why does it matter?</div>
+  </div>
+</div>
+
+
+<!-- ── S6: USER TYPES REFERENCE ──────────────────────────────── -->
+<div class="scene" id="s6">
+  <div class="eyebrow">Reference</div>
+  <div class="scene-title">Types of <span class="hl">Users to Consider</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s6-instr" style="font-size:clamp(0.85rem,1.4vw,1rem); color:rgba(255,255,255,0.8); margin-bottom:16px;">
+    Good designs account for a range of users. Aim for 3–5 stories that cover different perspectives.
+  </div>
+
+  <div class="three-col" style="align-items:stretch;">
+
+    <div class="tcol reveal" id="s6-c1">
+      <div class="def-card" style="height:100%;">
+        <div class="def-label">Primary Users</div>
+        <div class="def-body" style="font-size:clamp(0.72rem,1.2vw,0.85rem); color:rgba(255,255,255,0.7); line-height:1.7;">
+          The main person using the design. Be specific: age, context, what they're doing when they use it.
+        </div>
+      </div>
+    </div>
+
+    <div class="tcol reveal" id="s6-c2">
+      <div class="def-card" style="height:100%;">
+        <div class="def-label">Edge Case Users</div>
+        <div class="def-body" style="font-size:clamp(0.72rem,1.2vw,0.85rem); color:rgba(255,255,255,0.7); line-height:1.7;">
+          Users with different needs: left-handed, vision impairment, different physical ability, or unusual context.
+        </div>
+      </div>
+    </div>
+
+    <div class="tcol reveal" id="s6-c3">
+      <div class="def-card" style="height:100%;">
+        <div class="def-label">Secondary Users</div>
+        <div class="def-body" style="font-size:clamp(0.72rem,1.2vw,0.85rem); color:rgba(255,255,255,0.7); line-height:1.7;">
+          People who interact with the design indirectly: a parent checking a planner, a teacher collecting work, a sibling sharing a product.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="three-col" style="align-items:stretch; margin-top:12px;">
+
+    <div class="tcol reveal" id="s6-c4">
+      <div class="def-card" style="height:100%;">
+        <div class="def-label">Different Contexts</div>
+        <div class="def-body" style="font-size:clamp(0.72rem,1.2vw,0.85rem); color:rgba(255,255,255,0.7); line-height:1.7;">
+          Same user, different situation: rushed, tired, outdoors, distracted. How does context change what they need?
+        </div>
+      </div>
+    </div>
+
+    <div class="tcol reveal" id="s6-c5">
+      <div class="def-card" style="height:100%;">
+        <div class="def-label">Emotional State</div>
+        <div class="def-body" style="font-size:clamp(0.72rem,1.2vw,0.85rem); color:rgba(255,255,255,0.7); line-height:1.7;">
+          A stressed user needs different things than a relaxed one. What feeling should your design create or reduce?
+        </div>
+      </div>
+    </div>
+
+    <div class="tcol reveal" id="s6-c6">
+      <div class="def-card" style="height:100%;">
+        <div class="def-label">First-time vs. Returning</div>
+        <div class="def-body" style="font-size:clamp(0.72rem,1.2vw,0.85rem); color:rgba(255,255,255,0.7); line-height:1.7;">
+          New users need clarity; experienced users need efficiency. A good design serves both.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="reveal" id="s6-reminder" style="margin-top:12px;">
+    <div class="callout"><strong>Remember:</strong> each story should describe a real goal, not a feature. Focus on what the user needs to achieve and why it matters to them.</div>
+  </div>
+</div>
+
+
+<!-- ── S7: CONFIDENCE CHECK ──────────────────────────────────── -->
+<div class="scene" id="s7" style="align-items:center;">
+  <div class="checks" style="align-self:flex-start;">
+    <img src="checksforunderstanding/fingervote.png" alt="Finger Vote">
+  </div>
+  <div class="scene-title" style="align-self:center; text-align:center;">How <span class="hl">confident</span> are you?</div>
+  <div class="scene-rule" style="align-self:center;"></div>
+
+  <div style="display:flex; flex-direction:column; align-items:center; gap:12px; width:100%;">
+    <div class="reveal" id="s7-prompt" style="font-size:clamp(0.85rem,1.5vw,1.05rem); color:rgba(255,255,255,0.8); text-align:center;">
+      Show me on five fingers: how confident are you that you could write a clear user story for your own project right now?
+    </div>
+
+    <div class="conf-scale">
+      <div class="conf-item" id="ci1"><div class="conf-num">1</div><div class="conf-lbl">Still confused</div></div>
+      <div class="conf-item" id="ci2"><div class="conf-num">2</div><div class="conf-lbl">Need more examples</div></div>
+      <div class="conf-item" id="ci3"><div class="conf-num">3</div><div class="conf-lbl">Getting there</div></div>
+      <div class="conf-item" id="ci4"><div class="conf-num">4</div><div class="conf-lbl">Pretty confident</div></div>
+      <div class="conf-item hi" id="ci5"><div class="conf-num">5</div><div class="conf-lbl">I've got this</div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<script src="presentation.js"></script>
+<script>
+const SCENES = [
+
+  { id:'s0', steps:[
+    () => vis('s0-sub'),
+  ]},
+
+  { id:'s1', steps:[
+    () => vis('s1-def'),
+    () => vis('s1-why'),
+    () => vis('s1-note'),
+  ]},
+
+  { id:'s2', steps:[
+    () => vis('s2-who'),
+    () => { vis('s2-arr1'); vis('s2-what'); },
+    () => { vis('s2-arr2'); vis('s2-why'); },
+    () => vis('s2-tip'),
+  ]},
+
+  { id:'s3', steps:[
+    () => vis('s3-context'),
+    () => vis('s3-bad'),
+    () => { vis('s3-problems'); vis('s3-s1'); act('s3-s1'); },
+    () => { vis('s3-s2'); act('s3-s2'); },
+    () => { vis('s3-s3'); act('s3-s3'); },
+    () => vis('s3-good'),
+    () => vis('s3-good2'),
+    () => visAns('s3-ans'),
+  ],
+  fullFn: () => {
+    ['s3-s1','s3-s2','s3-s3'].forEach(id => { vis(id); act(id); });
+    visAns('s3-ans');
+  }},
+
+  { id:'s4', steps:[
+    // Step 1: show the reason strip pointing at the flawed WHO
+    () => {
+      const who = document.getElementById('s4-who');
+      who.style.borderColor = 'rgba(235,0,139,0.5)';
+      const reason = document.getElementById('s4-reason');
+      reason.style.opacity = '1';
+      reason.innerHTML = '<strong style="color:var(--pink);">Problem: "As a user..."</strong> &nbsp; This tells us nothing. Who specifically? What is their situation? Without this, the design has no real person to aim at.';
+    },
+    // Step 2: fix the WHO in place
+    () => {
+      const who = document.getElementById('s4-who');
+      who.style.borderColor = 'var(--pink)';
+      who.style.color = 'var(--pink)';
+      who.textContent = 'Year 8 student with back-to-back classes and no free period';
+      const reason = document.getElementById('s4-reason');
+      reason.innerHTML = '<strong style="color:var(--pink);">Fixed: As a...</strong> &nbsp; Naming the year level, the schedule pressure, and the context gives the design real constraints to respond to.';
+    },
+    // Step 3: highlight and explain the flawed WHAT
+    () => {
+      const what = document.getElementById('s4-what');
+      what.style.borderColor = 'rgba(235,0,139,0.5)';
+      const reason = document.getElementById('s4-reason');
+      reason.innerHTML = '<strong style="color:var(--pink);">Problem: "I want to see my homework..."</strong> &nbsp; This describes what the app does, not what the user needs to achieve. It\'s a feature request, not a goal.';
+    },
+    // Step 4: fix the WHAT in place
+    () => {
+      const what = document.getElementById('s4-what');
+      what.style.borderColor = 'var(--pink)';
+      what.style.color = 'var(--pink)';
+      what.textContent = 'check what is due tomorrow in under 10 seconds';
+      const reason = document.getElementById('s4-reason');
+      reason.innerHTML = '<strong style="color:var(--pink);">Fixed: I want to...</strong> &nbsp; A concrete action ("check") with a measurable outcome ("in under 10 seconds") that the design must actually deliver.';
+    },
+    // Step 5: highlight and explain the flawed WHY
+    () => {
+      const why = document.getElementById('s4-why');
+      why.style.borderColor = 'rgba(235,0,139,0.5)';
+      const reason = document.getElementById('s4-reason');
+      reason.innerHTML = '<strong style="color:var(--pink);">Problem: "So that I don\'t forget it..."</strong> &nbsp; This is a fear, not a benefit. It gives no picture of the user\'s life or what a successful outcome actually looks like.';
+    },
+    // Step 6: fix the WHY in place
+    () => {
+      const why = document.getElementById('s4-why');
+      why.style.borderColor = 'var(--pink)';
+      why.style.color = 'var(--pink)';
+      why.textContent = 'I can pack the right books during a short break without stressing';
+      const reason = document.getElementById('s4-reason');
+      reason.innerHTML = '<strong style="color:var(--pink);">Fixed: So that...</strong> &nbsp; A real moment in the user\'s day, with an emotional outcome ("without stressing") the design must create.';
+    },
+  ],
+  fullFn: () => {
+    const fixes = {
+      who:  'Year 8 student with back-to-back classes and no free period',
+      what: 'check what is due tomorrow in under 10 seconds',
+      why:  'I can pack the right books during a short break without stressing',
+    };
+    ['who','what','why'].forEach(k => {
+      const el = document.getElementById('s4-' + k);
+      el.style.borderColor = 'var(--pink)';
+      el.style.color = 'var(--pink)';
+      el.textContent = fixes[k];
+    });
+    const reason = document.getElementById('s4-reason');
+    reason.style.opacity = '1';
+    reason.innerHTML = '<strong style="color:var(--pink);">Fixed: So that...</strong> &nbsp; A real moment in the user\'s day, with an emotional outcome the design must create.';
+  }},
+
+  { id:'s5', steps:[
+    () => vis('s4-instr'),
+    () => vis('s4-bad'),
+    () => vis('s4-scaffold'),
+    () => vis('s4-bottom'),
+  ]},
+
+  { id:'s6', steps:[
+    () => vis('s6-instr'),
+    () => { vis('s6-c1'); vis('s6-c2'); vis('s6-c3'); },
+    () => { vis('s6-c4'); vis('s6-c5'); vis('s6-c6'); },
+    () => vis('s6-reminder'),
+  ]},
+
+  { id:'s7', steps:[
+    () => vis('s7-prompt'),
+    () => stagger(['ci1','ci2','ci3','ci4','ci5']),
+  ],
+  fullFn: () => ['ci1','ci2','ci3','ci4','ci5'].forEach(id => vis(id))
+  },
+
+];
+
+initPresentation(SCENES);
+</script>
+</body>
+</html>
