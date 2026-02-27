@@ -1,0 +1,555 @@
+/* ============================================================
+   PRESENTATION.CSS
+   Shared stylesheet for Casey's classroom presentations.
+   Pair with presentation.js and link from any lesson HTML.
+
+   COLOUR TOKENS
+   --navy   #0b203f  background
+   --navy2  #0e2849  panel backgrounds
+   --navy3  #122d55  bit cells, circles
+   --pink   #eb008b  accent / highlight
+   --white  #ffffff
+   --dim    rgba(255,255,255,0.5)  muted text
+   ============================================================ */
+
+/* ── Reset & root ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy:  #0b203f;
+  --navy2: #0e2849;
+  --navy3: #122d55;
+  --pink:  #eb008b;
+  --white: #ffffff;
+  --dim:   rgba(255,255,255,0.5);
+  --sans:  "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --mono:  "IBM Plex Mono", monospace;
+}
+
+html, body {
+  width: 100vw; height: 100vh; overflow: hidden;
+  background: var(--navy);
+  font-family: var(--sans);
+  color: var(--white);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Subtle grid overlay */
+body::before {
+  content: ""; position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none; z-index: 0;
+}
+
+/* ── Scene system ─────────────────────────────────────────── */
+/*
+  Each slide is a <div class="scene" id="sN">.
+  JS adds/removes .active to show/hide.
+  padding: 36px 56px 58px leaves room for progress dots.
+*/
+.scene {
+  position: fixed; inset: 0;
+  display: flex; flex-direction: column;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.4s ease;
+  z-index: 1;
+  padding: 36px 56px 58px;
+  overflow: hidden;
+}
+.scene.active { opacity: 1; pointer-events: all; }
+
+/* Progress dot bar — built by JS, sits at bottom centre */
+#progress {
+  position: fixed; bottom: 20px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; gap: 7px; align-items: center; z-index: 100;
+}
+.prog-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  transition: all 0.3s ease;
+}
+.prog-dot.done   { background: rgba(235,0,139,0.5); }
+.prog-dot.active { background: var(--pink); width: 22px; border-radius: 4px; }
+
+/* ── Typography & chrome ──────────────────────────────────── */
+/*
+  .eyebrow     Small uppercase label above the title (auto-animates in)
+  .scene-title Main slide heading (auto-animates in)
+  .scene-rule  Pink underline bar (auto-animates in)
+  .hl          Inline pink highlight
+  .mono-pink   Monospace + pink, used for code/binary values
+*/
+.eyebrow {
+  font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--pink); margin-bottom: 8px;
+  opacity: 0; transform: translateY(5px);
+  transition: all 0.4s ease 0.1s;
+}
+.scene.active .eyebrow { opacity: 1; transform: translateY(0); }
+
+.scene-title {
+  font-weight: 900;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  line-height: 1.05; letter-spacing: -0.02em;
+  opacity: 0; transform: translateY(10px);
+  transition: all 0.45s ease 0.2s;
+}
+.scene.active .scene-title { opacity: 1; transform: translateY(0); }
+
+.scene-rule {
+  width: 100px; height: 3px; background: var(--pink);
+  margin: 10px 0 16px; flex-shrink: 0;
+  opacity: 0; transition: opacity 0.4s ease 0.3s;
+}
+.scene.active .scene-rule { opacity: 1; }
+
+.hl        { color: var(--pink); }
+.mono-pink { font-family: var(--mono); color: var(--pink); }
+
+/* ── Reveal system ────────────────────────────────────────── */
+/*
+  Add class="reveal" to any element you want to step-reveal.
+  JS adds .vis via vis(id) to animate it in.
+  Elements that don't need IDs can be wrapped in a .reveal parent.
+
+  Special cases handled by JS fullReveal():
+    .pow-ans   — answer values on powers-of-2 slide
+    .conf-item — confidence scale items
+    .we-answer — worked-example answer (also needs inline style reset)
+    .step-row  — gets .act as well as .vis
+*/
+.reveal {
+  opacity: 0; transform: translateY(7px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.reveal.vis { opacity: 1; transform: translateY(0); }
+
+/* ── Layout helpers ───────────────────────────────────────── */
+/*
+  .two-col           Side-by-side split (each half: .col-l / .col-r)
+  .three-col         Equal thirds (each: .tcol)
+  .header-row        Title + phase pill on the same row
+*/
+.two-col   { display: flex; gap: 28px; flex: 1; min-height: 0; }
+.col-l     { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.col-r     { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.three-col { display: flex; gap: 20px; width: 100%; margin-top: 12px; }
+.tcol      { flex: 1; }
+.header-row{ display: flex; justify-content: space-between; align-items: flex-start; }
+
+/* ── Phase pill ───────────────────────────────────────────── */
+/*
+  Use <div class="phase-pill">I Do</div> inside .header-row.
+  Values: I Do / We Do / You Do
+*/
+.phase-pill {
+  display: inline-block; background: var(--pink); color: white;
+  font-weight: 700; font-size: 0.72rem; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 5px 14px; border-radius: 3px;
+}
+
+/* ── Check-for-understanding icons ───────────────────────── */
+/*
+  <div class="checks">
+    <img src="checksforunderstanding/stopandjot.png" alt="Stop and Jot">
+    <img src="checksforunderstanding/coldcall.png" alt="Cold Call">
+  </div>
+  Place immediately before .scene-title.
+  Available filenames: silentsolo | stopandjot | choralreading |
+    valueline | fingervote | volunteer | yesnomaybe | coldcall | turnandtalk
+*/
+.checks     { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.checks img { height: 48px; width: auto; display: block; }
+
+/* ── Video embed ──────────────────────────────────────────── */
+/*
+  <div class="reveal" id="sN-vid">
+    <div class="video-wrap">
+      <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+    </div>
+  </div>
+*/
+.video-wrap { width: 100%; aspect-ratio: 16/9; border-radius: 4px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); background: #000; }
+.video-wrap iframe { width: 100%; height: 100%; border: none; display: block; }
+
+/* ── Cards & callouts ─────────────────────────────────────── */
+/*
+  .def-card   Frosted panel with a .def-label and .def-body inside
+  .callout    Left-bordered highlight strip
+*/
+.def-card  { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 4px; padding: 14px 18px; margin-bottom: 12px; }
+.def-label { font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--pink); margin-bottom: 7px; }
+.def-body  { font-size: clamp(0.8rem,1.4vw,0.95rem); color: rgba(255,255,255,0.85); line-height: 1.6; }
+.callout   { background: rgba(235,0,139,0.07); border-left: 3px solid var(--pink); padding: 9px 15px; border-radius: 0 3px 3px 0; font-size: clamp(0.78rem,1.3vw,0.9rem); color: rgba(255,255,255,0.8); line-height: 1.5; }
+.callout strong { color: var(--pink); }
+
+/* Three-column text blocks */
+.tcol-title { font-weight: 900; font-size: clamp(0.9rem,1.7vw,1.2rem); color: var(--pink); margin-bottom: 8px; }
+.tcol-body  { font-size: clamp(0.72rem,1.2vw,0.85rem); color: rgba(255,255,255,0.7); line-height: 1.6; }
+
+/* ── Bottom bar ───────────────────────────────────────────── */
+/*
+  Sits at the absolute bottom of the slide.
+  <div class="bottom-bar reveal" id="sN-bottom">
+    <div class="bottom-bar-text">Your question here</div>
+  </div>
+*/
+.bottom-bar      { position: absolute; bottom: 44px; left: 56px; right: 56px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; }
+.bottom-bar-text { font-weight: 700; font-size: clamp(0.85rem,1.5vw,1.05rem); color: var(--pink); text-align: center; }
+
+/* ── Concept row (comparison panels + arrow) ─────────────── */
+/*
+  .concept-row   Flex row containing two .concept-panel divs and a .h-arrow
+  .concept-panel Standard panel; add .hi for pink border (right/destination side)
+  .h-arrow       &#8594; character, auto-centred
+*/
+.concept-row   { display: flex; align-items: stretch; gap: 0; margin-top: 14px; }
+.concept-panel { flex: 1; background: var(--navy2); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 18px 22px; }
+.concept-panel.hi { border-color: rgba(235,0,139,0.4); }
+.cp-label { font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--pink); margin-bottom: 10px; }
+.cp-main  { font-weight: 900; font-size: clamp(1.3rem,2.3vw,1.9rem); margin-bottom: 6px; }
+.cp-sub   { font-size: 0.78rem; color: var(--dim); line-height: 1.4; }
+.h-arrow  { font-size: 2.4rem; color: var(--pink); padding: 0 14px; flex-shrink: 0; display: flex; align-items: center; }
+
+/* ── Bit/binary grid ──────────────────────────────────────── */
+/*
+  .bit-grid   Full-width flex row; each column is .bit-col
+  .bit-pv     Place-value header cell (e.g. 128, 64 …)
+  .bit-pv-sub Smaller superscript row (2⁷ etc.) — optional
+  .bit-val    The bit value cell; add .on for pink (1), .q for dim ? placeholder
+
+  Example 4-bit cell:
+    <div class="bit-col">
+      <div class="bit-pv">8</div>
+      <div class="bit-val on">1</div>
+    </div>
+*/
+.bit-grid   { display: flex; gap: 3px; width: 100%; }
+.bit-col    { flex: 1; text-align: center; min-width: 0; }
+.bit-pv     { background: var(--navy3); font-weight: 900; font-size: clamp(0.8rem,1.8vw,1.4rem); padding: 7px 2px; border-radius: 2px 2px 0 0; border: 1px solid rgba(255,255,255,0.08); }
+.bit-pv-sub { font-family: var(--mono); font-size: 0.52rem; color: var(--dim); padding: 2px 0; background: var(--navy3); border: 1px solid rgba(255,255,255,0.08); border-top: none; }
+.bit-val    { font-family: var(--mono); font-weight: 700; font-size: clamp(0.9rem,2vw,1.5rem); padding: 9px 2px; background: rgba(235,0,139,0.08); border: 1px solid rgba(235,0,139,0.18); border-radius: 0 0 2px 2px; color: rgba(255,255,255,0.3); }
+.bit-val.on { background: var(--pink); color: white; border-color: var(--pink); }
+.bit-val.q  { color: rgba(255,255,255,0.25); }
+
+/* ── Bit combination cards ────────────────────────────────── */
+/*
+  .combo-cards  Flex row of .combo-card panels
+  .combo-card.q Pink-bordered card for the unknown/question column
+  .cbit.on / .cbit.off  Individual bit squares
+*/
+.combo-cards  { display: flex; gap: 14px; width: 100%; margin-top: 12px; }
+.combo-card   { flex: 1; background: var(--navy2); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 14px 12px; text-align: center; }
+.combo-card.q { border-color: rgba(235,0,139,0.35); }
+.combo-header { font-weight: 900; font-size: clamp(1rem,2vw,1.5rem); color: var(--pink); margin-bottom: 10px; }
+.combo-grid   { display: inline-flex; flex-direction: column; gap: 3px; margin: 6px 0; }
+.combo-row    { display: flex; gap: 3px; justify-content: center; }
+.cbit         { width: 26px; height: 26px; border-radius: 2px; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-weight: 700; font-size: 0.78rem; }
+.cbit.on  { background: var(--pink); }
+.cbit.off { background: var(--navy3); border: 1px solid rgba(255,255,255,0.1); }
+.combo-count  { font-weight: 700; font-size: 1rem; margin-top: 8px; }
+
+/* ── Byte circles ─────────────────────────────────────────── */
+/*
+  <div class="byte-circles">
+    <div class="bcircle on">1</div>
+    <div class="bcircle">0</div>
+    <div class="bgap"></div>  ← spacer between nibbles
+  </div>
+  .bcircle.on  Pink filled
+*/
+.byte-circles { display: flex; gap: 7px; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+.bcircle { width: clamp(44px,6.5vw,62px); height: clamp(44px,6.5vw,62px); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-weight: 700; font-size: clamp(1rem,2vw,1.4rem); border: 2.5px solid rgba(255,255,255,0.2); background: var(--navy3); color: rgba(255,255,255,0.4); }
+.bcircle.on { background: var(--pink); border-color: var(--pink); color: white; }
+.bgap { width: 10px; }
+
+/* ── Powers-of-2 rows ─────────────────────────────────────── */
+/*
+  <div class="pow-row reveal" id="sN-rX">
+    <div class="pow-label">2<sup>3</sup></div>
+    <div class="pow-eq">=</div>
+    <div class="pow-ans" id="pX">8</div>   ← revealed separately
+  </div>
+  JS adds .vis to .pow-ans ids when answers should appear.
+*/
+.pow-row   { display: flex; align-items: center; gap: 12px; margin-bottom: 9px; }
+.pow-label { background: var(--pink); color: white; font-weight: 900; font-size: clamp(0.9rem,1.8vw,1.4rem); padding: 8px 16px; border-radius: 3px; min-width: 64px; text-align: center; }
+.pow-eq    { font-size: 1.3rem; color: var(--dim); }
+.pow-ans   { font-family: var(--mono); font-size: clamp(0.9rem,1.8vw,1.4rem); font-weight: 700; color: var(--pink); min-width: 44px; opacity: 0; transition: opacity 0.3s ease; }
+.pow-ans.vis { opacity: 1; }
+
+/* ── Steps box ────────────────────────────────────────────── */
+/*
+  .steps-box    Container card
+  .step-row     Each step; JS adds .act to highlight the current one
+  .step-num     Numbered circle
+*/
+.steps-box { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 12px 16px; }
+.step-row  { display: flex; align-items: flex-start; gap: 9px; margin-bottom: 7px; font-size: clamp(0.75rem,1.3vw,0.88rem); color: rgba(255,255,255,0.55); line-height: 1.4; }
+.step-row:last-child { margin-bottom: 0; }
+.step-num  { flex-shrink: 0; width: 19px; height: 19px; border-radius: 50%; background: rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; font-size: 0.62rem; font-weight: 700; margin-top: 1px; }
+.step-row.act          { color: white; }
+.step-row.act .step-num{ background: var(--pink); }
+
+/* ── Worked answer ────────────────────────────────────────── */
+/*
+  Appears at end of a worked example via visAns(id).
+  <div class="we-answer" id="sN-ans">1011₂ = <span>11</span></div>
+  JS sets opacity and transform directly — do not add .reveal class.
+*/
+.we-answer { font-family: var(--mono); font-size: clamp(1rem,2.3vw,1.7rem); font-weight: 700; color: var(--pink); text-align: center; margin-top: 12px; opacity: 0; transform: scale(0.9); transition: opacity 0.4s ease, transform 0.4s ease; }
+.we-answer.vis { opacity: 1; transform: scale(1); }
+
+/* ── Confidence scale ─────────────────────────────────────── */
+/*
+  <div class="conf-scale">
+    <div class="conf-item" id="ci1"><div class="conf-num">1</div><div class="conf-lbl">Not sure</div></div>
+    ...
+    <div class="conf-item hi" id="ci5">...</div>  ← .hi = pink highlight
+  </div>
+  JS reveals each item with staggered delay via vis(id).
+*/
+.conf-scale { display: flex; gap: 9px; width: 100%; max-width: 680px; }
+.conf-item  { flex: 1; text-align: center; border-radius: 3px; overflow: hidden; opacity: 0; transform: translateY(9px); transition: opacity 0.35s ease, transform 0.35s ease; }
+.conf-item.vis { opacity: 1; transform: translateY(0); }
+.conf-num   { font-weight: 900; font-size: clamp(1.4rem,2.8vw,2.1rem); padding: 13px 0 9px; background: var(--navy2); border: 1px solid rgba(255,255,255,0.1); border-bottom: none; }
+.conf-item.hi .conf-num { background: var(--pink); border-color: var(--pink); }
+.conf-lbl   { font-size: clamp(0.56rem,0.9vw,0.68rem); padding: 6px 4px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-top: none; color: var(--dim); line-height: 1.3; }
+
+/* ── Question cards ───────────────────────────────────────── */
+/*
+  Side-by-side question prompts.
+  <div class="q-cards">
+    <div class="q-card reveal" id="sN-q1">
+      <div class="q-card-lbl">Question 1</div>
+      <div class="q-card-text">…</div>
+    </div>
+  </div>
+*/
+.q-cards    { display: flex; gap: 16px; width: 100%; margin-top: 12px; }
+.q-card     { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 20px 24px; }
+.q-card-lbl { font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--pink); margin-bottom: 12px; }
+.q-card-text{ font-size: clamp(0.95rem,1.8vw,1.4rem); line-height: 1.5; }
+.q-binary   { font-family: var(--mono); font-weight: 700; font-size: clamp(1rem,2vw,1.5rem); color: var(--pink); }
+
+/* ── Exercise rows (integer→binary practice) ─────────────── */
+/*
+  <div class="ex-row reveal" id="sN-rX">
+    <div class="ex-label">a)</div>
+    <div class="ex-number">6</div>
+    <div class="ex-arrow">&#8594;</div>
+    <div class="ex-blanks">_ _ _ _ _ _ _ _</div>
+  </div>
+*/
+.ex-row    { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.ex-row:last-child { margin-bottom: 0; }
+.ex-label  { font-weight: 900; font-size: clamp(1rem,2vw,1.4rem); color: var(--pink); min-width: 28px; }
+.ex-number { background: var(--pink); color: white; font-weight: 900; font-size: clamp(1rem,2vw,1.4rem); padding: 7px 14px; border-radius: 3px; min-width: 56px; text-align: center; }
+.ex-blanks { font-family: var(--mono); font-size: clamp(0.85rem,1.6vw,1.2rem); color: rgba(255,255,255,0.25); letter-spacing: 0.18em; }
+.ex-arrow  { font-size: 1.2rem; color: var(--dim); }
+
+/* ── Morse table ──────────────────────────────────────────── */
+.morse-table { width: 100%; }
+.morse-row   { display: flex; align-items: center; gap: 16px; border-bottom: 1px solid rgba(255,255,255,0.08); padding: 9px 0; }
+.morse-row:first-child { border-top: 1px solid rgba(255,255,255,0.08); }
+.morse-letter{ font-weight: 900; font-size: clamp(1.4rem,2.5vw,2rem); width: 44px; flex-shrink: 0; }
+.morse-sig   { font-size: clamp(1rem,2vw,1.4rem); color: var(--dim); letter-spacing: 0.1em; }
+
+/* ── Algorithm / numbered steps box ──────────────────────── */
+/*
+  Used for worked-example algorithm descriptions.
+  <div class="algo-box reveal" id="sN-algo">
+    <ol><li>…</li></ol>
+  </div>
+*/
+.algo-box    { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 13px 17px; font-size: clamp(0.76rem,1.3vw,0.88rem); line-height: 1.8; color: rgba(255,255,255,0.75); }
+.algo-box ol { padding-left: 18px; }
+.algo-box li { margin-bottom: 2px; }
+
+/* ── Progress bar: slide numbers ─────────────────────────── */
+#progress {
+  gap: 9px;
+}
+.slide-num {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.08em;
+  min-width: 22px;
+  line-height: 1;
+}
+#slide-num-l { text-align: right; }
+#slide-num-r { text-align: left; }
+
+/* Active dot: pulsing outline = more steps to play on this slide
+   Solid filled = next click transitions to the next slide        */
+.prog-dot.active.steps-remain {
+  background: transparent;
+  border: 2px solid var(--pink);
+  width: 22px;
+  border-radius: 4px;
+  animation: dot-pulse 1.8s ease-in-out infinite;
+}
+@keyframes dot-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(235,0,139,0); }
+  50%       { box-shadow: 0 0 0 4px rgba(235,0,139,0.2); }
+}
+
+/* ── Legibility fix: def-label ───────────────────────────── */
+/* Overrides the 0.52rem in the original rule */
+.def-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+}
+
+/* ── YouTube link button ──────────────────────────────────── */
+.yt-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: white;
+  padding: 14px 24px;
+  border-radius: 4px;
+  font-size: clamp(0.9rem,1.6vw,1.1rem);
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  cursor: pointer;
+  width: 100%;
+  justify-content: center;
+}
+.yt-btn:hover {
+  background: rgba(255,40,40,0.2);
+  border-color: rgba(255,80,80,0.4);
+}
+.yt-btn svg {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+}
+
+/* ── Swappable definition panels (s8, s10) ───────────────── */
+.def-stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+.def-panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 18px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease;
+}
+.def-panel.vis {
+  opacity: 1;
+  pointer-events: all;
+}
+.dp-kicker {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--pink);
+}
+.dp-title {
+  font-weight: 900;
+  font-size: clamp(2.2rem,5vw,4rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.dp-body {
+  font-size: clamp(1rem,2vw,1.5rem);
+  color: rgba(255,255,255,0.82);
+  line-height: 1.6;
+  max-width: 680px;
+}
+.dp-note {
+  font-size: clamp(0.82rem,1.4vw,1rem);
+  color: var(--dim);
+  line-height: 1.5;
+}
+
+/* Vocab check: large byte-circle display */
+.byte-circles.xl .bcircle {
+  width: clamp(52px,7.5vw,80px);
+  height: clamp(52px,7.5vw,80px);
+  font-size: clamp(1.1rem,2.2vw,1.8rem);
+}
+
+/* ── Integer→Binary animated column highlight ────────────── */
+.bit-col.current .bit-pv {
+  background: var(--pink);
+  color: white;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+.bit-col.current .bit-val {
+  border-color: rgba(235,0,139,0.5);
+  background: rgba(235,0,139,0.12);
+}
+.col-question {
+  min-height: 52px;
+  font-size: clamp(1rem,1.9vw,1.4rem);
+  font-weight: 700;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  line-height: 1.45;
+  padding: 10px 0 4px;
+}
+.col-question.vis { opacity: 1; }
+.col-question .q-yes { color: #4cda64; }
+.col-question .q-no  { color: var(--dim); }
+
+/* ── Sketchfab embed ──────────────────────────────────────── */
+.sketchfab-wrap {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.sketchfab-wrap iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+.sketchfab-credit {
+  font-size: 0.58rem;
+  color: rgba(255,255,255,0.2);
+  margin-top: 5px;
+  text-align: right;
+}
+.sketchfab-credit a {
+  color: rgba(255,255,255,0.3);
+  text-decoration: none;
+}
+
+/* ── External link pill ───────────────────────────────────── */
+.ext-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--pink);
+  font-size: clamp(0.75rem,1.2vw,0.88rem);
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid rgba(235,0,139,0.3);
+  padding-bottom: 1px;
+  transition: border-color 0.2s;
+}
+.ext-link:hover { border-color: var(--pink); }

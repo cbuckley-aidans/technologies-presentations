@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Might We: App Design</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="presentation.css">
+
+<style>
+  /* ── HMW Formula display ── */
+  .hmw-formula {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 4px;
+    padding: 22px 28px;
+    text-align: center;
+    font-size: clamp(1.1rem,2.2vw,1.6rem);
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+  }
+  .hmw-formula .q-how { color: rgba(255,255,255,0.9); }
+  .hmw-formula .q-action { color: var(--pink); font-family: var(--mono); }
+  .hmw-formula .q-so { color: rgba(255,255,255,0.9); }
+  .hmw-formula .q-outcome { color: #4cda64; font-family: var(--mono); }
+
+  /* ── Verdict badge ── */
+  .verdict {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 900;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 3px;
+    margin-bottom: 12px;
+  }
+  .verdict.broad   { background: rgba(255,180,0,0.15); color: #ffb400; border: 1px solid rgba(255,180,0,0.3); }
+  .verdict.narrow  { background: rgba(100,160,255,0.12); color: #6ab0ff; border: 1px solid rgba(100,160,255,0.3); }
+  .verdict.good    { background: rgba(76,218,100,0.12); color: #4cda64; border: 1px solid rgba(76,218,100,0.3); }
+
+  /* ── HMW statement display ── */
+  .hmw-statement {
+    font-size: clamp(1rem,2vw,1.45rem);
+    font-weight: 700;
+    line-height: 1.5;
+    padding: 16px 20px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 10px;
+  }
+  .hmw-statement .hmw-action { color: var(--pink); }
+  .hmw-statement .hmw-outcome { color: #4cda64; }
+
+  /* ── Why box ── */
+  .why-box {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  .why-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: clamp(0.78rem,1.3vw,0.9rem);
+    color: rgba(255,255,255,0.7);
+    line-height: 1.5;
+  }
+  .why-icon {
+    flex-shrink: 0;
+    margin-top: 2px;
+    font-size: 0.9rem;
+  }
+
+  /* ── Sort cards (We Do) ── */
+  .sort-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+  }
+  .sort-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 4px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .sort-letter {
+    font-weight: 900;
+    font-size: 1.3rem;
+    color: var(--pink);
+    flex-shrink: 0;
+    min-width: 24px;
+    margin-top: 2px;
+  }
+  .sort-text {
+    font-size: clamp(0.85rem,1.5vw,1.05rem);
+    line-height: 1.55;
+    color: rgba(255,255,255,0.85);
+  }
+  .sort-answer {
+    margin-left: auto;
+    flex-shrink: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .sort-answer.vis { opacity: 1; }
+
+  /* ── You Do task boxes ── */
+  .task-prompt {
+    font-size: clamp(0.88rem,1.5vw,1.05rem);
+    color: rgba(255,255,255,0.82);
+    line-height: 1.65;
+    margin-bottom: 6px;
+  }
+  .hmw-scaffold {
+    font-family: var(--mono);
+    font-size: clamp(0.85rem,1.5vw,1.05rem);
+    color: var(--pink);
+    font-weight: 700;
+    margin-top: 10px;
+  }
+  .hmw-scaffold .scaffold-action { color: rgba(255,255,255,0.4); font-style: italic; }
+
+  /* ── Annotation underline ── */
+  .ann-action  { border-bottom: 2px solid var(--pink);   padding-bottom: 1px; color: var(--pink); }
+  .ann-outcome { border-bottom: 2px solid #4cda64; padding-bottom: 1px; color: #4cda64; }
+
+  /* ── Comparison row for good example ── */
+  .label-row {
+    display: flex;
+    gap: 14px;
+    margin-top: 6px;
+  }
+  .label-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 3px;
+  }
+  .label-chip.pink-chip   { background: rgba(235,0,139,0.15); color: var(--pink); }
+  .label-chip.green-chip  { background: rgba(76,218,100,0.12); color: #4cda64; }
+
+  /* sort-answer reveal */
+  .sort-answer.vis { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<!-- ── s0: TITLE ─────────────────────────────────────────── -->
+<div class="scene" id="s0" style="align-items:center; justify-content:center; text-align:center;">
+  <div class="eyebrow" style="text-align:center; align-self:center;">App Design Project: Design Thinking</div>
+  <div class="scene-title" style="font-size:clamp(2.4rem,6vw,4.5rem);">&ldquo;How Might <span class="hl">We?&rdquo;</span></div>
+  <div class="scene-rule" style="align-self:center;"></div>
+  <div class="reveal" id="s0-sub" style="font-size:clamp(0.9rem,1.8vw,1.2rem); color:var(--dim); max-width:540px; line-height:1.7;">
+    Turning the problems you found into design opportunities.
+  </div>
+</div>
+
+<!-- ── s1: WHAT IS HMW ───────────────────────────────────── -->
+<div class="scene" id="s1">
+  <div class="checks"><img src="checksforunderstanding/silentsolo.png" alt="Silent Solo"></div>
+  <div class="scene-title">What is a <span class="hl">HMW?</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="two-col" style="flex:1; min-height:0; align-items:flex-start;">
+    <div class="col-l" style="gap:14px;">
+      <div class="reveal" id="s1-def">
+        <div class="def-card">
+          <div class="def-label">Definition</div>
+          <div class="def-body">A <strong style="color:white;">&ldquo;How Might We&rdquo;</strong> statement takes a <span class="hl">problem</span> you have observed and turns it into an open <span class="hl">design opportunity</span>: a question your app could answer.</div>
+        </div>
+      </div>
+      <div class="reveal" id="s1-why">
+        <div class="callout">
+          <strong>Why not just say &ldquo;the problem is...&rdquo;?</strong> Problems close down thinking. HMW questions open it up: they invite creative solutions instead of complaints.
+        </div>
+      </div>
+    </div>
+    <div class="col-r" style="gap:14px;">
+      <div class="reveal" id="s1-eg">
+        <div class="def-card" style="border-left:3px solid var(--pink);">
+          <div class="def-label">Compare</div>
+          <div class="def-body">
+            <div style="margin-bottom:12px;">
+              <div style="font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.35); margin-bottom:4px;">Problem statement</div>
+              <div style="color:rgba(255,255,255,0.55);">&ldquo;Teenagers don&rsquo;t know what&rsquo;s in their food.&rdquo;</div>
+            </div>
+            <div style="width:100%; height:1px; background:rgba(255,255,255,0.08); margin:10px 0;"></div>
+            <div>
+              <div style="font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--pink); margin-bottom:4px;">HMW question</div>
+              <div style="color:white;">&ldquo;How might we make nutrition info feel <em>interesting</em> so that teens actually want to read it?&rdquo;</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── s2: THE FORMULA ───────────────────────────────────── -->
+<div class="scene" id="s2">
+  <div class="checks"><img src="checksforunderstanding/choralreading.png" alt="Choral Reading"></div>
+  <div class="scene-title">The <span class="hl">Formula</span></div>
+  <div class="scene-rule"></div>
+
+  <div style="display:flex; flex-direction:column; gap:18px; flex:1; min-height:0; justify-content:center; max-width:780px;">
+
+    <div class="reveal" id="s2-formula">
+      <div class="hmw-formula">
+        <span class="q-how">&ldquo;How might we &nbsp;</span><span class="q-action">[ACTION]</span><span class="q-so"> &nbsp;so that &nbsp;</span><span class="q-outcome">[OUTCOME]</span><span class="q-how">?&rdquo;</span>
+      </div>
+    </div>
+
+    <div class="reveal" id="s2-chips">
+      <div class="label-row">
+        <div class="label-chip pink-chip">&#11044; ACTION &mdash; what your app does differently</div>
+        <div class="label-chip green-chip">&#11044; OUTCOME &mdash; the change you want to see in people</div>
+      </div>
+    </div>
+
+    <div class="reveal" id="s2-example">
+      <div class="def-card">
+        <div class="def-label">Example</div>
+        <div class="def-body" style="font-size:clamp(0.9rem,1.6vw,1.1rem);">
+          &ldquo;How might we <span class="ann-action">make building a balanced meal feel like a game</span> so that <span class="ann-outcome">students choose healthier options without being told to?</span>&rdquo;
+        </div>
+        <div class="label-row" style="margin-top:10px;">
+          <div class="label-chip pink-chip">&#11044; ACTION</div>
+          <div class="label-chip green-chip">&#11044; OUTCOME</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── s3: TOO BROAD ─────────────────────────────────────── -->
+<div class="scene" id="s3">
+  <div class="scene-title">Watch out: <span class="hl">Too Broad</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="two-col" style="flex:1; min-height:0; align-items:flex-start;">
+    <div class="col-l" style="gap:14px;">
+
+      <div class="reveal" id="s3-verdict">
+        <div class="verdict broad">&#9888; Too broad</div>
+      </div>
+
+      <div class="reveal" id="s3-stmt">
+        <div class="hmw-statement">
+          &ldquo;How might we <span class="hmw-action">fix healthy eating</span> so that <span class="hmw-outcome">everyone is healthier?</span>&rdquo;
+        </div>
+      </div>
+
+      <div class="reveal" id="s3-why">
+        <div class="why-box">
+          <div class="why-row"><div class="why-icon" style="color:#ffb400;">&#9679;</div><div>The action <strong style="color:white;">&ldquo;fix healthy eating&rdquo;</strong> could mean a thousand different things &mdash; there is no clear direction for your app.</div></div>
+          <div class="why-row"><div class="why-icon" style="color:#ffb400;">&#9679;</div><div>The outcome <strong style="color:white;">&ldquo;everyone is healthier&rdquo;</strong> is unmeasurable &mdash; how would you ever know if your app worked?</div></div>
+          <div class="why-row"><div class="why-icon" style="color:#ffb400;">&#9679;</div><div>A question this open leaves you paralysed at the design stage &mdash; you can&rsquo;t sketch a feature from it.</div></div>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-r" style="gap:14px;">
+      <div class="reveal" id="s3-tip">
+        <div class="def-card" style="border-left:3px solid #ffb400;">
+          <div class="def-label" style="color:#ffb400;">Ask yourself</div>
+          <div class="def-body">
+            <div style="margin-bottom:10px;">Could this question apply to a government policy, a school canteen, a doctor&rsquo;s clinic, <em>and</em> an app all at once?</div>
+            <div style="color:white; font-weight:700;">If yes &rarr; it&rsquo;s too broad. Zoom in.</div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal" id="s3-fix">
+        <div class="callout"><strong>Narrow it</strong> by picking a specific user, moment, or behaviour. Who exactly? When exactly? What one thing?</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── s4: TOO NARROW ────────────────────────────────────── -->
+<div class="scene" id="s4">
+  <div class="scene-title">Watch out: <span class="hl">Too Narrow</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="two-col" style="flex:1; min-height:0; align-items:flex-start;">
+    <div class="col-l" style="gap:14px;">
+
+      <div class="reveal" id="s4-verdict">
+        <div class="verdict narrow">&#9432; Too narrow</div>
+      </div>
+
+      <div class="reveal" id="s4-stmt">
+        <div class="hmw-statement">
+          &ldquo;How might we <span class="hmw-action">add a blue button on the home screen that shows calories</span> so that <span class="hmw-outcome">users tap it?</span>&rdquo;
+        </div>
+      </div>
+
+      <div class="reveal" id="s4-why">
+        <div class="why-box">
+          <div class="why-row"><div class="why-icon" style="color:#6ab0ff;">&#9679;</div><div>The action is a <strong style="color:white;">finished design decision</strong>, not an opportunity &mdash; you&rsquo;ve already solved it before you started.</div></div>
+          <div class="why-row"><div class="why-icon" style="color:#6ab0ff;">&#9679;</div><div>The outcome <strong style="color:white;">&ldquo;users tap it&rdquo;</strong> is a feature goal, not a real-world change for the user.</div></div>
+          <div class="why-row"><div class="why-icon" style="color:#6ab0ff;">&#9679;</div><div>A question this specific shuts down creativity &mdash; there is only one possible answer.</div></div>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-r" style="gap:14px;">
+      <div class="reveal" id="s4-tip">
+        <div class="def-card" style="border-left:3px solid #6ab0ff;">
+          <div class="def-label" style="color:#6ab0ff;">Ask yourself</div>
+          <div class="def-body">
+            <div style="margin-bottom:10px;">Does this question have <em>only one</em> possible answer? Does it describe a specific screen, button, or feature?</div>
+            <div style="color:white; font-weight:700;">If yes &rarr; it&rsquo;s too narrow. Step back to the <em>why</em>.</div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal" id="s4-fix">
+        <div class="callout"><strong>Zoom out</strong> by asking: what problem does that feature actually solve? What do we want the user to <em>feel or do</em> differently?</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── s5: JUST RIGHT ────────────────────────────────────── -->
+<div class="scene" id="s5">
+  <div class="scene-title">Just <span class="hl">Right</span></div>
+  <div class="scene-rule"></div>
+
+  <div style="display:flex; flex-direction:column; gap:16px; flex:1; min-height:0; justify-content:flex-start;">
+
+    <div class="reveal" id="s5-verdict">
+      <div class="verdict good">&#10003; Good HMW</div>
+    </div>
+
+    <div class="reveal" id="s5-stmt">
+      <div class="hmw-statement" style="font-size:clamp(1.05rem,2.1vw,1.5rem);">
+        &ldquo;How might we <span class="ann-action hmw-action">make it easy to compare the sugar content of drinks</span> so that <span class="ann-outcome hmw-outcome">students can make a more informed choice when they&rsquo;re thirsty?</span>&rdquo;
+      </div>
+    </div>
+
+    <div class="reveal" id="s5-breakdown">
+      <div class="three-col" style="margin-top:4px;">
+        <div class="tcol">
+          <div class="def-card" style="border-top:3px solid var(--pink); border-radius:0 0 4px 4px;">
+            <div class="def-label">Specific enough</div>
+            <div class="def-body">Focuses on one behaviour (comparing drinks), not all of healthy eating.</div>
+          </div>
+        </div>
+        <div class="tcol">
+          <div class="def-card" style="border-top:3px solid #4cda64; border-radius:0 0 4px 4px;">
+            <div class="def-label">Open enough</div>
+            <div class="def-body">Does not tell you how: you could solve it with a graph, a game, a badge, or a visual label.</div>
+          </div>
+        </div>
+        <div class="tcol">
+          <div class="def-card" style="border-top:3px solid rgba(255,255,255,0.3); border-radius:0 0 4px 4px;">
+            <div class="def-label">Real outcome</div>
+            <div class="def-body">The outcome is a human change (&ldquo;make an informed choice&rdquo;), not just a feature goal.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal" id="s5-rule">
+      <div class="callout"><strong>The Goldilocks test:</strong> specific enough to design <em>from</em>, open enough to have multiple creative solutions.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── s6: WE DO — SORT IT ───────────────────────────────── -->
+<div class="scene" id="s6">
+  <div class="checks">
+    <img src="checksforunderstanding/turnandtalk.png" alt="Turn and Talk">
+    <img src="checksforunderstanding/coldcall.png" alt="Cold Call">
+  </div>
+  <div class="header-row">
+    <div class="scene-title">Sort <span class="hl">these out</span></div>
+    <div class="phase-pill">We Do</div>
+  </div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s6-instr" style="font-style:italic; color:var(--dim); font-size:clamp(0.8rem,1.3vw,0.92rem); margin-bottom:14px;">
+    With your partner: is each statement <span style="color:#ffb400; font-weight:700;">Too Broad</span>, <span style="color:#6ab0ff; font-weight:700;">Too Narrow</span>, or <span style="color:#4cda64; font-weight:700;">Just Right</span>? Be ready to explain why.
+  </div>
+
+  <div class="sort-cards">
+
+    <div class="sort-card reveal" id="s6-c1">
+      <div class="sort-letter">A</div>
+      <div class="sort-text">&ldquo;How might we <strong>make food better</strong> so that <strong>society is healthier?</strong>&rdquo;</div>
+      <div class="sort-answer" id="s6-a1"><div class="verdict broad" style="margin-bottom:0;">Too Broad</div></div>
+    </div>
+
+    <div class="sort-card reveal" id="s6-c2">
+      <div class="sort-letter">B</div>
+      <div class="sort-text">&ldquo;How might we <strong>show a traffic-light icon next to each menu item</strong> so that <strong>users see it?</strong>&rdquo;</div>
+      <div class="sort-answer" id="s6-a2"><div class="verdict narrow" style="margin-bottom:0;">Too Narrow</div></div>
+    </div>
+
+    <div class="sort-card reveal" id="s6-c3">
+      <div class="sort-letter">C</div>
+      <div class="sort-text">&ldquo;How might we <strong>help students spot hidden sugar in everyday snacks</strong> so that <strong>they feel confident reading food labels?</strong>&rdquo;</div>
+      <div class="sort-answer" id="s6-a3"><div class="verdict good" style="margin-bottom:0;">Just Right</div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── s7: FIX IT ─────────────────────────────────────────── -->
+<div class="scene" id="s7">
+  <div class="checks">
+    <img src="checksforunderstanding/stopandjot.png" alt="Stop and Jot">
+    <img src="checksforunderstanding/coldcall.png" alt="Cold Call">
+  </div>
+  <div class="header-row">
+    <div class="scene-title">Fix <span class="hl">these HMWs</span></div>
+    <div class="phase-pill">We Do</div>
+  </div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s7-instr" style="font-style:italic; color:var(--dim); font-size:clamp(0.8rem,1.3vw,0.92rem); margin-bottom:14px;">
+    Each statement below has a problem. On your whiteboard: identify what is wrong, then rewrite it as a better HMW.
+  </div>
+
+  <div class="two-col" style="flex:1; min-height:0; align-items:flex-start; gap:20px;">
+
+    <div class="col-l" style="gap:12px;">
+
+      <div class="sort-card reveal" id="s7-c1">
+        <div class="sort-letter">1</div>
+        <div style="display:flex; flex-direction:column; gap:8px; flex:1;">
+          <div class="sort-text">&ldquo;How might we <strong>make people eat salad</strong> so that <strong>nobody gets sick?</strong>&rdquo;</div>
+          <div class="sort-answer" id="s7-a1">
+            <div style="border-top:1px solid rgba(255,255,255,0.08); padding-top:8px; margin-top:2px;">
+              <div class="verdict broad" style="margin-bottom:6px;">Too Broad</div>
+              <div style="font-size:clamp(0.72rem,1.2vw,0.84rem); color:rgba(255,255,255,0.65); line-height:1.5;">
+                <span style="color:white; font-weight:700;">Fix:</span> "How might we <span style="color:var(--pink);">make trying a new vegetable feel low-risk</span> so that <span style="color:#4cda64;">students are more willing to experiment with healthy foods?</span>"
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sort-card reveal" id="s7-c2">
+        <div class="sort-letter">2</div>
+        <div style="display:flex; flex-direction:column; gap:8px; flex:1;">
+          <div class="sort-text">&ldquo;How might we <strong>put a calorie counter in the top-right corner of the home screen</strong> so that <strong>users can see their total?</strong>&rdquo;</div>
+          <div class="sort-answer" id="s7-a2">
+            <div style="border-top:1px solid rgba(255,255,255,0.08); padding-top:8px; margin-top:2px;">
+              <div class="verdict narrow" style="margin-bottom:6px;">Too Narrow</div>
+              <div style="font-size:clamp(0.72rem,1.2vw,0.84rem); color:rgba(255,255,255,0.65); line-height:1.5;">
+                <span style="color:white; font-weight:700;">Fix:</span> "How might we <span style="color:var(--pink);">help students track what they eat throughout the day</span> so that <span style="color:#4cda64;">they notice patterns in their own habits?</span>"
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-r" style="gap:12px;">
+
+      <div class="sort-card reveal" id="s7-c3">
+        <div class="sort-letter">3</div>
+        <div style="display:flex; flex-direction:column; gap:8px; flex:1;">
+          <div class="sort-text">&ldquo;How might we <strong>solve the global obesity crisis</strong> so that <strong>the world is a better place?</strong>&rdquo;</div>
+          <div class="sort-answer" id="s7-a3">
+            <div style="border-top:1px solid rgba(255,255,255,0.08); padding-top:8px; margin-top:2px;">
+              <div class="verdict broad" style="margin-bottom:6px;">Too Broad</div>
+              <div style="font-size:clamp(0.72rem,1.2vw,0.84rem); color:rgba(255,255,255,0.65); line-height:1.5;">
+                <span style="color:white; font-weight:700;">Fix:</span> "How might we <span style="color:var(--pink);">make portion sizes easier to visualise</span> so that <span style="color:#4cda64;">students feel more in control of how much they eat?</span>"
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sort-card reveal" id="s7-c4">
+        <div class="sort-letter">4</div>
+        <div style="display:flex; flex-direction:column; gap:8px; flex:1;">
+          <div class="sort-text">&ldquo;How might we <strong>display a green tick on foods with less than 5g of sugar</strong> so that <strong>the tick appears?</strong>&rdquo;</div>
+          <div class="sort-answer" id="s7-a4">
+            <div style="border-top:1px solid rgba(255,255,255,0.08); padding-top:8px; margin-top:2px;">
+              <div class="verdict narrow" style="margin-bottom:6px;">Too Narrow</div>
+              <div style="font-size:clamp(0.72rem,1.2vw,0.84rem); color:rgba(255,255,255,0.65); line-height:1.5;">
+                <span style="color:white; font-weight:700;">Fix:</span> "How might we <span style="color:var(--pink);">make low-sugar options stand out at a glance</span> so that <span style="color:#4cda64;">students can make a quicker, more informed choice?</span>"
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<script src="presentation.js"></script>
+<script>
+const SCENES = [
+
+  { id:'s0', steps:[
+    () => vis('s0-sub'),
+  ]},
+
+  { id:'s1', steps:[
+    () => vis('s1-def'),
+    () => vis('s1-why'),
+    () => vis('s1-eg'),
+  ]},
+
+  { id:'s2', steps:[
+    () => vis('s2-formula'),
+    () => vis('s2-chips'),
+    () => vis('s2-example'),
+  ]},
+
+  { id:'s3', steps:[
+    () => vis('s3-verdict'),
+    () => vis('s3-stmt'),
+    () => vis('s3-why'),
+    () => { vis('s3-tip'); vis('s3-fix'); },
+  ]},
+
+  { id:'s4', steps:[
+    () => vis('s4-verdict'),
+    () => vis('s4-stmt'),
+    () => vis('s4-why'),
+    () => { vis('s4-tip'); vis('s4-fix'); },
+  ]},
+
+  { id:'s5', steps:[
+    () => vis('s5-verdict'),
+    () => vis('s5-stmt'),
+    () => vis('s5-breakdown'),
+    () => vis('s5-rule'),
+  ]},
+
+  { id:'s6', steps:[
+    () => vis('s6-instr'),
+    () => { vis('s6-c1'); vis('s6-c2'); vis('s6-c3'); },
+    () => vis('s6-a1'),
+    () => vis('s6-a2'),
+    () => vis('s6-a3'),
+  ],
+  fullFn: () => ['s6-a1','s6-a2','s6-a3'].forEach(id => vis(id))
+  },
+
+  { id:'s7', steps:[
+    () => vis('s7-instr'),
+    () => { vis('s7-c1'); vis('s7-c2'); vis('s7-c3'); vis('s7-c4'); },
+    () => vis('s7-a1'),
+    () => vis('s7-a2'),
+    () => vis('s7-a3'),
+    () => vis('s7-a4'),
+  ],
+  fullFn: () => ['s7-a1','s7-a2','s7-a3','s7-a4'].forEach(id => vis(id))
+  },
+
+];
+
+initPresentation(SCENES);
+</script>
+</body>
+</html>

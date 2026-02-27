@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spotting Scams — Consolidation</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="presentation.css">
+</head>
+<body>
+<div id="progress"></div>
+
+
+<!-- ── TITLE ──────────────────────────────────────────────── -->
+<div class="scene" id="s0" style="align-items:center; justify-content:center; text-align:center;">
+  <div class="eyebrow" style="text-align:center; align-self:center;">Digital Technologies &mdash; Cyber Safety</div>
+  <div class="scene-title" style="font-size:clamp(2.4rem,6vw,4.5rem);">Spotting <span class="hl">Scams</span></div>
+  <div class="scene-rule" style="align-self:center;"></div>
+  <div class="reveal" id="s0-sub" style="font-size:clamp(0.9rem,1.8vw,1.2rem); color:var(--dim); max-width:520px; line-height:1.6;">
+    Consolidation practice &mdash; recognising phishing and social engineering attempts
+  </div>
+</div>
+
+
+<!-- ── LEARNING INTENTION ─────────────────────────────────── -->
+<div class="scene" id="s1">
+  <div class="eyebrow">Learning Intention</div>
+  <div class="scene-title">What are we doing <span class="hl">today?</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s1-li">
+    <div class="def-card">
+      <div class="def-label">Learning Intention</div>
+      <div class="def-body">We are learning to identify specific indicators that distinguish phishing and scam attempts from legitimate communications.</div>
+    </div>
+  </div>
+
+  <div class="reveal" id="s1-sc">
+    <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+      <div class="def-label">Success Criteria</div>
+      <div class="def-body">
+        <div class="reveal" id="s1-sc1" style="color:var(--pink); margin-bottom:5px;">I can identify at least two specific indicators that a message is a phishing or scam attempt.</div>
+        <div class="reveal" id="s1-sc2" style="color:var(--pink); margin-bottom:5px;">I can explain <em>why</em> each indicator is suspicious, not just state that it is.</div>
+        <div class="reveal" id="s1-sc3" style="color:var(--pink);">I can apply this reasoning to scenarios I have not seen before.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── QUICK RECAP — WHAT TO LOOK FOR ────────────────────── -->
+<div class="scene" id="s2">
+  <div class="checks"><img src="checksforunderstanding/choralreading.png" alt="Choral Reading"></div>
+  <div class="scene-title">The <span class="hl">Red Flags</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s2-intro">
+    <div class="def-card">
+      <div class="def-label">Read together</div>
+      <div class="def-body">Scammers use predictable tricks. Knowing the patterns means you can spot them even when the message looks convincing.</div>
+    </div>
+  </div>
+
+  <div class="three-col">
+    <div class="tcol reveal" id="s2-c1">
+      <div class="tcol-title">The Sender</div>
+      <div class="tcol-body">Misspelled domains, free email services (Gmail, Hotmail) pretending to be official, unknown numbers, or a known contact behaving strangely.</div>
+    </div>
+    <div class="tcol reveal" id="s2-c2">
+      <div class="tcol-title">The Message</div>
+      <div class="tcol-body">Urgency or threats, too-good-to-be-true offers, unexpected requests, requests for gift cards or wire transfers, fear tactics.</div>
+    </div>
+    <div class="tcol reveal" id="s2-c3">
+      <div class="tcol-title">The Link or Action</div>
+      <div class="tcol-body">Shortened URLs, links that don't match the claimed sender, requests for passwords or financial details, downloading unexpected files.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── I DO — MODELLED EXAMPLE ────────────────────────────── -->
+<div class="scene" id="s3">
+  <div class="header-row">
+    <div>
+      <div class="eyebrow">Modelled Example</div>
+      <div class="scene-title">Let me <span class="hl">show you</span> how I think</div>
+    </div>
+    <div class="phase-pill" style="margin-top:8px;">I Do</div>
+  </div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s3-scenario">
+    <div class="def-card" style="border-left:3px solid #f5a623; border-radius:0 4px 4px 0; background:rgba(245,166,35,0.07);">
+      <div class="def-label" style="color:#f5a623;">Scenario</div>
+      <div class="def-body">You receive an email from <span class="mono-pink">refunds@ato-gov.com.au</span> saying you are owed a $340 tax refund. It asks you to click a link and enter your bank account details to receive the money within 24 hours or the refund will expire.</div>
+    </div>
+  </div>
+
+  <div class="two-col" style="flex:1; min-height:0; margin-top:8px;">
+    <div class="col-l" style="gap:12px;">
+      <div class="reveal" id="s3-think" style="font-style:italic; color:var(--dim); font-size:clamp(0.8rem,1.3vw,0.92rem);">
+        I'm going to think out loud and name exactly what I notice...
+      </div>
+
+      <div class="reveal" id="s3-i1">
+        <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+          <div class="def-label" style="color:var(--pink);">Indicator 1 — Suspicious Sender Domain</div>
+          <div class="def-body">The real ATO emails from <span class="mono-pink">@ato.gov.au</span>. This email uses <span class="mono-pink">ato-gov.com.au</span> — a fake domain designed to look official. The hyphen and the <span class="mono-pink">.com</span> instead of <span class="mono-pink">.gov</span> are the giveaway.</div>
+        </div>
+      </div>
+
+      <div class="reveal" id="s3-i2">
+        <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+          <div class="def-label" style="color:var(--pink);">Indicator 2 — Artificial Urgency + Sensitive Info Request</div>
+          <div class="def-body">The 24-hour deadline is a pressure tactic to stop you thinking clearly. Legitimate government agencies never ask for your bank details via email link — they use MyGov or direct deposit they already have on file.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-r" style="gap:12px;">
+      <div class="reveal" id="s3-note">
+        <div class="callout"><strong>Key habit:</strong> Always check the actual email address, not just the display name. Scammers often set the display name to "ATO" or "PayPal" while the real address is completely different.</div>
+      </div>
+      <div class="reveal" id="s3-note2">
+        <div class="callout"><strong>The rule:</strong> Legitimate organisations will never ask for passwords, PINs, or full bank details through a link in an email or SMS.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── WE DO — EXAMPLE 1 ───────────────────────────────────── -->
+<div class="scene" id="s4">
+  <div class="checks">
+    <img src="checksforunderstanding/stopandjot.png" alt="Stop and Jot">
+    <img src="checksforunderstanding/coldcall.png" alt="Cold Call">
+  </div>
+  <div class="header-row">
+    <div class="scene-title">Scenario <span class="hl">1</span></div>
+    <div class="phase-pill">We Do</div>
+  </div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s4-scenario">
+    <div class="def-card" style="border-left:3px solid #f5a623; border-radius:0 4px 4px 0; background:rgba(245,166,35,0.07);">
+      <div class="def-label" style="color:#f5a623;">Scenario</div>
+      <div class="def-body">You get a text from an unknown number: <em>"Hi! Australia Post: Your parcel could not be delivered. A small redelivery fee of $3.50 is required. Pay here: auspost-rebook.com/track"</em></div>
+    </div>
+  </div>
+
+  <div class="reveal" id="s4-task" style="font-weight:700; color:var(--pink); margin:10px 0 6px; font-size:clamp(0.85rem,1.4vw,1rem);">
+    On your whiteboard — write two specific indicators this is a scam.
+  </div>
+  <div class="reveal" id="s4-time" style="font-style:italic; color:var(--dim); font-size:clamp(0.78rem,1.2vw,0.88rem); margin-bottom:12px;">
+    60 seconds. Then chin your boards.
+  </div>
+
+  <div class="two-col" style="flex:1; min-height:0;">
+    <div class="col-l">
+      <div class="reveal" id="s4-i1">
+        <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+          <div class="def-label" style="color:var(--pink);">Indicator 1</div>
+          <div class="def-body"><strong>Unknown sender number.</strong> Australia Post sends SMS from a registered short code or verified sender ID — not a random mobile number. Any parcel notification from an unknown number is immediately suspicious.</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-r">
+      <div class="reveal" id="s4-i2">
+        <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+          <div class="def-label" style="color:var(--pink);">Indicator 2</div>
+          <div class="def-body"><strong>Fake domain in the link.</strong> The real Australia Post site is <span class="mono-pink">auspost.com.au</span>. The link <span class="mono-pink">auspost-rebook.com</span> is a lookalike domain — different extension and a hyphen added to seem legitimate.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── WE DO — EXAMPLE 2 ───────────────────────────────────── -->
+<div class="scene" id="s5">
+  <div class="checks">
+    <img src="checksforunderstanding/stopandjot.png" alt="Stop and Jot">
+    <img src="checksforunderstanding/turnandtalk.png" alt="Turn and Talk">
+  </div>
+  <div class="header-row">
+    <div class="scene-title">Scenario <span class="hl">2</span></div>
+    <div class="phase-pill">We Do</div>
+  </div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s5-scenario">
+    <div class="def-card" style="border-left:3px solid #f5a623; border-radius:0 4px 4px 0; background:rgba(245,166,35,0.07);">
+      <div class="def-label" style="color:#f5a623;">Scenario</div>
+      <div class="def-body">You receive a WhatsApp message from an unknown number: <em>"Hi [your name], it's Mum! I dropped my phone in the pool and this is my new number. I need you to buy two $100 Google Play gift cards urgently and send me the codes — I'll pay you back tonight."</em></div>
+    </div>
+  </div>
+
+  <div class="reveal" id="s5-task" style="font-weight:700; color:var(--pink); margin:10px 0 4px; font-size:clamp(0.85rem,1.4vw,1rem);">
+    Jot your two indicators, then turn and talk with your partner.
+  </div>
+
+  <div class="two-col" style="flex:1; min-height:0;">
+    <div class="col-l">
+      <div class="reveal" id="s5-i1">
+        <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+          <div class="def-label" style="color:var(--pink);">Indicator 1</div>
+          <div class="def-body"><strong>Unknown number claiming to be a trusted person.</strong> This is the "Hi Mum / Hi Dad" scam. The claim that they "got a new phone" is a standard script to explain why you don't recognise the number. Always verify through a different channel before acting.</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-r">
+      <div class="reveal" id="s5-i2">
+        <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+          <div class="def-label" style="color:var(--pink);">Indicator 2</div>
+          <div class="def-body"><strong>Gift cards as payment.</strong> This is one of the clearest scam signals there is. No real person or organisation needs you to buy gift cards and read out the codes. Gift cards are untraceable — scammers love them for exactly that reason.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── YOU DO INTRO SLIDE ─────────────────────────────────── -->
+<div class="scene" id="s6" style="align-items:center; justify-content:center; text-align:center;">
+  <div class="eyebrow" style="align-self:center; text-align:center;">Your Turn</div>
+  <div class="scene-title" style="font-size:clamp(2rem,5vw,3.8rem);">7 more scenarios <span class="hl">to go.</span></div>
+  <div class="scene-rule" style="align-self:center;"></div>
+  <div class="reveal" id="s6-instr" style="font-size:clamp(0.9rem,1.7vw,1.15rem); color:rgba(255,255,255,0.8); max-width:560px; line-height:1.7;">
+    For each one: jot <strong>two specific indicators</strong> on your whiteboard, then chin it. Be ready to be cold called to explain your reasoning — not just name the indicator.
+  </div>
+</div>
+
+
+<!-- ── YOU DO — SCENARIO 3 ────────────────────────────────── -->
+<div class="scene" id="s7">
+  <div class="checks">
+    <img src="checksforunderstanding/stopandjot.png" alt="Stop and Jot">
+    <img src="checksforunderstanding/coldcall.png" alt="Cold Call">
+  </div>
+  <div class="header-row">
+    <div class="scene-title">Scenario <span class="hl">3</span></div>
+    <div class="phase-pill">You Do</div>
+  </div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s7-scenario">
+    <div class="def-card" style="border-left:3px solid #f5a623; border-radius:0 4px 4px 0; background:rgba(245,166,35,0.07);">
+      <div class="def-label" style="color:#f5a623;">Scenario</div>
+      <div class="def-body">A pop-up appears in your browser while watching a video: <em>"ALERT: Your computer is infected with 3 viruses! Your personal files are at risk. Call Microsoft Support immediately: 1800 555 234. Do not close this window."</em> The pop-up plays a loud alarm sound.</div>
+    </div>
+  </div>
+
+  <div class="reveal" id="s7-task" style="font-weight:700; color:var(--pink); margin:10px 0 4px;">Two indicators — jot and chin.</div>
+
+  <div class="two-col" style="flex:1; min-height:0;">
+    <div class="col-l">
+      <div class="reveal" id="s7-i1">
+        <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+          <div class="def-label" style="color:var(--pink);">Indicator 1</div>
+          <div class="def-body"><strong>Browser pop-ups cannot detect viruses.</strong> A webpage has no ability to scan your device. Any website claiming to have found a virus on your computer is lying — this is a fear tactic designed to make you panic and act fast.</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-r">
+      <div class="reveal" id="s7-i2">
+        <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+          <div class="def-label" style="color:var(--pink);">Indicator 2</div>
+          <div class="def-body"><strong>Microsoft never contacts you unsolicited.</strong> Legitimate tech companies do not phone you about problems — you contact them. A phone number in a browser pop-up is always a scammer waiting to ask for remote access to your device.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── YOU DO — SCENARIO 4 ────────────────────────────────── -->
+<div class="scene" id="s8">
+  <div class="checks">
+    <img src="checksforunderstanding/stopandjot.png" alt="Stop and Jot">
+    <img src="checksforunderstanding/coldcall.png" alt="Cold Call">
+  </div>
+  <div class="header-row">
+    <div class="scene-title">Scenario <span class="hl">4</span></div>
+    <div class="phase-pill">You Do</div>
+  </div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s8-scenario">
+    <div class="def-card" style="border-left:3px solid #f5a623; border-radius:0 4px 4px 0; background:rgba(245,166,35,0.07);">
+      <div class="def-label" style="color:#f5a623;">Scenario</div>
+      <div class="def-body">You receive an Instagram DM from an account called <span class="mono-pink">@NikePromo.Official2024</span> with 3 posts and 40 followers: <em>"Congratulations! You've been selected for our brand ambassador program. We're sending you FREE Nike gear — we just need your address and a $9.99 shipping fee paid via PayPal."</em></div>
+    </div>
+  </div>
+
+  <div class="reveal" id="s8-task" style="font-weight:700; color:var(--pink); margin:10px 0 4px;">Two indicators — jot and chin.</div>
+
+  <div class="two-col" style="flex:1; min-height:0;">
+    <div class="col-l">
+      <div class="reveal" id="s8-i1">
+        <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+          <div class="def-label" style="color:var(--pink);">Indicator 1</div>
+          <div class="def-body"><strong>Fake brand account.</strong> Nike's real Instagram is <span class="mono-pink">@nike</span> — verified, millions of followers. An account with 3 posts, 40 followers, and numbers in the name is impersonating the brand. Scammers create these accounts quickly and discard them.</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-r">
+      <div class="reveal" id="s8-i2">
+        <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+          <div class="def-label" style="color:var(--pink);">Indicator 2</div>
+          <div class="def-body"><strong>Paying for something "free."</strong> Requesting payment for shipping on a "free" prize is a classic scam. Once you pay, the item never arrives — and they now have your payment details and home address.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── YOU DO — SCENARIO 5 ────────────────────────────────── -->
+<div class="scene" id="s9">
+  <div class="checks">
+    <img src="checksforunderstanding/stopandjot.png" alt="Stop and Jot">
+    <img src="checksforunderstanding/coldcall.png" alt="Cold Call">
+  </div>
+  <div class="header-row">
+    <div class="scene-title">Scenario <span class="hl">5</span></div>
+    <div class="phase-pill">You Do</div>
+  </div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s9-scenario">
+    <div class="def-card" style="border-left:3px solid #f5a623; border-radius:0 4px 4px 0; background:rgba(245,166,35,0.07);">
+      <div class="def-label" style="color:#f5a623;">Scenario</div>
+      <div class="def-body">You receive an email with the subject <em>"URGENT — Your Netflix account will be cancelled in 24 hours."</em> The email is from <span class="mono-pink">billing@netflix-accounts-support.com</span> and asks you to click a link to update your payment method or lose your subscription immediately.</div>
+    </div>
+  </div>
+
+  <div class="reveal" id="s9-task" style="font-weight:700; color:var(--pink); margin:10px 0 4px;">Two indicators — jot and chin.</div>
+
+  <div class="two-col" style="flex:1; min-height:0;">
+    <div class="col-l">
+      <div class="reveal" id="s9-i1">
+        <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+          <div class="def-label" style="color:var(--pink);">Indicator 1</div>
+          <div class="def-body"><strong>Fake sender domain.</strong> Netflix emails only come from <span class="mono-pink">@netflix.com</span>. The domain <span class="mono-pink">netflix-accounts-support.com</span> is a lookalike — extra words and hyphens are added to seem credible. The real domain is always short and clean.</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-r">
+      <div class="reveal" id="s9-i2">
+        <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+          <div class="def-label" style="color:var(--pink);">Indicator 2</div>
+          <div class="def-body"><strong>Artificial 24-hour urgency.</strong> The countdown is designed to make you act before you think. Real subscription services send multiple warning emails over weeks — they don't cancel your account after one email with a same-day deadline.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── YOU DO — SCENARIO 6 ────────────────────────────────── -->
+<div class="scene" id="s10">
+  <div class="checks">
+    <img src="checksforunderstanding/stopandjot.png" alt="Stop and Jot">
+    <img src="checksforunderstanding/coldcall.png" alt="Cold Call">
+  </div>
+  <div class="header-row">
+    <div class="scene-title">Scenario <span class="hl">6</span></div>
+    <div class="phase-pill">You Do</div>
+  </div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s10-scenario">
+    <div class="def-card" style="border-left:3px solid #f5a623; border-radius:0 4px 4px 0; background:rgba(245,166,35,0.07);">
+      <div class="def-label" style="color:#f5a623;">Scenario</div>
+      <div class="def-body">You see a Facebook ad: <em>"Woolworths is giving away $500 gift cards to celebrate 100 years! Only 50 left. Click here, answer 3 quick questions, and share with 10 friends to claim yours."</em> The ad links to <span class="mono-pink">woolworths-giveaway2024.net</span></div>
+    </div>
+  </div>
+
+  <div class="reveal" id="s10-task" style="font-weight:700; color:var(--pink); margin:10px 0 4px;">Two indicators — jot and chin.</div>
+
+  <div class="two-col" style="flex:1; min-height:0;">
+    <div class="col-l">
+      <div class="reveal" id="s10-i1">
+        <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+          <div class="def-label" style="color:var(--pink);">Indicator 1</div>
+          <div class="def-body"><strong>Lookalike website domain.</strong> Woolworths' real site is <span class="mono-pink">woolworths.com.au</span>. The link <span class="mono-pink">woolworths-giveaway2024.net</span> uses a different extension (<span class="mono-pink">.net</span> vs <span class="mono-pink">.com.au</span>) and adds extra words — a clear sign of a fake site.</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-r">
+      <div class="reveal" id="s10-i2">
+        <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+          <div class="def-label" style="color:var(--pink);">Indicator 2</div>
+          <div class="def-body"><strong>Share to claim.</strong> Requiring you to share with friends is not generosity — it's a way to spread the scam further using your trusted name. Real competitions by major brands do not require sharing as a condition of entry.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── YOU DO — SCENARIO 7 ────────────────────────────────── -->
+<div class="scene" id="s11">
+  <div class="checks">
+    <img src="checksforunderstanding/stopandjot.png" alt="Stop and Jot">
+    <img src="checksforunderstanding/coldcall.png" alt="Cold Call">
+  </div>
+  <div class="header-row">
+    <div class="scene-title">Scenario <span class="hl">7</span></div>
+    <div class="phase-pill">You Do</div>
+  </div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s11-scenario">
+    <div class="def-card" style="border-left:3px solid #f5a623; border-radius:0 4px 4px 0; background:rgba(245,166,35,0.07);">
+      <div class="def-label" style="color:#f5a623;">Scenario</div>
+      <div class="def-body">You receive a text message: <em>"CBA BANK: Unusual sign-in detected on your account. Your access has been temporarily suspended. Verify now to restore access: bit.ly/cba-verif"</em></div>
+    </div>
+  </div>
+
+  <div class="reveal" id="s11-task" style="font-weight:700; color:var(--pink); margin:10px 0 4px;">Two indicators — jot and chin.</div>
+
+  <div class="two-col" style="flex:1; min-height:0;">
+    <div class="col-l">
+      <div class="reveal" id="s11-i1">
+        <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+          <div class="def-label" style="color:var(--pink);">Indicator 1</div>
+          <div class="def-body"><strong>Shortened URL hiding the real destination.</strong> <span class="mono-pink">bit.ly</span> links conceal where they actually take you. Legitimate banks always link directly to their own domain (e.g. <span class="mono-pink">netbank.commbank.com.au</span>) — they never use URL shorteners.</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-r">
+      <div class="reveal" id="s11-i2">
+        <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+          <div class="def-label" style="color:var(--pink);">Indicator 2</div>
+          <div class="def-body"><strong>Banks do not send SMS with clickable verification links.</strong> CommBank and other Australian banks explicitly state they will never ask you to verify your account via a link in a text message. If concerned, open the banking app directly or call the number on the back of your card.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── YOU DO — SCENARIO 8 ────────────────────────────────── -->
+<div class="scene" id="s12">
+  <div class="checks">
+    <img src="checksforunderstanding/stopandjot.png" alt="Stop and Jot">
+    <img src="checksforunderstanding/coldcall.png" alt="Cold Call">
+  </div>
+  <div class="header-row">
+    <div class="scene-title">Scenario <span class="hl">8</span></div>
+    <div class="phase-pill">You Do</div>
+  </div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s12-scenario">
+    <div class="def-card" style="border-left:3px solid #f5a623; border-radius:0 4px 4px 0; background:rgba(245,166,35,0.07);">
+      <div class="def-label" style="color:#f5a623;">Scenario</div>
+      <div class="def-body">You receive a LinkedIn message from someone you don't know: <em>"Hi! I came across your profile and think you'd be a perfect fit for our remote role — $120/hr, fully flexible. No experience needed. We'd love to get started straight away. Just send me your full name, date of birth, and bank account details so we can set up payroll."</em></div>
+    </div>
+  </div>
+
+  <div class="reveal" id="s12-task" style="font-weight:700; color:var(--pink); margin:10px 0 4px;">Two indicators — jot and chin.</div>
+
+  <div class="two-col" style="flex:1; min-height:0;">
+    <div class="col-l">
+      <div class="reveal" id="s12-i1">
+        <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+          <div class="def-label" style="color:var(--pink);">Indicator 1</div>
+          <div class="def-body"><strong>Too good to be true offer.</strong> $120/hr with no experience required, no interview, and an immediate start is not how real hiring works. Scammers use unrealistically attractive offers to bypass your critical thinking.</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-r">
+      <div class="reveal" id="s12-i2">
+        <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+          <div class="def-label" style="color:var(--pink);">Indicator 2</div>
+          <div class="def-body"><strong>Requesting sensitive personal data before employment is confirmed.</strong> No legitimate employer asks for your bank account details, date of birth, or full identification before you have signed a contract, completed onboarding, or even had an interview.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── YOU DO — SCENARIO 9 ────────────────────────────────── -->
+<div class="scene" id="s13">
+  <div class="checks">
+    <img src="checksforunderstanding/stopandjot.png" alt="Stop and Jot">
+    <img src="checksforunderstanding/coldcall.png" alt="Cold Call">
+  </div>
+  <div class="header-row">
+    <div class="scene-title">Scenario <span class="hl">9</span></div>
+    <div class="phase-pill">You Do</div>
+  </div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s13-scenario">
+    <div class="def-card" style="border-left:3px solid #f5a623; border-radius:0 4px 4px 0; background:rgba(245,166,35,0.07);">
+      <div class="def-label" style="color:#f5a623;">Scenario</div>
+      <div class="def-body">You receive a call from someone claiming to be from the Australian Federal Police: <em>"This is an automated message from the AFP. A warrant has been issued for your arrest due to tax fraud. To stop this arrest you must purchase $2,000 in iTunes gift cards and call us back immediately on this number."</em></div>
+    </div>
+  </div>
+
+  <div class="reveal" id="s13-task" style="font-weight:700; color:var(--pink); margin:10px 0 4px;">Two indicators — jot and chin.</div>
+
+  <div class="two-col" style="flex:1; min-height:0;">
+    <div class="col-l">
+      <div class="reveal" id="s13-i1">
+        <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+          <div class="def-label" style="color:var(--pink);">Indicator 1</div>
+          <div class="def-body"><strong>Government agencies do not demand gift card payments.</strong> The AFP, ATO, and any legitimate government body will never instruct you to pay fines or avoid arrest via iTunes cards. This is an immediate and definitive scam signal — no exceptions.</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-r">
+      <div class="reveal" id="s13-i2">
+        <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+          <div class="def-label" style="color:var(--pink);">Indicator 2</div>
+          <div class="def-body"><strong>Arrest threats by automated call.</strong> Police do not issue arrest warrants by automated phone message. Real legal proceedings involve formal written notices. The threat of immediate arrest is a high-pressure fear tactic designed to override rational thinking.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── YOU DO — SCENARIO 10 ───────────────────────────────── -->
+<div class="scene" id="s14">
+  <div class="checks">
+    <img src="checksforunderstanding/stopandjot.png" alt="Stop and Jot">
+    <img src="checksforunderstanding/coldcall.png" alt="Cold Call">
+  </div>
+  <div class="header-row">
+    <div class="scene-title">Scenario <span class="hl">10</span></div>
+    <div class="phase-pill">You Do</div>
+  </div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s14-scenario">
+    <div class="def-card" style="border-left:3px solid #f5a623; border-radius:0 4px 4px 0; background:rgba(245,166,35,0.07);">
+      <div class="def-label" style="color:#f5a623;">Scenario</div>
+      <div class="def-body">Your friend sends you a direct message on Discord: <em>"dude you have to check this out I found a site where you can get free Robux, I already got 10,000. you just log in with your Roblox account here: roblox-free-robux.gg"</em></div>
+    </div>
+  </div>
+
+  <div class="reveal" id="s14-task" style="font-weight:700; color:var(--pink); margin:10px 0 4px;">Two indicators — jot and chin.</div>
+
+  <div class="two-col" style="flex:1; min-height:0;">
+    <div class="col-l">
+      <div class="reveal" id="s14-i1">
+        <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+          <div class="def-label" style="color:var(--pink);">Indicator 1</div>
+          <div class="def-body"><strong>Free in-game currency is never legitimately available through third-party sites.</strong> Roblox only distributes Robux through its own platform. Any site claiming to give free Robux is a credential-harvesting site — it wants your login to take over your account.</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-r">
+      <div class="reveal" id="s14-i2">
+        <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+          <div class="def-label" style="color:var(--pink);">Indicator 2</div>
+          <div class="def-body"><strong>Your friend's account may already be compromised.</strong> Scam links spread by taking over accounts and sending messages to contact lists — so the message appearing to come from your friend is not verification it's safe. Your friend is likely already a victim.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── EXIT TICKET ─────────────────────────────────────────── -->
+<div class="scene" id="s15" style="align-items:center;">
+  <div class="checks" style="align-self:flex-start;">
+    <img src="checksforunderstanding/fingervote.png" alt="Finger Vote">
+  </div>
+  <div class="scene-title" style="align-self:center; text-align:center;">How <span class="hl">confident</span> are you?</div>
+  <div class="scene-rule" style="align-self:center;"></div>
+
+  <div style="display:flex; flex-direction:column; align-items:center; gap:12px; width:100%;">
+    <div class="reveal" id="s15-prompt" style="font-size:clamp(0.85rem,1.5vw,1.05rem); color:rgba(255,255,255,0.8); text-align:center;">
+      Show me on five fingers &mdash; if you received a scam message tonight, how confident are you that you would recognise it?
+    </div>
+
+    <div class="conf-scale">
+      <div class="conf-item" id="ci1"><div class="conf-num">1</div><div class="conf-lbl">Not confident at all</div></div>
+      <div class="conf-item" id="ci2"><div class="conf-num">2</div><div class="conf-lbl">Still unsure</div></div>
+      <div class="conf-item" id="ci3"><div class="conf-num">3</div><div class="conf-lbl">Getting there</div></div>
+      <div class="conf-item" id="ci4"><div class="conf-num">4</div><div class="conf-lbl">Fairly confident</div></div>
+      <div class="conf-item hi" id="ci5"><div class="conf-num">5</div><div class="conf-lbl">I'd spot it</div></div>
+    </div>
+
+    <div class="callout reveal" id="s15-note" style="border-left:none; border-top:3px solid var(--pink); border-radius:3px; text-align:center; max-width:620px; margin-top:6px;">
+      If you're on <strong>1&ndash;2</strong> &mdash; write down the one indicator type you found hardest to spot today. We'll revisit it.
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     SCENES
+     ══════════════════════════════════════════════════════════ -->
+<script src="presentation.js"></script>
+<script>
+const SCENES = [
+
+  { id:'s0', steps:[
+    () => vis('s0-sub'),
+  ]},
+
+  { id:'s1', steps:[
+    () => vis('s1-li'),
+    () => vis('s1-sc'),
+    () => vis('s1-sc1'),
+    () => vis('s1-sc2'),
+    () => vis('s1-sc3'),
+  ]},
+
+  { id:'s2', steps:[
+    () => vis('s2-intro'),
+    () => vis('s2-c1'),
+    () => vis('s2-c2'),
+    () => vis('s2-c3'),
+  ]},
+
+  { id:'s3', steps:[
+    () => vis('s3-scenario'),
+    () => vis('s3-think'),
+    () => vis('s3-i1'),
+    () => vis('s3-i2'),
+    () => { vis('s3-note'); vis('s3-note2'); },
+  ]},
+
+  { id:'s4', steps:[
+    () => vis('s4-scenario'),
+    () => { vis('s4-task'); vis('s4-time'); },
+    () => vis('s4-i1'),
+    () => vis('s4-i2'),
+  ]},
+
+  { id:'s5', steps:[
+    () => vis('s5-scenario'),
+    () => vis('s5-task'),
+    () => vis('s5-i1'),
+    () => vis('s5-i2'),
+  ]},
+
+  { id:'s6', steps:[
+    () => vis('s6-instr'),
+  ]},
+
+  { id:'s7', steps:[
+    () => vis('s7-scenario'),
+    () => vis('s7-task'),
+    () => vis('s7-i1'),
+    () => vis('s7-i2'),
+  ]},
+
+  { id:'s8', steps:[
+    () => vis('s8-scenario'),
+    () => vis('s8-task'),
+    () => vis('s8-i1'),
+    () => vis('s8-i2'),
+  ]},
+
+  { id:'s9', steps:[
+    () => vis('s9-scenario'),
+    () => vis('s9-task'),
+    () => vis('s9-i1'),
+    () => vis('s9-i2'),
+  ]},
+
+  { id:'s10', steps:[
+    () => vis('s10-scenario'),
+    () => vis('s10-task'),
+    () => vis('s10-i1'),
+    () => vis('s10-i2'),
+  ]},
+
+  { id:'s11', steps:[
+    () => vis('s11-scenario'),
+    () => vis('s11-task'),
+    () => vis('s11-i1'),
+    () => vis('s11-i2'),
+  ]},
+
+  { id:'s12', steps:[
+    () => vis('s12-scenario'),
+    () => vis('s12-task'),
+    () => vis('s12-i1'),
+    () => vis('s12-i2'),
+  ]},
+
+  { id:'s13', steps:[
+    () => vis('s13-scenario'),
+    () => vis('s13-task'),
+    () => vis('s13-i1'),
+    () => vis('s13-i2'),
+  ]},
+
+  { id:'s14', steps:[
+    () => vis('s14-scenario'),
+    () => vis('s14-task'),
+    () => vis('s14-i1'),
+    () => vis('s14-i2'),
+  ]},
+
+  { id:'s15', steps:[
+    () => vis('s15-prompt'),
+    () => stagger(['ci1','ci2','ci3','ci4','ci5']),
+    () => vis('s15-note'),
+  ],
+  fullFn: () => ['ci1','ci2','ci3','ci4','ci5'].forEach(id => vis(id))
+  },
+
+];
+
+initPresentation(SCENES);
+</script>
+</body>
+</html>

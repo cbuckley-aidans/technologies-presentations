@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smarter Homes - Innovation</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="presentation.css">
+<style>
+  .img-fill {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+    display: block;
+  }
+  .img-contain {
+    width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 4px;
+    display: block;
+  }
+  .img-frame {
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
+    flex: 1;
+    min-height: 0;
+  }
+  .tag-pill {
+    display: inline-block;
+    background: rgba(235,0,139,0.15);
+    border: 1px solid rgba(235,0,139,0.35);
+    color: var(--pink);
+    font-weight: 700;
+    font-size: clamp(0.7rem,1.2vw,0.85rem);
+    letter-spacing: 0.04em;
+    padding: 4px 12px;
+    border-radius: 3px;
+    margin-bottom: 6px;
+  }
+  /* Innovation 3-question cards */
+  .innov-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    margin-top: 8px;
+  }
+  .innov-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4px;
+    padding: 13px 18px;
+  }
+  .innov-card.hi {
+    border-left: 3px solid var(--pink);
+    border-radius: 0 4px 4px 0;
+    background: rgba(235,0,139,0.05);
+  }
+  .innov-num {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--pink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 0.78rem;
+    margin-top: 1px;
+  }
+  .innov-label {
+    font-weight: 900;
+    font-size: clamp(0.88rem,1.5vw,1.05rem);
+    color: white;
+    margin-bottom: 2px;
+  }
+  .innov-sub {
+    font-size: clamp(0.72rem,1.2vw,0.84rem);
+    color: var(--dim);
+  }
+  /* Material criteria grid */
+  .crit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+    width: 100%;
+    margin-top: 10px;
+  }
+  .crit-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4px;
+    padding: 11px 14px;
+  }
+  .crit-term {
+    font-weight: 900;
+    font-size: clamp(0.78rem,1.3vw,0.9rem);
+    color: var(--pink);
+    margin-bottom: 4px;
+  }
+  .crit-def {
+    font-size: clamp(0.7rem,1.1vw,0.8rem);
+    color: rgba(255,255,255,0.7);
+    line-height: 1.5;
+  }
+  /* Stile prompt slide */
+  .stile-prompt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 20px;
+  }
+  .stile-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 12px;
+    background: var(--pink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+  }
+  /* Stat highlight */
+  .stat-big {
+    font-weight: 900;
+    font-size: clamp(2.5rem,6vw,4.5rem);
+    color: var(--pink);
+    line-height: 1;
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+
+<!-- ── s0: TITLE ─────────────────────────────────────────── -->
+<div class="scene" id="s0" style="align-items:center; justify-content:center; text-align:center;">
+  <div class="eyebrow" style="text-align:center; align-self:center;">Smarter Homes</div>
+  <div class="scene-title" style="font-size:clamp(2.4rem,6vw,4.5rem);"><span class="hl">Innovation</span></div>
+  <div class="scene-rule" style="align-self:center;"></div>
+  <div class="reveal" id="s0-sub" style="font-size:clamp(0.9rem,1.8vw,1.2rem); color:var(--dim); max-width:560px; line-height:1.6;">
+    Responding to environment &bull; Materials science &bull; Evaluating innovation
+  </div>
+</div>
+
+
+<!-- ── s1: QUICK CHECK (retrieval) ───────────────────────── -->
+<div class="scene" id="s1">
+  <div class="checks">
+    <img src="checksforunderstanding/choralreading.png" alt="Choral Reading">
+    <img src="checksforunderstanding/stopandjot.png" alt="Stop and Jot">
+  </div>
+  <div class="scene-title">Quick <span class="hl">Check</span></div>
+  <div class="scene-rule"></div>
+  <div class="reveal" id="s1-intro" style="font-size:clamp(0.85rem,1.5vw,1rem); color:var(--dim); margin-bottom:18px;">
+    We are going to wear both hats shortly, so let's check in first.
+  </div>
+
+  <div class="reveal" id="s1-q1">
+    <div class="def-card">
+      <div class="def-label">Question 1</div>
+      <div class="def-body" style="font-size:clamp(1rem,2vw,1.4rem); font-weight:700;">
+        Who is responsible for deciding <em>how</em> a building is constructed?
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal" id="s1-a1" style="margin-top: -4px; margin-bottom:14px;">
+    <div class="callout"><strong>Answer:</strong> The <strong style="color:white;">Civil Engineer</strong></div>
+  </div>
+
+  <div class="reveal" id="s1-q2">
+    <div class="def-card">
+      <div class="def-label">Question 2</div>
+      <div class="def-body" style="font-size:clamp(1rem,2vw,1.4rem); font-weight:700;">
+        Who is responsible for deciding what a building <em>looks</em> and <em>feels</em> like?
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal" id="s1-a2" style="margin-top:-4px;">
+    <div class="callout"><strong>Answer:</strong> The <strong style="color:white;">Architect</strong></div>
+  </div>
+</div>
+
+
+<!-- ── s2: RESPONDING TO ENVIRONMENT ─────────────────────── -->
+<div class="scene" id="s2">
+  <div class="checks">
+    <img src="checksforunderstanding/stopandjot.png" alt="Stop and Jot">
+    <img src="checksforunderstanding/coldcall.png" alt="Cold Call">
+  </div>
+  <div class="scene-title">Responding to <span class="hl">Environment</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="two-col" style="flex:1; min-height:0;">
+    <div class="col-l" style="justify-content:flex-start; gap:14px;">
+      <div class="reveal" id="s2-instr" style="font-size:clamp(0.85rem,1.5vw,1rem); color:rgba(255,255,255,0.8); line-height:1.7;">
+        Look at the image. You may recognise where this is, and you might have even visited!
+      </div>
+      <div class="reveal" id="s2-instr2" style="font-size:clamp(0.85rem,1.5vw,1rem); color:rgba(255,255,255,0.8); line-height:1.7;">
+        For now, try not to spoil anything. Take the image as it is.
+      </div>
+      <div class="reveal" id="s2-prompt">
+        <div class="callout">
+          <strong>On your whiteboard:</strong> Write down all the problems and challenges you can think of that would arise from trying to <em>build and live here</em>.
+        </div>
+      </div>
+    </div>
+    <div class="col-r">
+      <div class="reveal" id="s2-img" class="img-frame" style="flex:1; min-height:0; border-radius:4px; overflow:hidden; border:1px solid rgba(255,255,255,0.1);">
+        <img src="https://images.squarespace-cdn.com/content/v1/61e6b4a8b0d8a237e396e313/1668472464876-4G3GA3ASA19LG69SJRLX/DJI_0946.JPG"
+          alt="Remote arid landscape" style="width:100%; height:100%; object-fit:cover; display:block;">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── s3: COOBER PEDY REVEAL ────────────────────────────── -->
+<div class="scene" id="s3">
+  <div class="checks">
+    <img src="checksforunderstanding/turnandtalk.png" alt="Turn and Talk">
+    <img src="checksforunderstanding/stopandjot.png" alt="Stop and Jot">
+  </div>
+  <div class="scene-title">Coober <span class="hl">Pedy</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="two-col" style="flex:1; min-height:0;">
+    <div class="col-l" style="gap:12px; justify-content:flex-start;">
+      <div class="reveal" id="s3-t1" style="font-size:clamp(0.85rem,1.5vw,1rem); color:rgba(255,255,255,0.85); line-height:1.7;">
+        This is <strong>Coober Pedy</strong>, a remote mining town in South Australia, famous for its opal mines.
+      </div>
+      <div class="reveal" id="s3-t2" style="font-size:clamp(0.85rem,1.5vw,1rem); color:rgba(255,255,255,0.85); line-height:1.7;">
+        Coober Pedy is also famous for its <strong>heat</strong>, with 40&ndash;50&deg;C surface temperatures being common.
+      </div>
+      <div class="reveal" id="s3-q">
+        <div class="callout">
+          <strong>Before moving on, guess:</strong> Out of all household energy use (fridge, cooking, dishwasher...) what percentage do you think <em>cooling</em> takes up for the average Australian home?
+        </div>
+      </div>
+      <div class="reveal" id="s3-ans">
+        <div style="display:flex; align-items:center; gap:16px;">
+          <div class="stat-big">40%</div>
+          <div style="font-size:clamp(0.78rem,1.3vw,0.9rem); color:var(--dim); line-height:1.5;">of household electricity use<br>goes towards cooling</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-r">
+      <div class="reveal" id="s3-img" style="flex:1; min-height:0; border-radius:4px; overflow:hidden; border:1px solid rgba(255,255,255,0.1);">
+        <img src="https://blackopaldirect.com/cdn/shop/articles/048A1776_a59a8c83-249e-4d56-a282-9cd164ace02c.jpg?v=1750716557&width=2048"
+          alt="Australian opal" style="width:100%; height:100%; object-fit:cover; display:block;">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── s4: HOW DID COOBER PEDY INNOVATE? ─────────────────── -->
+<div class="scene" id="s4">
+  <div class="scene-title">How did Coober Pedy <span class="hl">innovate?</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="two-col" style="flex:1; min-height:0;">
+    <div class="col-l" style="gap:12px; justify-content:flex-start;">
+      <div class="reveal" id="s4-t1">
+        <div class="def-card">
+          <div class="def-label">The Solution</div>
+          <div class="def-body">The majority of Coober Pedy's infrastructure is built <strong>underground</strong>.</div>
+        </div>
+      </div>
+      <div class="reveal" id="s4-t2" style="font-size:clamp(0.85rem,1.5vw,1rem); color:rgba(255,255,255,0.8); line-height:1.7;">
+        The earth surrounding a dugout absorbs heat during the day and releases it slowly overnight.
+      </div>
+      <div class="reveal" id="s4-t3">
+        <div class="callout">The underground temperature stays around <strong>23&ndash;25&deg;C</strong> year-round, regardless of what's happening on the surface.</div>
+      </div>
+    </div>
+    <div class="col-r">
+      <div class="reveal" id="s4-img" style="flex:1; min-height:0; border-radius:4px; overflow:hidden; border:1px solid rgba(255,255,255,0.1);">
+        <img src="https://content.api.news/v3/images/bin/1ccba32941ad9dafc0ba102ac142e370"
+          alt="Coober Pedy dugout building" style="width:100%; height:100%; object-fit:cover; display:block;">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── s5: VIDEO — UNDERGROUND TOWN ──────────────────────── -->
+<div class="scene" id="s5">
+  <div class="scene-title">Watch <span class="hl">this.</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="two-col" style="flex:1; min-height:0;">
+    <div class="col-l" style="justify-content:flex-start; gap:14px;">
+      <div class="reveal" id="s5-ctx" style="font-size:clamp(0.85rem,1.5vw,1rem); color:rgba(255,255,255,0.8); line-height:1.6;">
+        <em>The town where people live underground: Welcome to Coober Pedy</em>
+      </div>
+      <div class="reveal" id="s5-q">
+        <div class="callout">
+          <strong>Focus question:</strong> What specific design decisions do you notice that help manage the heat?
+        </div>
+      </div>
+    </div>
+    <div class="col-r">
+      <div class="reveal" id="s5-vid" style="width:100%;">
+        <a class="yt-btn" href="https://www.youtube.com/watch?v=uFA-OB-nJ_I" target="_blank">
+          <svg viewBox="0 0 24 24" fill="#ff0000"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8z"/><polygon fill="#fff" points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
+          The town where people live underground: Welcome to Coober Pedy
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── s6: PASSIVE COOLING DEFINITION ────────────────────── -->
+<div class="scene" id="s6">
+  <div class="checks">
+    <img src="checksforunderstanding/silentsolo.png" alt="Silent Solo">
+  </div>
+  <div class="scene-title">Passive <span class="hl">Cooling</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s6-def">
+    <div class="def-card">
+      <div class="def-label">Definition</div>
+      <div class="def-body" style="font-size:clamp(0.9rem,1.6vw,1.1rem);">
+        <strong>Passive cooling</strong> is a sustainable architectural design approach that uses natural energy sources (wind, sun, and water) to lower indoor temperatures <strong>without mechanical air conditioning</strong>.
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal" id="s6-tm">
+    <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+      <div class="def-label">Example: Thermal Mass</div>
+      <div class="def-body">
+        One example of passive cooling is through the use of <strong>thermal mass</strong>. This uses materials like sandstone to absorb heat during the day and then release it slowly during the night.
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal" id="s6-q" style="margin-top:8px;">
+    <div class="callout">
+      <strong>Cold call:</strong> In your own words, what is the difference between passive cooling and just turning on an air conditioner?
+    </div>
+  </div>
+</div>
+
+
+<!-- ── s7: BRISBANE PASSIVE COOLING ──────────────────────── -->
+<div class="scene" id="s7">
+  <div class="checks">
+    <img src="checksforunderstanding/stopandjot.png" alt="Stop and Jot">
+    <img src="checksforunderstanding/coldcall.png" alt="Cold Call">
+  </div>
+  <div class="scene-title">Passive cooling <span class="hl">in Brisbane</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="two-col" style="flex:1; min-height:0;">
+    <div class="col-l" style="gap:12px; justify-content:flex-start;">
+      <div class="reveal" id="s7-q1">
+        <div class="callout">
+          <strong>Question 1:</strong> What forms of passive cooling can you see in this Brisbane street?
+        </div>
+      </div>
+      <div class="reveal" id="s7-q2">
+        <div class="callout">
+          <strong>Question 2:</strong> What would be working <em>against</em> passive cooling principles in this urban environment?
+        </div>
+      </div>
+      <div class="reveal" id="s7-note" style="font-size:clamp(0.78rem,1.3vw,0.9rem); color:var(--dim); line-height:1.6; margin-top:4px;">
+        The ancient Persians worked out a form of air conditioning over 700 years ago. Newer and more technological does not always mean better.
+      </div>
+    </div>
+    <div class="col-r">
+      <div class="reveal" id="s7-img" style="flex:1; min-height:0; border-radius:4px; overflow:hidden; border:1px solid rgba(255,255,255,0.1);">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Queen_Street_with_443_Queen_Street_in_the_background%2C_Brisbane%2C_May_2023%2C_02.jpg"
+          alt="Queen Street, Brisbane" style="width:100%; height:100%; object-fit:cover; display:block;">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── s8: WINDCATCHERS ───────────────────────────────────── -->
+<div class="scene" id="s8">
+  <div class="scene-title">The Persian <span class="hl">Windcatcher</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s8-intro" style="font-size:clamp(0.85rem,1.5vw,1rem); color:rgba(255,255,255,0.8); line-height:1.6; margin-bottom:10px;">
+    Ancient Persian architects designed <strong>badgir</strong> (windcatchers) over 700 years ago, a form of natural air conditioning. Hot air always rises, so buildings were designed to capture prevailing wind at height and draw it down into the interior. These concepts are still applied in modern construction through the positioning of windows and insulation.
+  </div>
+
+  <div class="two-col" style="flex:1; min-height:0;">
+    <div class="col-l">
+      <div class="reveal" id="s8-img1" style="flex:1; min-height:0; border-radius:4px; overflow:hidden; border:1px solid rgba(255,255,255,0.1);">
+        <img src="https://images.adsttc.com/media/images/6181/6692/f91c/818e/0200/0027/newsletter/MP.-Wind-Catcher-Wind-Towers-Yazd.jpg?1635870343"
+          alt="Wind towers in Yazd, Iran" style="width:100%; height:100%; object-fit:cover; display:block;">
+      </div>
+    </div>
+    <div class="col-r" style="justify-content:center; align-items:center;">
+      <div class="reveal" id="s8-img2" style="width:100%; display:flex; flex-direction:column; align-items:center; gap:10px; padding:10px;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Qanat_wind_tower.svg/250px-Qanat_wind_tower.svg.png"
+          alt="Windcatcher diagram" style="max-height:260px; object-fit:contain; background:rgba(255,255,255,0.9); border-radius:4px; padding:12px;">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── s9: FOCUS ON MATERIALS ────────────────────────────── -->
+<div class="scene" id="s9">
+  <div class="checks">
+    <img src="checksforunderstanding/stopandjot.png" alt="Stop and Jot">
+    <img src="checksforunderstanding/coldcall.png" alt="Cold Call">
+  </div>
+  <div class="scene-title">A Focus on <span class="hl">Materials</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s9-t1" style="font-size:clamp(0.85rem,1.5vw,1rem); color:rgba(255,255,255,0.8); line-height:1.7; margin-bottom:10px;">
+    Sometimes architects and civil engineers think about <em>what</em> materials they build with just as much as <em>how</em> they build with them. We know that materials support weight and react to the environment in different ways.
+  </div>
+
+  <div class="reveal" id="s9-task">
+    <div class="callout">
+      <strong>On your whiteboard:</strong> Write down as many building materials as you can think of off the top of your head. You have 90 seconds.
+    </div>
+  </div>
+
+  <div class="reveal" id="s9-followup" style="margin-top:14px;">
+    <div style="font-size:clamp(0.82rem,1.4vw,0.96rem); color:var(--dim); margin-top:8px;">Share out and let's build a class list.</div>
+  </div>
+</div>
+
+
+<!-- ── s10: 6 CRITERIA DEFINITIONS ───────────────────────── -->
+<div class="scene" id="s10">
+  <div class="checks">
+    <img src="checksforunderstanding/silentsolo.png" alt="Silent Solo">
+    <img src="checksforunderstanding/choralreading.png" alt="Choral Reading">
+  </div>
+  <div class="scene-title">Six Evaluation <span class="hl">Criteria</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s10-intro" style="font-size:clamp(0.8rem,1.4vw,0.92rem); color:var(--dim); margin-bottom:8px;">
+    You are not expected to memorise these, but we will keep coming back to them. Selecting materials is often a <strong style="color:white;">balancing act</strong> across all six.
+  </div>
+
+  <div class="crit-grid">
+    <div class="crit-card reveal" id="s10-c1">
+      <div class="crit-term">1. Thermal Mass</div>
+      <div class="crit-def">A material's ability to absorb, store, and slowly release heat.</div>
+    </div>
+    <div class="crit-card reveal" id="s10-c2">
+      <div class="crit-term">2. Insulation</div>
+      <div class="crit-def">A material's resistance to heat transfer.</div>
+    </div>
+    <div class="crit-card reveal" id="s10-c3">
+      <div class="crit-term">3. Embodied Carbon</div>
+      <div class="crit-def">The emissions produced in making and transporting a material.</div>
+    </div>
+    <div class="crit-card reveal" id="s10-c4">
+      <div class="crit-term">4. Durability</div>
+      <div class="crit-def">How well a material resists wear, weather, and time.</div>
+    </div>
+    <div class="crit-card reveal" id="s10-c5">
+      <div class="crit-term">5. Sustainability</div>
+      <div class="crit-def">Meeting current needs without compromising future ones.</div>
+    </div>
+    <div class="crit-card reveal" id="s10-c6">
+      <div class="crit-term">6. Price</div>
+      <div class="crit-def">How affordably can this be mass produced?</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── s11: HEMPCRETE INTRO + CATEGORY ASSIGN ────────────── -->
+<div class="scene" id="s11">
+  <div class="scene-title">Case Study: <span class="hl">Hempcrete</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="two-col" style="flex:1; min-height:0;">
+    <div class="col-l" style="gap:12px; justify-content:flex-start;">
+      <div class="reveal" id="s11-intro">
+        <div class="def-card">
+          <div class="def-label">What is it?</div>
+          <div class="def-body">Hempcrete is a bio-composite building material made from hemp hurd (the woody inner fibres of the hemp plant), lime, and water. It is lightweight, breathable, and carbon-negative.</div>
+        </div>
+      </div>
+      <div class="reveal" id="s11-assign">
+        <div class="callout">
+          <strong>Before we watch:</strong> you will be assigned one of the 6 criteria to focus on. Take notes on your whiteboard about what the video says about <em>your</em> category.
+        </div>
+      </div>
+      <div class="reveal" id="s11-cats" style="font-size:clamp(0.75rem,1.2vw,0.86rem); color:var(--dim); line-height:2;">
+        Thermal mass &nbsp;&bull;&nbsp; Insulation &nbsp;&bull;&nbsp; Embodied carbon &nbsp;&bull;&nbsp; Durability &nbsp;&bull;&nbsp; Sustainability &nbsp;&bull;&nbsp; Price
+      </div>
+    </div>
+    <div class="col-r">
+      <div class="reveal" id="s11-img" style="flex:1; min-height:0; border-radius:4px; overflow:hidden; border:1px solid rgba(255,255,255,0.1);">
+        <img src="https://2050-materials.com/wp-content/uploads/2023/08/Screen-Shot-2023-07-31-at-2.57.32-PM.png"
+          alt="Hempcrete material" style="width:100%; height:100%; object-fit:cover; display:block;">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── s12: HEMPCRETE VIDEO ───────────────────────────────── -->
+<div class="scene" id="s12">
+  <div class="scene-title">Watch <span class="hl">this.</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="two-col" style="flex:1; min-height:0;">
+    <div class="col-l" style="justify-content:flex-start; gap:14px;">
+      <div class="reveal" id="s12-ctx" style="font-size:clamp(0.85rem,1.5vw,1rem); color:rgba(255,255,255,0.8); line-height:1.6;">
+        <em>Pros and Cons of Hempcrete</em>
+      </div>
+      <div class="reveal" id="s12-remind">
+        <div class="callout">
+          Remember your assigned category. Take notes on your whiteboard.
+        </div>
+      </div>
+      <div class="reveal" id="s12-after" style="font-size:clamp(0.8rem,1.4vw,0.92rem); color:var(--dim); line-height:1.6;">
+        After the video: you will share your category's findings with the class.
+      </div>
+    </div>
+    <div class="col-r">
+      <div class="reveal" id="s12-vid" style="width:100%;">
+        <a class="yt-btn" href="https://www.youtube.com/watch?v=ioBGjbOzDUM" target="_blank">
+          <svg viewBox="0 0 24 24" fill="#ff0000"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8z"/><polygon fill="#fff" points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
+          Pros and Cons of Hempcrete
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── s13: CONCRETE BALANCING ACT ───────────────────────── -->
+<div class="scene" id="s13">
+  <div class="scene-title">The Balancing <span class="hl">Act</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s13-intro" style="font-size:clamp(0.85rem,1.5vw,1rem); color:rgba(255,255,255,0.8); line-height:1.6; margin-bottom:10px;">
+    Every material will be a trade-off. Concrete is a great example of this tension.
+  </div>
+
+  <div class="concept-row">
+    <div class="concept-panel reveal" id="s13-pros">
+      <div class="cp-label">Concrete: Strengths</div>
+      <div class="cp-sub" style="line-height:1.9; color:rgba(255,255,255,0.8);">
+        Exceptionally strong, resisting heavy loads, rot, fire, and termites<br>
+        Excellent thermal mass helps regulate indoor temperatures<br>
+        Reducing heating and cooling costs over the building's life
+      </div>
+    </div>
+
+    <div class="h-arrow reveal" id="s13-arrow">&#8596;</div>
+
+    <div class="concept-panel hi reveal" id="s13-cons">
+      <div class="cp-label" style="color:var(--pink);">Concrete: Limitations</div>
+      <div class="cp-sub" style="line-height:1.9; color:rgba(255,255,255,0.8);">
+        Cement production accounts for roughly <strong style="color:white;">8%</strong> of global CO₂ emissions<br>
+        Consumes approximately <strong style="color:white;">10%</strong> of the world's industrial water<br>
+        Contributes to urban heat island effects and habitat loss
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal" id="s13-note" style="margin-top:14px;">
+    <div class="callout">This is why material scientists keep innovating, always trying to find materials that get closer to satisfying all six criteria.</div>
+  </div>
+</div>
+
+
+<!-- ── s14: HOW DO WE EVALUATE INNOVATION? ───────────────── -->
+<div class="scene" id="s14">
+  <div class="checks">
+    <img src="checksforunderstanding/silentsolo.png" alt="Silent Solo">
+  </div>
+  <div class="scene-title">Evaluating <span class="hl">Innovation</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s14-intro" style="font-size:clamp(0.85rem,1.5vw,1rem); color:var(--dim); margin-bottom:10px;">
+    We can use three questions to analyse how innovative a civil design is. These are not the only questions to ask, but they are quick and reliable to apply.
+  </div>
+
+  <div class="innov-cards">
+    <div class="innov-card reveal" id="s14-q1">
+      <div class="innov-num">1</div>
+      <div>
+        <div class="innov-label">Does it perform better?</div>
+        <div class="innov-sub">Stronger, faster, more resilient</div>
+      </div>
+    </div>
+    <div class="innov-card reveal" id="s14-q2">
+      <div class="innov-num">2</div>
+      <div>
+        <div class="innov-label">Is it more sustainable?</div>
+        <div class="innov-sub">Less waste, lower emissions, longer lifespan</div>
+      </div>
+    </div>
+    <div class="innov-card reveal" id="s14-q3">
+      <div class="innov-num">3</div>
+      <div>
+        <div class="innov-label">Is it more accessible?</div>
+        <div class="innov-sub">Cheaper, faster to build, usable in more places</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal" id="s14-note" style="margin-top:12px;">
+    <div class="callout">Not all three need to be perfectly satisfied, and it is okay to find faults in an innovation. That's part of the analysis.</div>
+  </div>
+</div>
+
+
+<!-- ── s15: FINGER VOTE — COOBER PEDY ────────────────────── -->
+<div class="scene" id="s15">
+  <div class="checks">
+    <img src="checksforunderstanding/fingervote.png" alt="Finger Vote">
+  </div>
+  <div class="scene-title">Apply the <span class="hl">Framework</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s15-intro" style="font-size:clamp(0.85rem,1.5vw,1rem); color:rgba(255,255,255,0.8); line-height:1.6; margin-bottom:12px;">
+    Use the Coober Pedy underground house as a test case. Show fingers for each question: <strong>5 = strongly agree</strong> it satisfies this, <strong>1 = strongly disagree</strong>.
+  </div>
+
+  <div class="two-col" style="flex:1; min-height:0; align-items:flex-start;">
+    <div class="col-l" style="gap:10px;">
+      <div class="innov-card reveal" id="s15-r1">
+        <div class="innov-num">1</div>
+        <div>
+          <div class="innov-label">Does it perform better?</div>
+          <div class="innov-sub">Stronger, faster, more resilient</div>
+        </div>
+      </div>
+      <div class="innov-card reveal" id="s15-r2">
+        <div class="innov-num">2</div>
+        <div>
+          <div class="innov-label">Is it more sustainable?</div>
+          <div class="innov-sub">Less waste, lower emissions, longer lifespan</div>
+        </div>
+      </div>
+      <div class="innov-card reveal" id="s15-r3">
+        <div class="innov-num">3</div>
+        <div>
+          <div class="innov-label">Is it more accessible?</div>
+          <div class="innov-sub">Cheaper, faster to build, usable in more places</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-r">
+      <div class="reveal" id="s15-img" style="flex:1; min-height:0; border-radius:4px; overflow:hidden; border:1px solid rgba(255,255,255,0.1);">
+        <img src="https://content.api.news/v3/images/bin/1ccba32941ad9dafc0ba102ac142e370"
+          alt="Coober Pedy dugout" style="width:100%; height:100%; object-fit:cover; display:block;">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── s16: EARTHSHIP INTRO (Silent Solo) ─────────────────── -->
+<div class="scene" id="s16">
+  <div class="checks">
+    <img src="checksforunderstanding/silentsolo.png" alt="Silent Solo">
+  </div>
+  <div class="scene-title">Case Study: <span class="hl">Earthship</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="two-col" style="flex:1; min-height:0;">
+    <div class="col-l" style="gap:12px; justify-content:flex-start;">
+      <div class="reveal" id="s16-t1">
+        <div class="def-card">
+          <div class="def-label">What is an Earthship?</div>
+          <div class="def-body">Earthships are sustainable, off-grid, passive solar homes built from natural and repurposed materials such as earth-rammed tyres, bottles, and cans. Developed by architect Mike Reynolds, they are designed to be self-sufficient: generating their own power, harvesting water, treating sewage, and often growing food via integrated greenhouses.</div>
+        </div>
+      </div>
+      <div class="reveal" id="s16-limit">
+        <div class="callout">
+          <strong>However, consider Question 3:</strong> Ramming earth into tyres by hand is highly labour-intensive, making them slow and expensive to build. Mike Reynolds has acknowledged that prices are too high and continues to innovate to bring them down.
+        </div>
+      </div>
+    </div>
+    <div class="col-r" style="gap:10px;">
+      <div class="reveal" id="s16-img1" style="flex:1; min-height:0; border-radius:4px; overflow:hidden; border:1px solid rgba(255,255,255,0.1);">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/G2_Global_model_Earthship_Taos_N.M..JPG"
+          alt="Earthship home, Taos New Mexico" style="width:100%; height:100%; object-fit:cover; display:block;">
+      </div>
+      <div class="reveal" id="s16-img2" style="flex:1; min-height:0; border-radius:4px; overflow:hidden; border:1px solid rgba(255,255,255,0.1);">
+        <img src="https://d2pbni5h22hdt0.cloudfront.net/wp-content/uploads/2022/08/11110908/earthship-design-principles-garbage-materials-2.jpeg"
+          alt="Earth-rammed tyre construction" style="width:100%; height:100%; object-fit:cover; display:block;">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── s17: EARTHSHIP VIDEO ───────────────────────────────── -->
+<div class="scene" id="s17">
+  <div class="scene-title">Watch <span class="hl">this.</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="two-col" style="flex:1; min-height:0;">
+    <div class="col-l" style="justify-content:flex-start; gap:14px;">
+      <div class="reveal" id="s17-ctx" style="font-size:clamp(0.85rem,1.5vw,1rem); color:rgba(255,255,255,0.8); line-height:1.6;">
+        <em>Tiny Earthship Style Cabin Built with Recycled Tyres &amp; Green Roof</em>
+      </div>
+      <div class="reveal" id="s17-q">
+        <div class="callout">
+          <strong>As you watch:</strong> identify which of the three innovation questions this design satisfies well, and where you think it falls short.
+        </div>
+      </div>
+      <div class="reveal" id="s17-curious" style="font-size:clamp(0.78rem,1.3vw,0.88rem); color:var(--dim); line-height:1.6;">
+        The Earthship movement is growing globally, and there are some remarkable designs in documentaries if you're curious.
+      </div>
+    </div>
+    <div class="col-r">
+      <div class="reveal" id="s17-vid" style="width:100%;">
+        <a class="yt-btn" href="https://www.youtube.com/watch?v=HUxsh0a7ypE" target="_blank">
+          <svg viewBox="0 0 24 24" fill="#ff0000"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8z"/><polygon fill="#fff" points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
+          Tiny Earthship Style Cabin Built with Recycled Tyres &amp; Green Roof
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── s18: YOUR TURN — ACCESS STILE ─────────────────────── -->
+<div class="scene" id="s18" style="align-items:center; justify-content:center; text-align:center;">
+  <div class="eyebrow" style="text-align:center; align-self:center;">Your Turn</div>
+  <div class="scene-title" style="font-size:clamp(2rem,5vw,3.8rem);">Access <span class="hl">Stile</span></div>
+  <div class="scene-rule" style="align-self:center;"></div>
+
+  <div class="reveal" id="s18-task" style="max-width:600px; align-self:center;">
+    <div class="def-card" style="text-align:left; margin-top:8px;">
+      <div class="def-label">Your Task</div>
+      <div class="def-body" style="font-size:clamp(0.9rem,1.7vw,1.1rem); line-height:1.7;">
+        Research and create a <strong>one-page poster</strong> about an innovative approach to civil structures: a process of building, a material, or both. Apply the three-question framework in your analysis.
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal" id="s18-hint" style="max-width:600px; align-self:center; margin-top:8px;">
+    <div class="callout" style="text-align:left;">
+      Use Canva, Word, or another program. Include visual elements and catchy statistics. Starting points are listed in Stile.
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     SCENES ARRAY
+     ══════════════════════════════════════════════════════════ -->
+<script src="presentation.js"></script>
+<script>
+const SCENES = [
+
+  { id:'s0', steps:[
+    () => vis('s0-sub'),
+  ]},
+
+  { id:'s1', steps:[
+    () => vis('s1-intro'),
+    () => vis('s1-q1'),
+    () => vis('s1-a1'),
+    () => vis('s1-q2'),
+    () => vis('s1-a2'),
+  ]},
+
+  { id:'s2', steps:[
+    () => vis('s2-instr'),
+    () => vis('s2-instr2'),
+    () => vis('s2-img'),
+    () => vis('s2-prompt'),
+  ]},
+
+  { id:'s3', steps:[
+    () => vis('s3-t1'),
+    () => vis('s3-img'),
+    () => vis('s3-t2'),
+    () => vis('s3-q'),
+    () => vis('s3-ans'),
+  ]},
+
+  { id:'s4', steps:[
+    () => vis('s4-img'),
+    () => vis('s4-t1'),
+    () => vis('s4-t2'),
+    () => vis('s4-t3'),
+  ]},
+
+  { id:'s5', steps:[
+    () => vis('s5-ctx'),
+    () => vis('s5-q'),
+    () => vis('s5-vid'),
+  ]},
+
+  { id:'s6', steps:[
+    () => vis('s6-def'),
+    () => vis('s6-tm'),
+    () => vis('s6-q'),
+  ]},
+
+  { id:'s7', steps:[
+    () => vis('s7-img'),
+    () => vis('s7-q1'),
+    () => vis('s7-q2'),
+    () => vis('s7-note'),
+  ]},
+
+  { id:'s8', steps:[
+    () => vis('s8-intro'),
+    () => vis('s8-img1'),
+    () => vis('s8-img2'),
+  ]},
+
+  { id:'s9', steps:[
+    () => vis('s9-t1'),
+    () => vis('s9-task'),
+    () => vis('s9-followup'),
+  ]},
+
+  { id:'s10', steps:[
+    () => vis('s10-intro'),
+    () => vis('s10-c1'),
+    () => vis('s10-c2'),
+    () => vis('s10-c3'),
+    () => vis('s10-c4'),
+    () => vis('s10-c5'),
+    () => vis('s10-c6'),
+  ]},
+
+  { id:'s11', steps:[
+    () => vis('s11-img'),
+    () => vis('s11-intro'),
+    () => vis('s11-assign'),
+    () => vis('s11-cats'),
+  ]},
+
+  { id:'s12', steps:[
+    () => vis('s12-ctx'),
+    () => vis('s12-remind'),
+    () => vis('s12-vid'),
+    () => vis('s12-after'),
+  ]},
+
+  { id:'s13', steps:[
+    () => vis('s13-intro'),
+    () => vis('s13-pros'),
+    () => vis('s13-arrow'),
+    () => vis('s13-cons'),
+    () => vis('s13-note'),
+  ]},
+
+  { id:'s14', steps:[
+    () => vis('s14-intro'),
+    () => vis('s14-q1'),
+    () => vis('s14-q2'),
+    () => vis('s14-q3'),
+    () => vis('s14-note'),
+  ]},
+
+  { id:'s15', steps:[
+    () => vis('s15-intro'),
+    () => vis('s15-img'),
+    () => vis('s15-r1'),
+    () => vis('s15-r2'),
+    () => vis('s15-r3'),
+  ]},
+
+  { id:'s16', steps:[
+    () => vis('s16-img1'),
+    () => vis('s16-img2'),
+    () => vis('s16-t1'),
+    () => vis('s16-limit'),
+  ]},
+
+  { id:'s17', steps:[
+    () => vis('s17-ctx'),
+    () => vis('s17-q'),
+    () => vis('s17-vid'),
+    () => vis('s17-curious'),
+  ]},
+
+  { id:'s18', steps:[
+    () => vis('s18-task'),
+    () => vis('s18-hint'),
+  ]},
+
+];
+
+initPresentation(SCENES);
+</script>
+</body>
+</html>

@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Why Computers Use Binary</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="presentation.css">
+
+<style>
+/* ── Light switch animation ─────────────────────────────── */
+.switch-demo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  padding: 20px;
+}
+.switch-container {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+.bulb-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.bulb {
+  width: 64px;
+  height: 80px;
+  position: relative;
+}
+.bulb svg { width: 100%; height: 100%; }
+.bulb-label {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--dim);
+  text-align: center;
+}
+.bulb-state {
+  font-weight: 900;
+  font-size: 1.1rem;
+  font-family: var(--mono);
+  color: rgba(255,255,255,0.3);
+  transition: color 0.4s ease;
+}
+.bulb-state.on { color: #fbbf24; }
+
+.switch-toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.switch-body {
+  width: 28px;
+  height: 72px;
+  background: var(--navy2);
+  border: 2px solid rgba(255,255,255,0.15);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s ease;
+}
+.switch-body.on { border-color: rgba(235,0,139,0.5); }
+.switch-knob {
+  position: absolute;
+  left: 3px; right: 3px;
+  height: 28px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 2px;
+  transition: top 0.35s cubic-bezier(0.34,1.56,0.64,1), background 0.3s ease;
+  top: 40px;
+}
+.switch-knob.on {
+  top: 4px;
+  background: var(--pink);
+}
+.switch-label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.circuit-line {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+.wire {
+  height: 3px;
+  width: 60px;
+  background: rgba(255,255,255,0.12);
+  position: relative;
+  overflow: hidden;
+  border-radius: 2px;
+}
+.wire-flow {
+  position: absolute;
+  top: 0; bottom: 0; left: -100%;
+  width: 100%;
+  background: linear-gradient(90deg, transparent, rgba(251,191,36,0.8), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.wire-flow.active {
+  opacity: 1;
+  animation: flow 0.8s linear infinite;
+}
+@keyframes flow {
+  from { left: -100%; }
+  to   { left: 100%; }
+}
+.bit-badge {
+  font-family: var(--mono);
+  font-weight: 900;
+  font-size: 2.2rem;
+  color: rgba(255,255,255,0.15);
+  transition: color 0.4s ease;
+  min-width: 50px;
+  text-align: center;
+}
+.bit-badge.on { color: var(--pink); }
+
+.click-hint {
+  font-size: 0.7rem;
+  color: var(--dim);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-family: var(--mono);
+}
+
+/* ── Signal wobble canvas ───────────────────────────────── */
+.wobble-scene {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  min-height: 0;
+}
+.wobble-panels {
+  display: flex;
+  gap: 16px;
+  flex: 1;
+  min-height: 0;
+}
+.wobble-panel {
+  flex: 1;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 4px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+}
+.wobble-panel.danger { border-color: rgba(255,80,80,0.25); }
+.wobble-panel.safe   { border-color: rgba(76,218,100,0.25); }
+.wp-title {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.wp-title .danger-label { color: #f87171; }
+.wp-title .safe-label   { color: #4cda64; }
+.wobble-canvas {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  display: block;
+  border-radius: 2px;
+}
+.wobble-verdict {
+  font-size: clamp(0.7rem,1.1vw,0.82rem);
+  line-height: 1.4;
+  min-height: 36px;
+  font-family: var(--mono);
+}
+.wobble-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.wobble-btn {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: white;
+  padding: 7px 18px;
+  border-radius: 3px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 0.06em;
+}
+.wobble-btn:hover { background: rgba(235,0,139,0.15); border-color: rgba(235,0,139,0.3); }
+.wobble-btn.active { background: var(--pink); border-color: var(--pink); }
+.noise-label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--dim);
+}
+
+/* ── Speed counter ──────────────────────────────────────── */
+.speed-stat {
+  text-align: center;
+  padding: 18px;
+}
+.speed-num {
+  font-weight: 900;
+  font-size: clamp(2.8rem,6vw,5rem);
+  color: var(--pink);
+  font-family: var(--mono);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+.speed-unit {
+  font-size: clamp(0.8rem,1.5vw,1.1rem);
+  color: var(--dim);
+  margin-top: 4px;
+}
+
+/* ── Binary vocab display ───────────────────────────────── */
+.binary-def-row {
+  display: flex;
+  gap: 14px;
+  align-items: stretch;
+}
+.bd-cell {
+  flex: 1;
+  background: var(--navy2);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 4px;
+  padding: 18px;
+  text-align: center;
+}
+.bd-digit {
+  font-family: var(--mono);
+  font-weight: 900;
+  font-size: clamp(2.5rem,5vw,4rem);
+  line-height: 1;
+}
+.bd-cell.zero .bd-digit { color: rgba(255,255,255,0.3); }
+.bd-cell.one  .bd-digit { color: var(--pink); }
+.bd-word {
+  font-weight: 900;
+  font-size: clamp(0.9rem,1.5vw,1.1rem);
+  margin: 8px 0 4px;
+}
+.bd-meaning {
+  font-size: clamp(0.72rem,1.2vw,0.85rem);
+  color: var(--dim);
+  line-height: 1.5;
+}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+
+<!-- ── s0: TITLE ────────────────────────────────────────── -->
+<div class="scene" id="s0" style="align-items:center; justify-content:center; text-align:center;">
+  <div class="eyebrow" style="text-align:center; align-self:center;">Digital Systems &mdash; Year 9 Computing</div>
+  <div class="scene-title" style="font-size:clamp(2.4rem,6vw,4.5rem);">Why do computers<br>use <span class="hl">Binary?</span></div>
+  <div class="scene-rule" style="align-self:center;"></div>
+  <div class="reveal" id="s0-sub" style="font-size:clamp(0.9rem,1.8vw,1.2rem); color:var(--dim); max-width:520px; line-height:1.7;">
+    A computer is not magic. It is a machine made of wires and electricity.<br>
+    Today we find out what that actually means.
+  </div>
+</div>
+
+
+<!-- ── s1: LEARNING INTENTION ───────────────────────────── -->
+<div class="scene" id="s1">
+  <div class="eyebrow">Learning Intention</div>
+  <div class="scene-title">What are we learning <span class="hl">today?</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s1-li">
+    <div class="def-card">
+      <div class="def-label">Learning Intention</div>
+      <div class="def-body">Understand why computers use a binary (Base-2) number system, and connect that to the physical behaviour of electrical circuits and transistors.</div>
+    </div>
+  </div>
+
+  <div class="reveal" id="s1-sc" style="margin-top:10px;">
+    <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+      <div class="def-label">Success Criteria</div>
+      <div class="def-body" style="display:flex; flex-direction:column; gap:7px;">
+        <div class="reveal" id="s1-sc1" style="color:var(--pink);">I can name the two digits in binary and explain what each represents in a circuit.</div>
+        <div class="reveal" id="s1-sc2" style="color:var(--pink);">I can explain why two states are more reliable than ten for reading electrical signals.</div>
+        <div class="reveal" id="s1-sc3" style="color:var(--pink);">I can connect the behaviour of a transistor to why computers use binary at a hardware level.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── s2: WHAT IS BINARY? ──────────────────────────────── -->
+<div class="scene" id="s2">
+  <div class="checks">
+    <img src="checksforunderstanding/silentsolo.png" alt="Silent Solo">
+    <img src="checksforunderstanding/choralreading.png" alt="Choral Reading">
+  </div>
+  <div class="scene-title">Section 1 &mdash; What is <span class="hl">Binary?</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="two-col" style="flex:1; min-height:0;">
+    <div class="col-l" style="gap:12px;">
+      <div class="reveal" id="s2-humans">
+        <div class="def-card">
+          <div class="def-label">Humans &mdash; Base 10</div>
+          <div class="def-body">We use the digits 0&ndash;9. Ten digits, ten fingers. This system is called <strong>Decimal</strong>.</div>
+        </div>
+      </div>
+      <div class="reveal" id="s2-computers">
+        <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+          <div class="def-label">Computers &mdash; Base 2</div>
+          <div class="def-body">Computers only use <strong>two digits</strong>: <span class="mono-pink">0</span> and <span class="mono-pink">1</span>. This system is called <strong>Binary</strong>. A single binary digit is called a <strong>bit</strong>.</div>
+        </div>
+      </div>
+      <div class="reveal" id="s2-everything">
+        <div class="callout"><strong>Everything</strong> on a computer &mdash; images, videos, games, documents &mdash; is stored as a string of 0s and 1s.</div>
+      </div>
+    </div>
+
+    <div class="col-r" style="gap:12px; justify-content:center;">
+      <div class="reveal" id="s2-digits">
+        <div class="binary-def-row">
+          <div class="bd-cell zero">
+            <div class="bd-digit">0</div>
+            <div class="bd-word">Zero</div>
+            <div class="bd-meaning">Means <strong>"Off"</strong><br>or <strong>"False"</strong></div>
+          </div>
+          <div class="bd-cell one">
+            <div class="bd-digit">1</div>
+            <div class="bd-word">One</div>
+            <div class="bd-meaning">Means <strong>"On"</strong><br>or <strong>"True"</strong></div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal" id="s2-callout" style="margin-top:8px;">
+        <div class="callout"><strong>One bit</strong> is the smallest possible piece of information a computer can store.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── s3: TRANSISTORS (Sketchfab + YouTube) ────────────── -->
+<div class="scene" id="s3">
+  <div class="header-row">
+    <div>
+      <div class="eyebrow">Section 2 &mdash; The Hardware</div>
+      <div class="scene-title">Meet the <span class="hl">Transistor</span></div>
+    </div>
+  </div>
+  <div class="scene-rule"></div>
+
+  <div class="two-col" style="flex:1; min-height:0;">
+    <div class="col-l" style="gap:12px; justify-content:flex-start;">
+      <div class="reveal" id="s3-def">
+        <div class="def-card">
+          <div class="def-label">What is a Transistor?</div>
+          <div class="def-body">A transistor is a <strong>microscopic switch</strong>. Modern computer chips pack <strong>billions</strong> of them onto a chip smaller than your fingernail.</div>
+        </div>
+      </div>
+      <div class="reveal" id="s3-states">
+        <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+          <div class="def-label">Two and only two states</div>
+          <div class="def-body">Like any switch, a transistor can only ever be in <strong>one of two states</strong> at any moment:<br><br>
+            <span class="mono-pink">ON</span> &nbsp;— electricity is flowing<br>
+            <span class="mono-pink">OFF</span> &nbsp;— no electricity is flowing
+          </div>
+        </div>
+      </div>
+      <div class="reveal" id="s3-yt">
+        <a class="yt-btn" href="https://www.youtube.com/watch?v=Jh9pFp1oM7E" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.54 6.42C22.4212 5.94541 22.1793 5.51057 21.8387 5.15941C21.498 4.80824 21.0708 4.55318 20.6 4.42C18.88 4 12 4 12 4C12 4 5.12 4 3.4 4.46C2.92925 4.59318 2.50198 4.84824 2.16135 5.19941C1.82072 5.55057 1.57879 5.98541 1.46 6.46C1.14521 8.20556 0.991235 9.97631 1 11.75C0.988787 13.537 1.14277 15.3213 1.46 17.08C1.59096 17.5398 1.83831 17.9581 2.17814 18.2945C2.51798 18.6308 2.93882 18.8738 3.4 19C5.12 19.46 12 19.46 12 19.46C12 19.46 18.88 19.46 20.6 19C21.0708 18.8668 21.498 18.6118 21.8387 18.2606C22.1793 17.9094 22.4212 17.4746 22.54 17C22.8524 15.2676 23.0063 13.5103 23 11.75C23.0112 9.96295 22.8573 8.1787 22.54 6.42Z" fill="#FF0000"/>
+            <path d="M9.75 15.02L15.5 11.75L9.75 8.48V15.02Z" fill="white"/>
+          </svg>
+          Just How Small Are Transistors?
+        </a>
+      </div>
+    </div>
+
+    <div class="col-r" style="gap:6px;">
+      <div class="reveal" id="s3-3d" style="flex:1; min-height:0; display:flex; flex-direction:column;">
+        <div class="sketchfab-wrap" style="flex:1;">
+          <iframe title="Transistor" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/01a3df69401246e2b13cc03d37064333/embed"></iframe>
+        </div>
+        <div class="sketchfab-credit">
+          <a href="https://sketchfab.com/3d-models/transistor-01a3df69401246e2b13cc03d37064333" target="_blank" rel="nofollow">Transistor</a> by <a href="https://sketchfab.com/plutonium.software" target="_blank" rel="nofollow">Plutonium.software</a> on Sketchfab
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── s4: HOW CIRCUITS WORK (interactive switch) ────────── -->
+<div class="scene" id="s4">
+  <div class="checks">
+    <img src="checksforunderstanding/coldcall.png" alt="Cold Call">
+  </div>
+  <div class="scene-title">Section 2 &mdash; How <span class="hl">Circuits</span> Work</div>
+  <div class="scene-rule"></div>
+
+  <div class="two-col" style="flex:1; min-height:0; align-items:flex-start;">
+    <div class="col-l" style="gap:12px;">
+      <div class="reveal" id="s4-explain">
+        <div class="def-card">
+          <div class="def-label">The Classroom Switch Analogy</div>
+          <div class="def-body">A transistor works exactly like the light switch on your classroom wall. It is either letting electricity <strong>flow</strong> (ON) or <strong>blocking</strong> it (OFF). There is no in-between.</div>
+        </div>
+      </div>
+      <div class="reveal" id="s4-link">
+        <div class="callout">A circuit can only ever be in <strong>one of two states</strong> &mdash; and those two states map perfectly onto <strong>binary 1 and 0</strong>.</div>
+      </div>
+      <div class="reveal" id="s4-cq" style="margin-top:8px;">
+        <div style="font-family:var(--mono); font-size:0.7rem; color:var(--pink); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:6px;">Cold Call &rarr;</div>
+        <div style="font-size:clamp(0.85rem,1.4vw,1rem); color:rgba(255,255,255,0.85); line-height:1.6;">
+          If a transistor is <span class="mono-pink">ON</span>, what binary digit does it represent?<br>
+          What about when it is <span class="mono-pink">OFF</span>?
+        </div>
+      </div>
+    </div>
+
+    <div class="col-r" style="justify-content:center; align-items:center;">
+      <div class="reveal" id="s4-switch" style="width:100%;">
+        <!-- Interactive switch demo -->
+        <div class="switch-demo" id="switchDemo">
+          <div style="font-family:var(--mono); font-size:0.62rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--dim);">Click the switch</div>
+          <div class="switch-container">
+            <div class="bulb-wrap">
+              <svg viewBox="0 0 64 80" width="64" height="80" id="bulbSvg">
+                <!-- Glow -->
+                <ellipse id="bulbGlow" cx="32" cy="30" rx="28" ry="28" fill="rgba(251,191,36,0)" style="transition:fill 0.4s ease"/>
+                <!-- Bulb glass -->
+                <ellipse cx="32" cy="28" rx="22" ry="22" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
+                <!-- Filament -->
+                <path d="M26 34 Q28 26 32 28 Q36 30 38 34" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2" id="filament" style="transition:stroke 0.4s ease"/>
+                <!-- Base -->
+                <rect x="23" y="48" width="18" height="6" rx="1" fill="rgba(255,255,255,0.12)"/>
+                <rect x="25" y="54" width="14" height="4" rx="1" fill="rgba(255,255,255,0.08)"/>
+                <rect x="27" y="58" width="10" height="12" rx="1" fill="rgba(255,255,255,0.1)"/>
+              </svg>
+              <div class="bulb-state" id="bulbState">0</div>
+              <div class="bulb-label">Binary Digit</div>
+            </div>
+
+            <div class="wire" id="wireLeft"><div class="wire-flow" id="flowLeft"></div></div>
+
+            <div class="switch-toggle" id="switchToggle" onclick="event.stopPropagation(); toggleSwitch()">
+              <div class="switch-body" id="switchBody">
+                <div class="switch-knob" id="switchKnob"></div>
+              </div>
+              <div class="switch-label" id="switchLbl">OFF</div>
+            </div>
+
+            <div class="wire" id="wireRight"><div class="wire-flow" id="flowRight"></div></div>
+
+            <div class="bit-badge" id="bitBadge">0</div>
+          </div>
+          <div style="font-size:0.7rem; color:var(--dim); font-family:var(--mono); text-align:center;" id="circuitStatus">No electricity flowing</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── s5: THE RELIABILITY PROBLEM (wobble visualiser) ─── -->
+<div class="scene" id="s5">
+  <div class="eyebrow">Section 3 &mdash; The Core Insight</div>
+  <div class="scene-title">The <span class="hl">Reliability</span> Problem</div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s5-intro" style="font-size:clamp(0.82rem,1.4vw,0.95rem); color:rgba(255,255,255,0.75); margin-bottom:10px; line-height:1.6;">
+    Electricity is <strong style="color:white;">"wobbly."</strong> Heat and interference cause signals to fluctuate &mdash; called <span class="mono-pink">noise</span>. The visualiser below shows what happens when you read a noisy signal in each system.
+  </div>
+
+  <div class="wobble-scene reveal" id="s5-viz">
+    <div class="wobble-controls">
+      <div class="noise-label">Noise level:</div>
+      <button class="wobble-btn active" id="btnLow"  onclick="event.stopPropagation(); setNoise('low')">Low</button>
+      <button class="wobble-btn"        id="btnMed"  onclick="event.stopPropagation(); setNoise('med')">Medium</button>
+      <button class="wobble-btn"        id="btnHigh" onclick="event.stopPropagation(); setNoise('high')">High</button>
+      <div style="flex:1;"></div>
+      <div style="font-family:var(--mono); font-size:0.62rem; color:var(--dim);">Errors detected: <span id="errorCount" style="color:var(--pink); font-weight:700;">0</span></div>
+    </div>
+
+    <div class="wobble-panels" onclick="event.stopPropagation()">
+      <!-- Decimal panel -->
+      <div class="wobble-panel danger">
+        <div class="wp-title"><span class="danger-label">&#9888; Decimal (Base 10)</span> &mdash; 10 target zones</div>
+        <canvas class="wobble-canvas" id="decimalCanvas"></canvas>
+        <div class="wobble-verdict" id="decimalVerdict" style="color:#f87171;"></div>
+      </div>
+      <!-- Binary panel -->
+      <div class="wobble-panel safe">
+        <div class="wp-title"><span class="safe-label">&#10003; Binary (Base 2)</span> &mdash; 2 target zones</div>
+        <canvas class="wobble-canvas" id="binaryCanvas"></canvas>
+        <div class="wobble-verdict" id="binaryVerdict" style="color:#4cda64;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal" id="s5-conclusion" style="margin-top:8px;">
+    <div class="callout"><strong>The margin of safety</strong> is enormous in binary. Two zones means the gap between ON and OFF is massive &mdash; even a very noisy signal is read correctly.</div>
+  </div>
+</div>
+
+
+<!-- ── s6: WHY BINARY WINS (comparison) ─────────────────── -->
+<div class="scene" id="s6">
+  <div class="eyebrow">Section 3 &mdash; The Conclusion</div>
+  <div class="scene-title">Why Binary <span class="hl">wins</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s6-body" style="font-size:clamp(0.85rem,1.4vw,1rem); color:rgba(255,255,255,0.75); margin-bottom:6px; line-height:1.6;">
+    Detecting which state a signal is in requires the computer to make a decision. The fewer options there are, the harder it is to get it wrong.
+  </div>
+
+  <div class="concept-row">
+    <div class="concept-panel reveal" id="s6-decimal">
+      <div class="cp-label">Decimal (Base 10)</div>
+      <div class="cp-main" style="color:rgba(255,255,255,0.4);">10 Targets</div>
+      <div style="width:100%; height:1px; background:rgba(255,255,255,0.1); margin:10px 0;"></div>
+      <div class="cp-sub">Each zone is narrow. A small wobble in voltage can make a <strong style="color:#f87171;">7</strong> look like an <strong style="color:#f87171;">8</strong>. This is a read error.</div>
+    </div>
+
+    <div class="h-arrow reveal" id="s6-arrow">&#8594;</div>
+
+    <div class="concept-panel hi reveal" id="s6-binary">
+      <div class="cp-label" style="color:var(--pink);">Binary (Base 2)</div>
+      <div class="cp-main" style="color:var(--pink);">2 Targets</div>
+      <div style="width:100%; height:1px; background:rgba(235,0,139,0.2); margin:10px 0;"></div>
+      <div class="cp-sub">Each zone is <strong style="color:white;">huge</strong>. The signal can wobble a lot and still be clearly read as <span class="mono-pink">1</span> or <span class="mono-pink">0</span>. No errors.</div>
+    </div>
+  </div>
+
+  <div class="reveal" id="s6-callout" style="margin-top:14px;">
+    <div class="callout"><strong>Using Binary creates a massive safety margin</strong> between ON and OFF &mdash; this is what makes computers reliable enough to run billions of operations without mistakes.</div>
+  </div>
+</div>
+
+
+<!-- ── s7: THE NEED FOR SPEED ────────────────────────────── -->
+<div class="scene" id="s7">
+  <div class="eyebrow">Section 4 &mdash; Speed</div>
+  <div class="scene-title">The Need for <span class="hl">Speed</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s7-intro" style="font-size:clamp(0.85rem,1.4vw,1rem); color:rgba(255,255,255,0.8); margin-bottom:10px; line-height:1.6;">
+    Because the decision is so simple &mdash; <span class="mono-pink">ON</span> or <span class="mono-pink">OFF</span> &mdash; computers can make it at extraordinary speed.
+  </div>
+
+  <div class="three-col">
+    <div class="tcol reveal" id="s7-c1">
+      <div class="def-card" style="text-align:center;">
+        <div class="def-label">Switching speed</div>
+        <div class="speed-stat">
+          <div class="speed-num" id="switchCount">0</div>
+          <div class="speed-unit">billion times / second</div>
+        </div>
+        <div class="def-body" style="font-size:0.78rem;">Modern transistors switch ON and OFF billions of times every second.</div>
+      </div>
+    </div>
+    <div class="tcol reveal" id="s7-c2">
+      <div class="def-card" style="text-align:center;">
+        <div class="def-label">Signal speed</div>
+        <div class="speed-stat">
+          <div class="speed-num">&asymp;c</div>
+          <div class="speed-unit">speed of light</div>
+        </div>
+        <div class="def-body" style="font-size:0.78rem;">Electrical signals inside a computer travel at nearly the speed of light.</div>
+      </div>
+    </div>
+    <div class="tcol reveal" id="s7-c3">
+      <div class="def-card">
+        <div class="def-label">Why this matters</div>
+        <div class="def-body">Because the computer doesn't have to ask <em>"Is this a 7 or an 8?"</em> &mdash; it only has to ask <span class="mono-pink">"ON or OFF?"</span> &mdash; it can process data without double-checking. Speed and accuracy at once.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── s8: SYNTHESIS CHECK ────────────────────────────────── -->
+<div class="scene" id="s8">
+  <div class="checks">
+    <img src="checksforunderstanding/stopandjot.png" alt="Stop and Jot">
+    <img src="checksforunderstanding/coldcall.png" alt="Cold Call">
+  </div>
+  <div class="scene-title">Synthesis <span class="hl">Check</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s8-instr" style="font-style:italic; color:var(--dim); font-size:clamp(0.8rem,1.3vw,0.92rem); margin-bottom:14px;">
+    On your whiteboard: answer each question. You have 3 minutes. Chin your board when done.
+  </div>
+
+  <div class="q-cards">
+    <div class="q-card reveal" id="s8-q1">
+      <div class="q-card-lbl">Question 1</div>
+      <div class="q-card-text">Name the <strong>two states</strong> of a circuit. Which binary digit matches each?</div>
+    </div>
+    <div class="q-card reveal" id="s8-q2">
+      <div class="q-card-lbl">Question 2</div>
+      <div class="q-card-text">Why are <strong>two states safer</strong> than ten for reading an electrical signal?</div>
+    </div>
+    <div class="q-card reveal" id="s8-q3">
+      <div class="q-card-lbl">Question 3</div>
+      <div class="q-card-text">How does binary make computers both <strong>reliable</strong> <em>and</em> <strong>fast</strong>? Use both ideas in your answer.</div>
+    </div>
+  </div>
+
+  <div class="bottom-bar reveal" id="s8-bottom">
+    <div class="bottom-bar-text">Use your info sheet to check your answers before we cold call.</div>
+  </div>
+</div>
+
+
+<!-- ── s9: CONFIDENCE CHECK ──────────────────────────────── -->
+<div class="scene" id="s9" style="align-items:center;">
+  <div class="checks" style="align-self:flex-start;">
+    <img src="checksforunderstanding/fingervote.png" alt="Finger Vote">
+  </div>
+  <div class="scene-title" style="align-self:center; text-align:center;">How <span class="hl">confident</span> are you?</div>
+  <div class="scene-rule" style="align-self:center;"></div>
+
+  <div style="display:flex; flex-direction:column; align-items:center; gap:12px; width:100%;">
+    <div class="reveal" id="s9-prompt" style="font-size:clamp(0.85rem,1.5vw,1.05rem); color:rgba(255,255,255,0.8); text-align:center;">
+      Show me on five fingers &mdash; how confident are you that you can explain <span class="mono-pink">why computers use binary?</span>
+    </div>
+
+    <div class="conf-scale">
+      <div class="conf-item" id="ci1"><div class="conf-num">1</div><div class="conf-lbl">Not sure at all</div></div>
+      <div class="conf-item" id="ci2"><div class="conf-num">2</div><div class="conf-lbl">I need more time</div></div>
+      <div class="conf-item" id="ci3"><div class="conf-num">3</div><div class="conf-lbl">Getting there</div></div>
+      <div class="conf-item" id="ci4"><div class="conf-num">4</div><div class="conf-lbl">Fairly confident</div></div>
+      <div class="conf-item hi" id="ci5"><div class="conf-num">5</div><div class="conf-lbl">I could teach it</div></div>
+    </div>
+
+    <div class="callout reveal" id="s9-note" style="border-left:none; border-top:3px solid var(--pink); border-radius:3px; text-align:center; max-width:640px;">
+      If you're showing <strong>1&ndash;2 fingers</strong> &mdash; re-read Section 3 of your info sheet and we'll review the wobble demo together.
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════
+     INTERACTIVE SCRIPTS
+     ════════════════════════════════════════════════════════ -->
+
+<!-- Switch toggle -->
+<script>
+let switchOn = false;
+
+function toggleSwitch() {
+  switchOn = !switchOn;
+  document.getElementById('switchKnob').className = 'switch-knob' + (switchOn ? ' on' : '');
+  document.getElementById('switchBody').className = 'switch-body' + (switchOn ? ' on' : '');
+  document.getElementById('switchLbl').textContent = switchOn ? 'ON' : 'OFF';
+
+  // Flows
+  document.getElementById('flowLeft').className  = 'wire-flow' + (switchOn ? ' active' : '');
+  document.getElementById('flowRight').className = 'wire-flow' + (switchOn ? ' active' : '');
+
+  // Bulb
+  const glow     = document.getElementById('bulbGlow');
+  const filament = document.getElementById('filament');
+  const state    = document.getElementById('bulbState');
+  const badge    = document.getElementById('bitBadge');
+  const status   = document.getElementById('circuitStatus');
+
+  if (switchOn) {
+    glow.setAttribute('fill', 'rgba(251,191,36,0.25)');
+    filament.setAttribute('stroke', '#fbbf24');
+    state.className = 'bulb-state on';
+    state.textContent = '1';
+    badge.className = 'bit-badge on';
+    badge.textContent = '1';
+    status.textContent = 'Electricity flowing → Binary: 1';
+  } else {
+    glow.setAttribute('fill', 'rgba(251,191,36,0)');
+    filament.setAttribute('stroke', 'rgba(255,255,255,0.2)');
+    state.className = 'bulb-state';
+    state.textContent = '0';
+    badge.className = 'bit-badge';
+    badge.textContent = '0';
+    status.textContent = 'No electricity flowing → Binary: 0';
+  }
+}
+</script>
+
+<!-- Wobble visualiser -->
+<script>
+let noiseLevel = 0.04; // fraction of canvas height
+let animFrame;
+let errorCount = 0;
+let targetDecimal = 7; // which decimal zone we're "targeting"
+let targetBinary  = 1; // which binary zone
+let lastDecimalRead = 7;
+let lastBinaryRead  = 1;
+
+function setNoise(level) {
+  document.getElementById('btnLow').className  = 'wobble-btn' + (level === 'low'  ? ' active' : '');
+  document.getElementById('btnMed').className  = 'wobble-btn' + (level === 'med'  ? ' active' : '');
+  document.getElementById('btnHigh').className = 'wobble-btn' + (level === 'high' ? ' active' : '');
+  if (level === 'low')  noiseLevel = 0.04;
+  if (level === 'med')  noiseLevel = 0.09;
+  if (level === 'high') noiseLevel = 0.16;
+  errorCount = 0;
+  document.getElementById('errorCount').textContent = '0';
+}
+
+// Signal history buffers
+const HIST = 220;
+let decHistory = [];
+let binHistory = [];
+// Smooth noise
+let decNoise = 0, binNoise = 0;
+
+function lerp(a, b, t) { return a + (b - a) * t; }
+
+function drawWobble() {
+  const dc = document.getElementById('decimalCanvas');
+  const bc = document.getElementById('binaryCanvas');
+  if (!dc || !bc) return;
+
+  // Resize to fit
+  [dc, bc].forEach(c => {
+    if (c.width !== c.offsetWidth || c.height !== c.offsetHeight) {
+      c.width  = c.offsetWidth;
+      c.height = c.offsetHeight;
+    }
+  });
+
+  const W = dc.width, H = dc.height;
+  if (W < 10 || H < 10) { animFrame = requestAnimationFrame(drawWobble); return; }
+
+  // Update noise
+  decNoise = lerp(decNoise, (Math.random() - 0.5) * 2 * noiseLevel, 0.18);
+  binNoise = lerp(binNoise, (Math.random() - 0.5) * 2 * noiseLevel, 0.18);
+
+  // Target signal position (fraction of H, 0=top=high voltage)
+  // Decimal: targeting digit 7 out of 0-9. position = 1 - (7/9) = zone from top
+  const decTarget = 1 - (targetDecimal / 9); // normalised y
+  const binTarget = 1 - (targetBinary  / 1); // 0 or 1 → 1.0 or 0.0
+
+  const decY = (decTarget + decNoise) * H;
+  const binY = (binTarget + binNoise) * H;
+
+  decHistory.push(decY);
+  binHistory.push(binY);
+  if (decHistory.length > HIST) decHistory.shift();
+  if (binHistory.length > HIST) binHistory.shift();
+
+  // Determine current read value
+  const decRead = Math.round(((1 - decY / H) * 9));
+  const binRead = binY / H < 0.5 ? 1 : 0;
+  const decErr  = decRead !== targetDecimal;
+  const binErr  = binRead !== targetBinary;
+
+  if (decErr && !window._lastDecErr) errorCount++;
+  window._lastDecErr = decErr;
+  document.getElementById('errorCount').textContent = errorCount;
+
+  // ── Draw Decimal canvas ──
+  const dCtx = dc.getContext('2d');
+  dCtx.clearRect(0, 0, W, H);
+
+  // Zone bands (10 zones)
+  for (let i = 0; i < 10; i++) {
+    const y0 = (i / 10) * H;
+    const y1 = ((i + 1) / 10) * H;
+    const isTarget = (9 - i) === targetDecimal;
+    dCtx.fillStyle = isTarget ? 'rgba(251,191,36,0.07)' : 'rgba(255,255,255,0.02)';
+    dCtx.fillRect(0, y0, W, y1 - y0);
+
+    // Zone label
+    dCtx.fillStyle = isTarget ? 'rgba(251,191,36,0.6)' : 'rgba(255,255,255,0.12)';
+    dCtx.font = '10px IBM Plex Mono, monospace';
+    dCtx.textAlign = 'right';
+    dCtx.fillText(String(9 - i), W - 6, (y0 + y1) / 2 + 4);
+
+    // Zone boundary line
+    dCtx.strokeStyle = 'rgba(255,255,255,0.06)';
+    dCtx.lineWidth = 1;
+    dCtx.beginPath();
+    dCtx.moveTo(0, y0); dCtx.lineTo(W - 16, y0);
+    dCtx.stroke();
+  }
+
+  // Signal line
+  dCtx.beginPath();
+  decHistory.forEach((y, xi) => {
+    const x = (xi / (HIST - 1)) * (W - 20);
+    if (xi === 0) dCtx.moveTo(x, y); else dCtx.lineTo(x, y);
+  });
+  dCtx.strokeStyle = decErr ? '#f87171' : '#fbbf24';
+  dCtx.lineWidth = 2;
+  dCtx.shadowColor = decErr ? '#f87171' : '#fbbf24';
+  dCtx.shadowBlur  = 6;
+  dCtx.stroke();
+  dCtx.shadowBlur = 0;
+
+  // Read indicator
+  dCtx.fillStyle = decErr ? '#f87171' : '#4cda64';
+  dCtx.font = 'bold 11px IBM Plex Mono, monospace';
+  dCtx.textAlign = 'left';
+  dCtx.fillText('Read: ' + decRead, 4, decY - 6 < 14 ? 14 : decY - 6);
+
+  // Verdict
+  document.getElementById('decimalVerdict').innerHTML = decErr
+    ? `<span style="color:#f87171;">&#9888; ERROR: Target was <strong>${targetDecimal}</strong> but read as <strong>${decRead}</strong></span>`
+    : `<span>Reading <strong>${decRead}</strong> correctly &mdash; so far…</span>`;
+
+  // ── Draw Binary canvas ──
+  const bCtx = bc.getContext('2d');
+  bCtx.clearRect(0, 0, W, H);
+
+  // Zone bands (2 zones)
+  for (let i = 0; i < 2; i++) {
+    const y0 = (i / 2) * H;
+    const y1 = ((i + 1) / 2) * H;
+    const digit = 1 - i;
+    const isTarget = digit === targetBinary;
+    bCtx.fillStyle = isTarget ? 'rgba(235,0,139,0.08)' : 'rgba(255,255,255,0.02)';
+    bCtx.fillRect(0, y0, W, y1 - y0);
+
+    bCtx.fillStyle = isTarget ? 'rgba(235,0,139,0.7)' : 'rgba(255,255,255,0.15)';
+    bCtx.font = '11px IBM Plex Mono, monospace';
+    bCtx.textAlign = 'right';
+    bCtx.fillText(String(digit), W - 6, (y0 + y1) / 2 + 4);
+
+    bCtx.strokeStyle = 'rgba(255,255,255,0.08)';
+    bCtx.lineWidth = 1;
+    bCtx.beginPath();
+    bCtx.moveTo(0, y0); bCtx.lineTo(W - 16, y0);
+    bCtx.stroke();
+  }
+
+  bCtx.beginPath();
+  binHistory.forEach((y, xi) => {
+    const x = (xi / (HIST - 1)) * (W - 20);
+    if (xi === 0) bCtx.moveTo(x, y); else bCtx.lineTo(x, y);
+  });
+  bCtx.strokeStyle = binErr ? '#f87171' : '#4cda64';
+  bCtx.lineWidth = 2;
+  bCtx.shadowColor = binErr ? '#f87171' : '#4cda64';
+  bCtx.shadowBlur  = 6;
+  bCtx.stroke();
+  bCtx.shadowBlur = 0;
+
+  bCtx.fillStyle = binErr ? '#f87171' : '#4cda64';
+  bCtx.font = 'bold 11px IBM Plex Mono, monospace';
+  bCtx.textAlign = 'left';
+  bCtx.fillText('Read: ' + binRead, 4, binY - 6 < 14 ? 14 : binY - 6);
+
+  document.getElementById('binaryVerdict').innerHTML = binErr
+    ? `<span style="color:#f87171;">&#9888; ERROR: Target was <strong>${targetBinary}</strong> but read as <strong>${binRead}</strong></span>`
+    : `<span>Reading <strong>${binRead}</strong> correctly. Safety margin is huge!</span>`;
+
+  animFrame = requestAnimationFrame(drawWobble);
+}
+
+// Start animation when s5 becomes active (observed via MutationObserver)
+const obs = new MutationObserver(() => {
+  const s5 = document.getElementById('s5');
+  if (s5 && s5.classList.contains('active')) {
+    if (!animFrame) drawWobble();
+  } else {
+    if (animFrame) { cancelAnimationFrame(animFrame); animFrame = null; }
+    decHistory = []; binHistory = [];
+  }
+});
+document.addEventListener('DOMContentLoaded', () => {
+  const s5 = document.getElementById('s5');
+  if (s5) obs.observe(s5, { attributes: true, attributeFilter: ['class'] });
+});
+</script>
+
+<!-- Animated switch counter for speed slide -->
+<script>
+function animateCounter(id, target, duration) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const start = performance.now();
+  function step(now) {
+    const t = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - t, 3);
+    el.textContent = Math.round(ease * target);
+    if (t < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// Trigger counter when s7 becomes active
+const obs2 = new MutationObserver(() => {
+  const s7 = document.getElementById('s7');
+  if (s7 && s7.classList.contains('active')) {
+    animateCounter('switchCount', 5, 1400);
+  }
+});
+document.addEventListener('DOMContentLoaded', () => {
+  const s7 = document.getElementById('s7');
+  if (s7) obs2.observe(s7, { attributes: true, attributeFilter: ['class'] });
+});
+</script>
+
+<!-- ════════════════════════════════════════════════════════
+     SCENES ARRAY
+     ════════════════════════════════════════════════════════ -->
+<script src="presentation.js"></script>
+<script>
+const SCENES = [
+
+  { id:'s0', steps:[
+    () => vis('s0-sub'),
+  ]},
+
+  { id:'s1', steps:[
+    () => vis('s1-li'),
+    () => vis('s1-sc'),
+    () => vis('s1-sc1'),
+    () => vis('s1-sc2'),
+    () => vis('s1-sc3'),
+  ]},
+
+  { id:'s2', steps:[
+    () => vis('s2-humans'),
+    () => vis('s2-computers'),
+    () => vis('s2-digits'),
+    () => vis('s2-everything'),
+    () => vis('s2-callout'),
+  ]},
+
+  { id:'s3', steps:[
+    () => vis('s3-def'),
+    () => vis('s3-states'),
+    () => vis('s3-3d'),
+    () => vis('s3-yt'),
+  ]},
+
+  { id:'s4', steps:[
+    () => vis('s4-explain'),
+    () => vis('s4-link'),
+    () => vis('s4-switch'),
+    () => vis('s4-cq'),
+  ]},
+
+  { id:'s5', steps:[
+    () => vis('s5-intro'),
+    () => vis('s5-viz'),
+    () => vis('s5-conclusion'),
+  ]},
+
+  { id:'s6', steps:[
+    () => vis('s6-body'),
+    () => vis('s6-decimal'),
+    () => vis('s6-arrow'),
+    () => vis('s6-binary'),
+    () => vis('s6-callout'),
+  ]},
+
+  { id:'s7', steps:[
+    () => vis('s7-intro'),
+    () => vis('s7-c1'),
+    () => vis('s7-c2'),
+    () => vis('s7-c3'),
+  ]},
+
+  { id:'s8', steps:[
+    () => vis('s8-instr'),
+    () => vis('s8-q1'),
+    () => vis('s8-q2'),
+    () => vis('s8-q3'),
+    () => vis('s8-bottom'),
+  ]},
+
+  { id:'s9', steps:[
+    () => vis('s9-prompt'),
+    () => stagger(['ci1','ci2','ci3','ci4','ci5']),
+    () => vis('s9-note'),
+  ],
+  fullFn: () => ['ci1','ci2','ci3','ci4','ci5'].forEach(id => vis(id))
+  },
+
+];
+
+initPresentation(SCENES);
+</script>
+</body>
+</html>
