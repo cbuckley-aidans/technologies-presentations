@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Text Encoding</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="presentation.css">
+<style>
+/* ── Codebook animation ── */
+.codebook-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  margin-top: 18px;
+  flex: 1;
+  min-height: 0;
+}
+.cb-book {
+  width: 160px;
+  height: 200px;
+  position: relative;
+  flex-shrink: 0;
+}
+.cb-book svg { width: 100%; height: 100%; }
+
+.cb-text-in {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+.cb-text-out {
+  font-family: var(--mono);
+  font-size: clamp(0.7rem, 1.3vw, 0.95rem);
+  color: var(--pink);
+  line-height: 1.9;
+  opacity: 0;
+  transition: opacity 0.5s ease 0.2s;
+}
+.cb-text-out.vis { opacity: 1; }
+.cb-arrow-anim {
+  font-size: 2.8rem;
+  color: var(--pink);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  flex-shrink: 0;
+}
+.cb-arrow-anim.vis { opacity: 1; }
+
+/* ── ASCII lookup table ── */
+.ascii-table-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+.ascii-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.ascii-row.vis { opacity: 1; transform: translateX(0); }
+.ascii-char {
+  font-weight: 900;
+  font-size: clamp(1rem, 2.2vw, 1.6rem);
+  width: 52px;
+  text-align: center;
+  background: var(--pink);
+  padding: 8px 0;
+  border-radius: 3px 0 0 3px;
+  flex-shrink: 0;
+  color: white;
+}
+.ascii-dec {
+  font-family: var(--mono);
+  font-size: clamp(0.72rem, 1.2vw, 0.9rem);
+  color: var(--dim);
+  width: 52px;
+  text-align: center;
+  background: var(--navy3);
+  padding: 8px 0;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  flex-shrink: 0;
+}
+.ascii-arrow-sm {
+  color: var(--dim);
+  font-size: 1rem;
+  padding: 0 8px;
+  flex-shrink: 0;
+}
+.ascii-bits {
+  font-family: var(--mono);
+  font-size: clamp(0.82rem, 1.4vw, 1.05rem);
+  font-weight: 700;
+  color: var(--pink);
+  display: flex;
+  gap: 3px;
+}
+.ascii-bits span {
+  display: inline-block;
+  width: 22px;
+  height: 32px;
+  line-height: 32px;
+  text-align: center;
+  border-radius: 2px;
+  background: rgba(235,0,139,0.1);
+  border: 1px solid rgba(235,0,139,0.2);
+}
+.ascii-bits span.b1 {
+  background: var(--pink);
+  border-color: var(--pink);
+  color: white;
+}
+
+/* ── Lookup arrow connector ── */
+.lookup-connector {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--dim);
+  font-size: 0.78rem;
+  margin: 8px 0 4px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.lookup-connector.vis { opacity: 1; }
+.lookup-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--pink), rgba(235,0,139,0.1));
+}
+
+/* ── Morse display ── */
+.morse-visual {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+.morse-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--pink);
+  display: inline-block;
+}
+.morse-dash {
+  width: 30px; height: 10px;
+  border-radius: 5px;
+  background: var(--pink);
+  display: inline-block;
+}
+.morse-gap {
+  width: 16px; display: inline-block;
+}
+.morse-char-block {
+  background: var(--navy2);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 4px;
+  padding: 10px 14px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.morse-char-block.vis { opacity: 1; transform: translateY(0); }
+.morse-char-lbl { font-weight: 900; font-size: 1.4rem; color: var(--pink); margin-bottom: 8px; }
+.morse-code-txt { font-family: var(--mono); font-size: 0.8rem; color: var(--dim); margin-bottom: 6px; }
+.morse-bits-row { font-family: var(--mono); font-size: 0.75rem; color: rgba(255,255,255,0.4); }
+
+/* Efficiency compare row */
+.eff-row {
+  display: flex;
+  align-items: stretch;
+  gap: 14px;
+  width: 100%;
+  margin-top: 10px;
+}
+.eff-panel {
+  flex: 1;
+  background: var(--navy2);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 4px;
+  padding: 16px 18px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.eff-panel.vis { opacity: 1; transform: translateY(0); }
+.eff-panel.hi { border-color: rgba(235,0,139,0.35); }
+.eff-label { font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--pink); margin-bottom: 8px; }
+.eff-char-ex { font-weight: 900; font-size: 1.2rem; margin-bottom: 6px; }
+.eff-bits { font-family: var(--mono); font-size: 0.82rem; color: var(--dim); line-height: 1.6; }
+.eff-count { font-weight: 900; font-size: 1rem; color: white; margin-top: 6px; }
+.eff-count span { color: var(--pink); }
+
+/* ── Unicode tiles ── */
+.unicode-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+.uni-tile {
+  background: var(--navy2);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 4px;
+  padding: 12px 16px;
+  text-align: center;
+  min-width: 90px;
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.uni-tile.vis { opacity: 1; transform: scale(1); }
+.uni-glyph { font-size: clamp(1.6rem, 3vw, 2.4rem); margin-bottom: 4px; line-height: 1.2; }
+.uni-code { font-family: var(--mono); font-size: 0.58rem; color: var(--dim); }
+
+/* Byte-growth visual */
+.byte-grow {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 16px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.byte-grow.vis { opacity: 1; }
+.bg-label { font-size: clamp(0.72rem,1.2vw,0.85rem); color: var(--dim); width: 80px; text-align: right; flex-shrink: 0; }
+.bg-bytes { display: flex; gap: 4px; }
+.bg-byte {
+  width: 26px; height: 26px; border-radius: 3px;
+  background: var(--pink);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 0.52rem; color: white; font-weight: 700;
+}
+.bg-byte.dim { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.25); }
+.bg-range { font-family: var(--mono); font-size: 0.75rem; color: var(--dim); margin-left: 8px; }
+
+/* SVG book animation */
+@keyframes page-flip {
+  0%   { transform-origin: left; transform: rotateY(0deg); opacity: 1; }
+  50%  { transform-origin: left; transform: rotateY(-60deg); opacity: 0.6; }
+  100% { transform-origin: left; transform: rotateY(0deg); opacity: 1; }
+}
+.book-page-anim { animation: page-flip 1.8s ease-in-out infinite; }
+
+/* Animated lookup beam */
+.lookup-beam {
+  position: absolute;
+  width: 3px;
+  background: linear-gradient(180deg, var(--pink), transparent);
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+/* flowing binary bg on title */
+.binary-rain {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.binary-rain span {
+  position: absolute;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: rgba(235,0,139,0.08);
+  animation: rain-fall linear infinite;
+  top: -2em;
+}
+@keyframes rain-fall {
+  to { transform: translateY(110vh); }
+}
+
+/* s0 content above rain */
+#s0 > * { position: relative; z-index: 1; }
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<!-- ── S0: TITLE ───────────────────────────────────────────── -->
+<div class="scene" id="s0" style="align-items:center; justify-content:center; text-align:center;">
+  <div class="binary-rain" id="rain"></div>
+  <div class="scene-title" style="font-size:clamp(2.6rem,6.5vw,5rem);">Text <span class="hl">Encoding</span></div>
+  <div class="scene-rule" style="align-self:center;"></div>
+  <div class="reveal" id="s0-sub" style="font-size:clamp(0.9rem,1.6vw,1.1rem); color:var(--dim); max-width:480px; line-height:1.7;">
+    How computers turn letters into binary — and why we needed more than one system to do it.
+  </div>
+</div>
+
+
+<!-- ── S1: THE CODEBOOK ───────────────────────────────────── -->
+<div class="scene" id="s1">
+  <div class="checks"><img src="checksforunderstanding/silentsolo.png" alt="Silent Solo"></div>
+  <div class="scene-title">The <span class="hl">Code Book</span> Analogy</div>
+  <div class="scene-rule"></div>
+
+  <div style="display:flex; flex-direction:column; flex:1; min-height:0; gap:14px;">
+
+    <div class="reveal" id="s1-def">
+      <div class="def-card">
+        <div class="def-label">Text Encoding</div>
+        <div class="def-body">A system that maps every character to a unique binary number. The computer uses this mapping like a reference book — look up the character, get the bits.</div>
+      </div>
+    </div>
+
+    <div class="codebook-wrap">
+      <div style="text-align:center; opacity:0; transition:opacity 0.4s ease;" id="s1-textin">
+        <div style="font-family:var(--mono); font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--dim); margin-bottom:8px;">Input</div>
+        <div class="cb-text-in">Hello<span class="hl">!</span></div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+        <div class="cb-arrow-anim" id="s1-arrow">&#8594;</div>
+        <!-- Animated book SVG -->
+        <div class="cb-book" id="s1-book" style="opacity:0; transition:opacity 0.5s ease;">
+          <svg viewBox="0 0 160 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Book body -->
+            <rect x="10" y="10" width="140" height="180" rx="4" fill="#0e2849" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+            <!-- Spine -->
+            <rect x="10" y="10" width="18" height="180" rx="4" fill="#122d55" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+            <!-- Pink accent bar -->
+            <rect x="10" y="10" width="4" height="180" rx="2" fill="#eb008b"/>
+            <!-- Lines of text -->
+            <rect class="book-page-anim" x="38" y="40" width="96" height="4" rx="2" fill="rgba(235,0,139,0.5)"/>
+            <rect x="38" y="54" width="80" height="3" rx="1.5" fill="rgba(255,255,255,0.15)"/>
+            <rect x="38" y="65" width="88" height="3" rx="1.5" fill="rgba(255,255,255,0.1)"/>
+            <rect x="38" y="76" width="72" height="3" rx="1.5" fill="rgba(255,255,255,0.1)"/>
+            <rect x="38" y="87" width="84" height="3" rx="1.5" fill="rgba(255,255,255,0.15)"/>
+            <rect x="38" y="98" width="68" height="3" rx="1.5" fill="rgba(255,255,255,0.1)"/>
+            <rect x="38" y="109" width="90" height="3" rx="1.5" fill="rgba(255,255,255,0.1)"/>
+            <rect x="38" y="120" width="76" height="3" rx="1.5" fill="rgba(255,255,255,0.15)"/>
+            <!-- Label -->
+            <text x="80" y="166" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="9" font-family="IBM Plex Mono, monospace" letter-spacing="1">CODE BOOK</text>
+          </svg>
+        </div>
+      </div>
+
+      <div style="text-align:center; opacity:0; transition:opacity 0.4s ease;" id="s1-textout">
+        <div style="font-family:var(--mono); font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--dim); margin-bottom:8px;">Binary Output</div>
+        <div class="cb-text-out vis" style="opacity:1;">
+          01001000 <span style="color:rgba(255,255,255,0.4)">H</span><br>
+          01100101 <span style="color:rgba(255,255,255,0.4)">e</span><br>
+          01101100 <span style="color:rgba(255,255,255,0.4)">l</span><br>
+          01101100 <span style="color:rgba(255,255,255,0.4)">l</span><br>
+          01101111 <span style="color:rgba(255,255,255,0.4)">o</span><br>
+          00100001 <span style="color:rgba(255,255,255,0.4)">!</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal" id="s1-callout">
+      <div class="callout"><strong>Key idea:</strong> the encoding system is the agreement between sender and receiver about what the bits mean. Without the same code book, the bits are meaningless.</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ── S2: ASCII ──────────────────────────────────────────── -->
+<div class="scene" id="s2">
+  <div class="eyebrow">The First Standard</div>
+  <div class="scene-title">ASCII &mdash; <span class="hl">7 bits</span> per character</div>
+  <div class="scene-rule"></div>
+
+  <div class="two-col" style="flex:1; min-height:0; align-items:flex-start;">
+    <div class="col-l" style="gap:10px;">
+
+      <div class="reveal" id="s2-intro" style="font-size:clamp(0.8rem,1.35vw,0.94rem); color:rgba(255,255,255,0.75); line-height:1.6; margin-bottom:4px;">
+        American Standard Code for Information Interchange (1963). Assigns a unique 7-bit binary value to 128 characters: letters, digits, punctuation, and control codes.
+      </div>
+
+      <div id="s2-connector" class="lookup-connector" style="display:flex; align-items:center; gap:0; opacity:0; transition:opacity 0.4s ease;">
+        <!-- "character" label centred over the 52px char cell -->
+        <span style="width:52px; text-align:center; flex-shrink:0; font-size:0.68rem; color:var(--dim);">character</span>
+        <!-- gap over the 52px dec cell -->
+        <span style="width:52px; flex-shrink:0;"></span>
+        <!-- line between char and decimal -->
+        <div style="flex:0 0 24px; height:1px; background:linear-gradient(90deg, rgba(235,0,139,0.15), var(--pink));"></div>
+        <!-- "decimal" label centred — sits over the arrow+start of bits -->
+        <span style="white-space:nowrap; font-size:0.68rem; color:var(--dim); padding:0 6px; flex-shrink:0;">decimal</span>
+        <!-- line to binary -->
+        <div style="flex:1; height:1px; background:linear-gradient(90deg, var(--pink), rgba(235,0,139,0.15));"></div>
+        <span style="font-size:0.68rem; color:var(--dim); flex-shrink:0;">binary</span>
+      </div>
+
+      <div class="ascii-table-wrap" id="s2-table">
+        <!-- Rows injected by JS -->
+      </div>
+
+    </div>
+    <div class="col-r" style="gap:12px; justify-content:flex-start;">
+      <div class="reveal" id="s2-r1">
+        <div class="def-card">
+          <div class="def-label">Why 7 bits?</div>
+          <div class="def-body">2<sup>7</sup> = 128 possible values. Enough for English uppercase, lowercase, digits, and common punctuation. The 8th bit was originally used for error checking (parity).</div>
+        </div>
+      </div>
+      <div class="reveal" id="s2-r2">
+        <div class="def-card">
+          <div class="def-label">Stored as 8 bits (1 byte)</div>
+          <div class="def-body">In practice each ASCII character is stored in one byte, with a leading <span class="mono-pink">0</span> padding the 7-bit value. So 'A' (65) becomes <span class="mono-pink">01000001</span>.</div>
+        </div>
+      </div>
+      <div class="reveal" id="s2-limit">
+        <div class="callout"><strong>Limitation:</strong> 128 characters is only enough for English. No accents, no other scripts, no symbols beyond basic punctuation.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── S3: MORSE ──────────────────────────────────────────── -->
+<div class="scene" id="s3">
+  <div class="eyebrow">Another encoding system</div>
+  <div class="scene-title">Morse Code &mdash; a <span class="hl">different</span> code book</div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s3-intro" style="font-size:clamp(0.8rem,1.35vw,0.94rem); color:rgba(255,255,255,0.75); line-height:1.6; margin-bottom:8px;">
+    Morse code is another text encoding system. Instead of bytes, it uses dots and dashes. Like ASCII, it is a code book: each character maps to a unique signal pattern.
+  </div>
+
+  <div style="display:flex; gap:14px; flex-wrap:wrap;" id="s3-chars">
+    <!-- Morse blocks injected by JS -->
+  </div>
+
+  <div style="margin-top:16px; display:flex; flex-direction:column; gap:8px;">
+    <div class="reveal" id="s3-compare-label" style="font-family:var(--mono); font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--pink);">Encoding "HI" — side by side</div>
+    <div class="eff-row">
+      <div class="eff-panel" id="s3-ep1">
+        <div class="eff-label">ASCII (binary)</div>
+        <div class="eff-char-ex">H I</div>
+        <div class="eff-bits">
+          01001000 &nbsp;<span style="color:rgba(255,255,255,0.3)">H</span><br>
+          01001001 &nbsp;<span style="color:rgba(255,255,255,0.3)">I</span>
+        </div>
+        <div class="eff-count"><span>16 bits</span> total</div>
+      </div>
+      <div class="eff-panel hi" id="s3-ep2">
+        <div class="eff-label">Morse Code</div>
+        <div class="eff-char-ex">H I</div>
+        <div class="eff-bits">
+          · · · · &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgba(255,255,255,0.3)">H (4 symbols)</span><br>
+          · · &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgba(255,255,255,0.3)">I (2 symbols)</span>
+        </div>
+        <div class="eff-count"><span>6 symbols</span> + gaps</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── S4: STOP AND JOT ───────────────────────────────────── -->
+<div class="scene" id="s4">
+  <div class="checks">
+    <img src="checksforunderstanding/stopandjot.png" alt="Stop and Jot">
+    <img src="checksforunderstanding/coldcall.png" alt="Cold Call">
+  </div>
+  <div class="scene-title">Stop &amp; <span class="hl">Jot</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s4-think" style="font-style:italic; color:var(--dim); font-size:clamp(0.82rem,1.35vw,0.94rem); margin-bottom:14px;">
+    Think carefully before you write. Consider both sides.
+  </div>
+
+  <div class="reveal" id="s4-q">
+    <div class="def-card" style="border-left: 3px solid var(--pink); border-radius:0 4px 4px 0; padding:20px 24px;">
+      <div class="def-label">On your whiteboard</div>
+      <div class="def-body" style="font-size:clamp(1.05rem,2.1vw,1.6rem); font-weight:700; color:white; line-height:1.5;">
+        Is Morse code a <span class="hl">more efficient</span> encoding system than ASCII binary?<br>
+        <span style="font-size:0.65em; font-weight:400; color:var(--dim);">Explain your reasoning. Think about what "efficient" might mean.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal" id="s4-hint" style="margin-top:14px;">
+    <div class="three-col">
+      <div class="tcol">
+        <div class="tcol-title">Consider: symbol count</div>
+        <div class="tcol-body">Common letters like E and T use fewer Morse symbols than 8-bit ASCII. Rare letters use more.</div>
+      </div>
+      <div class="tcol">
+        <div class="tcol-title">Consider: fixed vs variable</div>
+        <div class="tcol-body">ASCII is always 8 bits per character. Morse length varies. Which is easier for a computer to process?</div>
+      </div>
+      <div class="tcol">
+        <div class="tcol-title">Consider: what is missing</div>
+        <div class="tcol-body">Morse only covers a subset of characters. ASCII covers 128. Efficiency is not just about bits.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar reveal" id="s4-bottom">
+    <div class="bottom-bar-text">Chin your board when you are ready.</div>
+  </div>
+</div>
+
+
+<!-- ── S5: UNICODE ────────────────────────────────────────── -->
+<div class="scene" id="s5">
+  <div class="eyebrow">Beyond ASCII</div>
+  <div class="scene-title">Unicode &mdash; <span class="hl">one standard</span> for every language</div>
+  <div class="scene-rule"></div>
+
+  <div class="two-col" style="flex:1; min-height:0; align-items:flex-start;">
+    <div class="col-l" style="gap:12px;">
+
+      <div class="reveal" id="s5-prob">
+        <div class="def-card">
+          <div class="def-label">The Problem</div>
+          <div class="def-body">ASCII worked for English, but every country invented its own encoding for their script. Files from different systems were often unreadable. The world needed one universal code book.</div>
+        </div>
+      </div>
+
+      <div class="reveal" id="s5-sol">
+        <div class="def-card" style="border-left:3px solid var(--pink); border-radius:0 4px 4px 0;">
+          <div class="def-label">The Solution: Unicode (1991)</div>
+          <div class="def-body">A single standard that assigns a unique code point to every character in every writing system on Earth — over <span class="mono-pink">149,000</span> characters and counting.</div>
+        </div>
+      </div>
+
+      <!-- Byte growth visual -->
+      <div class="reveal" id="s5-bytes">
+        <div style="font-family:var(--mono); font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--pink); margin-bottom:8px;">More characters = more bytes needed</div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div class="byte-grow vis" style="opacity:1;">
+            <div class="bg-label">ASCII</div>
+            <div class="bg-bytes">
+              <div class="bg-byte">8</div>
+              <div class="bg-byte dim"></div>
+              <div class="bg-byte dim"></div>
+              <div class="bg-byte dim"></div>
+            </div>
+            <div class="bg-range">128 chars</div>
+          </div>
+          <div class="byte-grow" id="s5-bg2">
+            <div class="bg-label">UTF-16</div>
+            <div class="bg-bytes">
+              <div class="bg-byte">8</div>
+              <div class="bg-byte">8</div>
+              <div class="bg-byte dim"></div>
+              <div class="bg-byte dim"></div>
+            </div>
+            <div class="bg-range">65,536 chars</div>
+          </div>
+          <div class="byte-grow" id="s5-bg3">
+            <div class="bg-label">UTF-32</div>
+            <div class="bg-bytes">
+              <div class="bg-byte">8</div>
+              <div class="bg-byte">8</div>
+              <div class="bg-byte">8</div>
+              <div class="bg-byte">8</div>
+            </div>
+            <div class="bg-range">4 billion+ chars</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-r" style="gap:10px;">
+      <div class="reveal" id="s5-tiles-label" style="font-family:var(--mono); font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--pink);">Characters that ASCII could never represent</div>
+      <div class="unicode-grid" id="s5-tiles">
+        <!-- Injected by JS -->
+  </div>
+    </div>
+  </div>
+</div>
+
+
+<script src="presentation.js"></script>
+<script>
+/* ── Binary rain on title ── */
+(function() {
+  const rain = document.getElementById('rain');
+  const cols = Math.ceil(window.innerWidth / 22);
+  for (let i = 0; i < cols; i++) {
+    const s = document.createElement('span');
+    s.textContent = Array.from({length: 28}, () => Math.random() > 0.5 ? '1' : '0').join(' ');
+    s.style.left = (i * 22) + 'px';
+    s.style.animationDuration = (6 + Math.random() * 10) + 's';
+    s.style.animationDelay = (-Math.random() * 12) + 's';
+    rain.appendChild(s);
+  }
+})();
+
+/* ── ASCII table data + render ── */
+const ASCII_DATA = [
+  { ch: 'H', dec: 72,  bits: '01001000' },
+  { ch: 'e', dec: 101, bits: '01100101' },
+  { ch: 'l', dec: 108, bits: '01101100' },
+  { ch: 'o', dec: 111, bits: '01101111' },
+  { ch: '!', dec: 33,  bits: '00100001' },
+  { ch: 'A', dec: 65,  bits: '01000001' },
+  { ch: 'a', dec: 97,  bits: '01100001' },
+];
+function renderASCII() {
+  const wrap = document.getElementById('s2-table');
+  ASCII_DATA.forEach(d => {
+    const row = document.createElement('div');
+    row.className = 'ascii-row';
+    const bitsHtml = d.bits.split('').map(b =>
+      `<span class="${b === '1' ? 'b1' : ''}">${b}</span>`
+    ).join('');
+    row.innerHTML = `
+      <div class="ascii-char">${d.ch}</div>
+      <div class="ascii-dec">${d.dec}</div>
+      <div class="ascii-arrow-sm">&#8594;</div>
+      <div class="ascii-bits">${bitsHtml}</div>`;
+    wrap.appendChild(row);
+  });
+}
+renderASCII();
+
+/* ── Morse data + render ── */
+const MORSE_DATA = [
+  { ch: 'H', morse: '· · · ·',  bits: '0 0 0 0' },
+  { ch: 'I', morse: '· ·',      bits: '0 0' },
+  { ch: 'S', morse: '· · ·',    bits: '0 0 0' },
+  { ch: 'O', morse: '— — —',    bits: '1 1 1' },
+  { ch: 'E', morse: '·',        bits: '0' },
+];
+function renderMorse() {
+  const wrap = document.getElementById('s3-chars');
+  MORSE_DATA.forEach(d => {
+    const block = document.createElement('div');
+    block.className = 'morse-char-block';
+    block.innerHTML = `
+      <div class="morse-char-lbl">${d.ch}</div>
+      <div class="morse-code-txt">${d.morse}</div>
+      <div class="morse-bits-row" style="color:rgba(255,255,255,0.2); font-size:0.65rem;">ASCII: ${d.bits.length > 3 ? '8 bits' : '8 bits'}</div>`;
+    wrap.appendChild(block);
+  });
+}
+renderMorse();
+
+/* ── Unicode tiles ── */
+const UNI_TILES = [
+  { g: '你', code: 'U+4F60' },
+  { g: '日', code: 'U+65E5' },
+  { g: 'ñ',  code: 'U+00F1' },
+  { g: 'ة',  code: 'U+0629' },
+  { g: 'ψ',  code: 'U+03C8' },
+  { g: '😀', code: 'U+1F600' },
+  { g: '🎵', code: 'U+1F3B5' },
+  { g: '©',  code: 'U+00A9' },
+  { g: '→',  code: 'U+2192' },
+  { g: '€',  code: 'U+20AC' },
+  { g: '™',  code: 'U+2122' },
+  { g: '✓',  code: 'U+2713' },
+];
+function renderUnicode() {
+  const wrap = document.getElementById('s5-tiles');
+  UNI_TILES.forEach(t => {
+    const tile = document.createElement('div');
+    tile.className = 'uni-tile';
+    tile.innerHTML = `<div class="uni-glyph">${t.g}</div><div class="uni-code">${t.code}</div>`;
+    wrap.appendChild(tile);
+  });
+}
+renderUnicode();
+
+/* ── ASCII row stagger reveal ── */
+let asciiRevealIdx = 0;
+function revealNextASCIIRows(count) {
+  const rows = document.querySelectorAll('#s2-table .ascii-row');
+  const end = Math.min(asciiRevealIdx + count, rows.length);
+  for (let i = asciiRevealIdx; i < end; i++) {
+    (function(idx, delay) {
+      setTimeout(() => rows[idx].classList.add('vis'), delay);
+    })(i, (i - asciiRevealIdx) * 80);
+  }
+  asciiRevealIdx = end;
+}
+
+/* ── Morse blocks stagger ── */
+function revealMorseBlocks() {
+  const blocks = document.querySelectorAll('.morse-char-block');
+  blocks.forEach((b, i) => setTimeout(() => b.classList.add('vis'), i * 100));
+}
+
+/* ── Unicode tiles stagger ── */
+function revealUniTiles(start, count) {
+  const tiles = document.querySelectorAll('.uni-tile');
+  for (let i = start; i < Math.min(start + count, tiles.length); i++) {
+    (function(idx, delay) {
+      setTimeout(() => tiles[idx].classList.add('vis'), delay);
+    })(i, (i - start) * 60);
+  }
+}
+
+const SCENES = [
+  { id:'s0', steps:[
+    () => vis('s0-sub'),
+  ]},
+
+  { id:'s1', steps:[
+    () => vis('s1-def'),
+    () => {
+      document.getElementById('s1-textin').style.opacity = '1';
+    },
+    () => {
+      document.getElementById('s1-book').style.opacity = '1';
+      document.getElementById('s1-arrow').classList.add('vis');
+    },
+    () => {
+      document.getElementById('s1-textout').style.opacity = '1';
+    },
+    () => vis('s1-callout'),
+  ],
+  fullFn: () => {
+    ['s1-textin','s1-book','s1-textout'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.opacity = '1';
+    });
+    document.getElementById('s1-arrow').classList.add('vis');
+  }
+  },
+
+  { id:'s2', steps:[
+    () => vis('s2-intro'),
+    () => {
+      document.getElementById('s2-connector').classList.add('vis');
+      revealNextASCIIRows(3);
+    },
+    () => revealNextASCIIRows(2),
+    () => revealNextASCIIRows(2),
+    () => vis('s2-r1'),
+    () => vis('s2-r2'),
+    () => vis('s2-limit'),
+  ],
+  fullFn: () => {
+    document.getElementById('s2-connector').classList.add('vis');
+    asciiRevealIdx = 0;
+    revealNextASCIIRows(ASCII_DATA.length);
+  }
+  },
+
+  { id:'s3', steps:[
+    () => vis('s3-intro'),
+    () => revealMorseBlocks(),
+    () => vis('s3-compare-label'),
+    () => {
+      document.getElementById('s3-ep1').classList.add('vis');
+      setTimeout(() => document.getElementById('s3-ep2').classList.add('vis'), 150);
+    },
+  ],
+  fullFn: () => {
+    revealMorseBlocks();
+    ['s3-ep1','s3-ep2'].forEach(id => document.getElementById(id).classList.add('vis'));
+  }
+  },
+
+  { id:'s4', steps:[
+    () => vis('s4-think'),
+    () => vis('s4-q'),
+    () => vis('s4-hint'),
+    () => vis('s4-bottom'),
+  ]},
+
+  { id:'s5', steps:[
+    () => vis('s5-prob'),
+    () => vis('s5-sol'),
+    () => vis('s5-bytes'),
+    () => {
+      const bg2 = document.getElementById('s5-bg2');
+      const bg3 = document.getElementById('s5-bg3');
+      setTimeout(() => bg2.classList.add('vis'), 0);
+      setTimeout(() => bg3.classList.add('vis'), 250);
+    },
+    () => {
+      vis('s5-tiles-label');
+      revealUniTiles(0, 6);
+    },
+    () => revealUniTiles(6, 6),
+  ],
+  fullFn: () => {
+    ['s5-bg2','s5-bg3'].forEach(id => document.getElementById(id).classList.add('vis'));
+    revealUniTiles(0, UNI_TILES.length);
+  }
+  },
+];
+
+initPresentation(SCENES);
+</script>
+</body>
+</html>
