@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit Introduction — Civil Engineering &amp; Architecture</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="presentation.css">
+<style>
+  /* ── Image carousel ─────────────────────────────────────── */
+  .carousel {
+    position: relative;
+    width: 100%;
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--navy2);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .carousel-track {
+    display: flex;
+    transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+  .carousel-slide {
+    flex-shrink: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--navy2);
+    position: relative;
+  }
+  .carousel-slide img {
+    height: 380px;
+    width: auto;
+    display: block;
+    max-width: 100%;
+  }
+  .slide-caption {
+    position: absolute;
+    bottom: 10px;
+    left: 14px;
+    background: rgba(11,32,63,0.88);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 3px;
+    padding: 4px 10px;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    font-family: var(--mono);
+  }
+  .carousel-nav {
+    position: absolute;
+    bottom: 12px; right: 14px;
+    display: flex;
+    gap: 6px;
+    z-index: 10;
+  }
+  .carousel-btn {
+    width: 32px; height: 32px;
+    border-radius: 3px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(11,32,63,0.7);
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+  .carousel-btn:hover { background: var(--pink); border-color: var(--pink); }
+  .carousel-pips {
+    position: absolute;
+    bottom: 14px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 5px; z-index: 10;
+  }
+  .carousel-pip {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    transition: background 0.3s ease, width 0.3s ease;
+    border-radius: 3px;
+  }
+  .carousel-pip.active {
+    background: var(--pink);
+    width: 18px;
+  }
+
+  /* ── Which is which columns ─────────────────────────────── */
+  .wiw-col {
+    flex: 1;
+    background: var(--navy2);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4px;
+    padding: 20px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .wiw-num {
+    font-weight: 900;
+    font-size: clamp(2rem,4vw,3rem);
+    color: var(--pink);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .wiw-body {
+    font-size: clamp(0.78rem,1.3vw,0.92rem);
+    color: rgba(255,255,255,0.78);
+    line-height: 1.7;
+  }
+  .wiw-body em {
+    color: white;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+
+<!-- ── s0: HOOK ───────────────────────────────────────────── -->
+<div class="scene" id="s0" style="overflow-y:auto;">
+  <div class="checks">
+    <img src="checksforunderstanding/turnandtalk.png" alt="Turn and Talk">
+    <img src="checksforunderstanding/stopandjot.png" alt="Stop and Jot">
+  </div>
+  <div class="scene-title">What do these have <span class="hl">in common?</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s0-carousel">
+    <div class="carousel" id="mainCarousel">
+      <div class="carousel-track" id="carouselTrack">
+
+        <div class="carousel-slide">
+          <img src="https://live-production.wcms.abc-cdn.net.au/a1ea13175e6217be0ecebe44cea81807?impolicy=wcms_crop_resize&cropH=2250&cropW=4000&xPos=0&yPos=672&width=862&height=485" alt="Flood barrier and swollen river">
+          <div class="slide-caption">Flood mitigation infrastructure</div>
+        </div>
+
+        <div class="carousel-slide">
+          <img src="https://hommes.studio/wp-content/uploads/10-Best-Modern-Architecture-Projects-That-You-Need-To-Know-14.jpg" alt="Contemporary house with angled glass facade">
+          <div class="slide-caption">Contemporary residential architecture</div>
+        </div>
+
+        <div class="carousel-slide">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/1_William_Street%2C_Brisbane_in_March_2017%2C_02.jpg" alt="Brisbane CBD skyline from the river">
+          <div class="slide-caption">Brisbane CBD high-rise development</div>
+        </div>
+
+        <div class="carousel-slide">
+          <img src="https://roadsaustralia.weebly.com/uploads/7/7/9/8/77988430/4771637_orig.jpg" alt="Aerial view of highway interchange">
+          <div class="slide-caption">Highway interchange and transport infrastructure</div>
+        </div>
+
+        <div class="carousel-slide">
+          <img src="https://live-production.wcms.abc-cdn.net.au/c99cecd02b435053e6c2968e3f61f022?impolicy=wcms_crop_resize&cropH=2688&cropW=4032&xPos=0&yPos=333&width=862&height=575" alt="Steel pedestrian overpass bridge">
+          <div class="slide-caption">Pedestrian overpass structure</div>
+        </div>
+
+        <div class="carousel-slide">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/a/a0/Sydney_Australia._%2821339175489%29.jpg" alt="Sydney Opera House at sunset">
+          <div class="slide-caption">Sydney Opera House</div>
+        </div>
+
+        <div class="carousel-slide">
+          <img src="https://www.silverleafswppp.com/wp-content/uploads/2024/08/Stormwater-Drainage-System.jpg" alt="Stormwater drain in wet road">
+          <div class="slide-caption">Stormwater drainage system</div>
+        </div>
+
+        <div class="carousel-slide">
+          <img src="https://assets.atdw-online.com.au/images/711d5ff9a502189a1d7a868713f7961c.jpeg?w=1200&h=627" alt="Brisbane Story Bridge">
+          <div class="slide-caption">Sydney Harbour Bridge</div>
+        </div>
+
+        <div class="carousel-slide">
+          <img src="https://railway-news.com/wp-content/uploads/2025/09/gc-2.jpg" alt="TransLink Gold Coast train at station">
+          <div class="slide-caption">Rail transport infrastructure</div>
+        </div>
+
+        <div class="carousel-slide">
+          <img src="https://www.inspectmyhome.com.au/blog/wp-content/uploads/2022/11/retaining-wall.jpg" alt="Timber retaining wall in garden">
+          <div class="slide-caption">Retaining wall structure</div>
+        </div>
+
+      </div>
+
+      <div class="carousel-pips" id="carouselPips"></div>
+
+      <div class="carousel-nav">
+        <button class="carousel-btn" id="prevBtn" onclick="carouselMove(-1); event.stopPropagation();">&#8592;</button>
+        <button class="carousel-btn" id="nextBtn" onclick="carouselMove(1); event.stopPropagation();">&#8594;</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar reveal" id="s0-bottom">
+    <div class="bottom-bar-text">On your whiteboard: write down what you think these all have in common.</div>
+  </div>
+</div>
+
+
+<!-- ── s1: ARCH vs CIVIL — DISCUSSION PROMPT ─────────────── -->
+<div class="scene" id="s1">
+  <div class="checks">
+    <img src="checksforunderstanding/turnandtalk.png" alt="Turn and Talk">
+    <img src="checksforunderstanding/coldcall.png" alt="Cold Call">
+  </div>
+  <div class="scene-title">Architecture vs <span class="hl">Civil Engineering</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="reveal" id="s1-q" style="font-size:clamp(1rem,2vw,1.5rem); font-weight:700; color:rgba(255,255,255,0.9); line-height:1.5; max-width:700px;">
+    What do you think the main differences are between <span class="hl">architects</span> and <span class="hl">civil engineers</span>?
+  </div>
+
+  <div class="reveal" id="s1-instr" style="margin-top:18px;">
+    <div class="callout">Discuss with your partner first, then be ready to share with the class.</div>
+  </div>
+</div>
+
+
+<!-- ── s2: WHAT IS A CIVIL ENGINEER ──────────────────────── -->
+<div class="scene" id="s2">
+  <div class="checks">
+    <img src="checksforunderstanding/silentsolo.png" alt="Silent Solo">
+  </div>
+  <div class="scene-title">What is a <span class="hl">Civil Engineer?</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="two-col" style="flex:1; min-height:0;">
+    <div class="col-l" style="gap:14px;">
+
+      <div class="reveal" id="s2-def1">
+        <div class="def-card">
+          <div class="def-label">Definition</div>
+          <div class="def-body">Civil engineers <strong>design, construct, manage and maintain</strong> the infrastructure of modern society.</div>
+        </div>
+      </div>
+
+      <div class="reveal" id="s2-def2">
+        <div class="def-card">
+          <div class="def-label">What they work on</div>
+          <div class="def-body">Roads, railways, tunnels, buildings, bridges, airports, mines, dams, ports and harbours, water supply and sewerage systems, and flood mitigation works.</div>
+        </div>
+      </div>
+
+      <div class="reveal" id="s2-callout">
+        <div class="callout"><strong>In short:</strong> civil engineering is about solving problems for the public.</div>
+      </div>
+
+    </div>
+    <div class="col-r">
+      <div class="reveal" id="s2-img">
+        <div style="display:flex; justify-content:center; background:var(--navy2); border:1px solid rgba(255,255,255,0.1); border-radius:4px; overflow:hidden;">
+          <img src="https://www.herrenknecht.com/fileadmin/user_upload/references/reference/Commonwealth_of_Australia/2008/S375_Durchstich04.jpg" alt="Tunnel boring machine with crew" style="height:320px; width:auto; display:block; max-width:100%;">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── s3: WHAT IS AN ARCHITECT ──────────────────────────── -->
+<div class="scene" id="s3">
+  <div class="checks">
+    <img src="checksforunderstanding/silentsolo.png" alt="Silent Solo">
+  </div>
+  <div class="scene-title">What is an <span class="hl">Architect?</span></div>
+  <div class="scene-rule"></div>
+
+  <div class="two-col" style="flex:1; min-height:0;">
+    <div class="col-l" style="gap:14px;">
+
+      <div class="reveal" id="s3-def1">
+        <div class="def-card">
+          <div class="def-label">Definition</div>
+          <div class="def-body">Architects <strong>design, plan and oversee</strong> the construction of buildings and spaces for human use.</div>
+        </div>
+      </div>
+
+      <div class="reveal" id="s3-def2">
+        <div class="def-card">
+          <div class="def-label">What they work on</div>
+          <div class="def-body">Homes, schools, hospitals, museums, offices, libraries, theatres, public plazas and urban precincts.</div>
+        </div>
+      </div>
+
+      <div class="reveal" id="s3-callout">
+        <div class="callout"><strong>In short:</strong> architecture is about designing spaces for people to live, work and gather in.</div>
+      </div>
+
+    </div>
+    <div class="col-r">
+      <div class="reveal" id="s3-img">
+        <div style="display:flex; justify-content:center; background:var(--navy2); border:1px solid rgba(255,255,255,0.1); border-radius:4px; overflow:hidden;">
+          <img src="https://substackcdn.com/image/fetch/$s_!ezXw!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fbucketeer-e05bbc84-baa3-437e-9518-adb32be77984.s3.amazonaws.com%2Fpublic%2Fimages%2F6b8800d4-e89c-4750-a773-1aef0ec6f150_1800x1192.jpeg" alt="Bold brutalist library building" style="height:320px; width:auto; display:block; max-width:100%;">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── s4: WHICH IS WHICH ─────────────────────────────────── -->
+<div class="scene" id="s4">
+  <div class="checks">
+    <img src="checksforunderstanding/choralreading.png" alt="Choral Reading">
+    <img src="checksforunderstanding/fingervote.png" alt="Finger Vote">
+  </div>
+  <div class="scene-title">Which is <span class="hl">which?</span></div>
+  <div class="scene-rule"></div>
+
+  <div style="display:flex; gap:20px; flex:1; min-height:0; align-items:stretch;">
+
+    <div class="wiw-col reveal" id="s4-1">
+      <div class="wiw-num">1</div>
+      <div class="wiw-body">
+        Primarily responsible for <em>how a building is designed and experienced.</em>
+        <br><br>
+        Focuses on spatial layout, aesthetics, functionality for the people inside it, and compliance with planning and building codes.
+        <br><br>
+        Training is heavily oriented toward design thinking, human experience of space, and visual communication.
+        <br><br>
+        The lead designer and the client's primary point of contact on a building project.
+      </div>
+    </div>
+
+    <div class="wiw-col reveal" id="s4-2" style="border-color:rgba(235,0,139,0.35);">
+      <div class="wiw-num">2</div>
+      <div class="wiw-body">
+        Primarily responsible for <em>whether the structure physically works and is safe.</em>
+        <br><br>
+        Focuses on loads, forces, foundations, structural integrity, and the physical systems that make a building or piece of infrastructure stand up and function.
+        <br><br>
+        Training is heavily mathematical and physics-based.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bottom-bar reveal" id="s4-bottom">
+    <div class="bottom-bar-text">Hold up your fingers: 1 = Architect &nbsp;|&nbsp; 2 = Civil Engineer. Which description fits which profession?</div>
+  </div>
+</div>
+
+
+<script src="presentation.js"></script>
+<script>
+
+/* ── Carousel logic ───────────────────────────────────────── */
+let carouselIndex = 0;
+const slides = document.querySelectorAll('.carousel-slide');
+const track = document.getElementById('carouselTrack');
+const pipsContainer = document.getElementById('carouselPips');
+
+slides.forEach((_, i) => {
+  const pip = document.createElement('div');
+  pip.className = 'carousel-pip' + (i === 0 ? ' active' : '');
+  pip.id = 'pip' + i;
+  pipsContainer.appendChild(pip);
+});
+
+function carouselMove(dir) {
+  document.getElementById('pip' + carouselIndex).classList.remove('active');
+  carouselIndex = (carouselIndex + dir + slides.length) % slides.length;
+  const slideWidth = track.parentElement.offsetWidth;
+  track.style.transform = `translateX(-${carouselIndex * slideWidth}px)`;
+  document.getElementById('pip' + carouselIndex).classList.add('active');
+}
+
+/* Auto-advance carousel disabled */
+function startCarousel() {}
+function stopCarousel()  {}
+
+/* ── Scenes ───────────────────────────────────────────────── */
+const SCENES = [
+
+  { id:'s0', steps:[
+    () => { vis('s0-carousel'); startCarousel(); },
+    () => vis('s0-bottom'),
+  ],
+  fullFn: () => { stopCarousel(); }
+  },
+
+  { id:'s1', steps:[
+    () => vis('s1-q'),
+    () => vis('s1-instr'),
+  ]},
+
+  { id:'s2', steps:[
+    () => vis('s2-def1'),
+    () => vis('s2-def2'),
+    () => { vis('s2-callout'); vis('s2-img'); },
+  ]},
+
+  { id:'s3', steps:[
+    () => vis('s3-def1'),
+    () => vis('s3-def2'),
+    () => { vis('s3-callout'); vis('s3-img'); },
+  ]},
+
+  { id:'s4', steps:[
+    () => vis('s4-1'),
+    () => vis('s4-2'),
+    () => vis('s4-bottom'),
+  ]},
+
+];
+
+/* Stop carousel when navigating away from s0 */
+const _origGoTo = window._goTo;
+document.addEventListener('keydown', () => stopCarousel());
+
+initPresentation(SCENES);
+</script>
+</body>
+</html>
