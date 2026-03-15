@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TCP vs UDP — Sort the Scenarios</title>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy:        #1b1f45;
+            --pink:        #ea008a;
+            --teal:        #1a6e6e;
+            --blue:        #1a4ea6;
+            --white:       #ffffff;
+            --off-white:   #f5f5f5;
+            --light-grey:  #e8e8e8;
+            --mid-grey:    #9a9a9a;
+            --correct:     #16a34a;
+            --incorrect:   #dc2626;
+            --teal-light:  #e8f4f4;
+            --blue-light:  #e8eef8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Barlow', Helvetica Neue, Helvetica, Arial, sans-serif;
+            background: #eaeaea;
+            padding: 40px 32px;
+            color: var(--navy);
+            min-height: 100vh;
+            zoom: 1.5;
+        }
+
+        /* ── HEADER ── */
+        .sheet-label {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--mid-grey);
+            margin-bottom: 6px;
+        }
+
+        .sheet-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 42px;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: var(--navy);
+            letter-spacing: 0.01em;
+            margin: 0 0 8px 0;
+            padding-bottom: 14px;
+            border-bottom: 4px solid var(--navy);
+        }
+
+        .sheet-title span { color: var(--pink); }
+
+        /* ── FRAMING NOTE ── */
+        .framing-note {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            background: var(--white);
+            border-left: 6px solid var(--pink);
+            border-top: 1.5px solid var(--light-grey);
+            border-right: 1.5px solid var(--light-grey);
+            border-bottom: 1.5px solid var(--light-grey);
+            padding: 16px 20px;
+            margin: 18px 0 28px;
+        }
+
+        .framing-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--pink);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .framing-text { flex: 1; }
+
+        .framing-text strong {
+            display: block;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--navy);
+            margin-bottom: 4px;
+        }
+
+        .framing-text p {
+            font-size: 16px;
+            line-height: 1.5;
+            color: var(--navy);
+        }
+
+        /* ── TILE POOL ── */
+        .pool-label {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--mid-grey);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pool-label::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--pink);
+            flex-shrink: 0;
+        }
+
+        .tile-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            background: var(--white);
+            border: 1.5px solid var(--light-grey);
+            border-top: 4px solid var(--navy);
+            padding: 18px 18px;
+            margin-bottom: 24px;
+            min-height: 80px;
+            transition: background 0.15s;
+        }
+
+        .tile-pool.drag-over {
+            background: #f0f3ff;
+            border-color: var(--navy);
+        }
+
+        .tile-pool:empty::after {
+            content: 'All scenarios have been placed';
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--light-grey);
+            align-self: center;
+        }
+
+        /* ── SORT COLUMNS ── */
+        .columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .column {
+            background: var(--white);
+            border-top: 4px solid var(--navy);
+            border-left: 1.5px solid var(--light-grey);
+            border-right: 1.5px solid var(--light-grey);
+            border-bottom: 1.5px solid var(--light-grey);
+        }
+
+        .col-header {
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .col-tcp .col-header  { background: var(--teal); }
+        .col-udp .col-header  { background: var(--blue); }
+
+        .col-acronym {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--white);
+            letter-spacing: 0.04em;
+            line-height: 1;
+        }
+
+        .col-meta { flex: 1; }
+
+        .col-fullname {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(255,255,255,0.55);
+        }
+
+        .col-tagline {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .col-drop-zone {
+            min-height: 200px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: background 0.15s;
+        }
+
+        .col-drop-zone.drag-over { background: #f8faff; }
+        .col-tcp .col-drop-zone.drag-over { background: var(--teal-light); }
+        .col-udp .col-drop-zone.drag-over { background: var(--blue-light); }
+
+        .col-drop-zone:empty::after {
+            content: 'Drop scenarios here';
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--light-grey);
+            text-align: center;
+            padding: 40px 0;
+            display: block;
+            border: 2.5px dashed var(--light-grey);
+            border-radius: 2px;
+        }
+
+        /* ── SCENARIO TILES ── */
+        .tile {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            background: var(--off-white);
+            border: 1.5px solid var(--light-grey);
+            border-left: 5px solid var(--navy);
+            padding: 12px 14px;
+            cursor: grab;
+            user-select: none;
+            transition: transform 0.1s, box-shadow 0.1s, opacity 0.15s, border-color 0.3s, background 0.3s;
+            box-shadow: 0 2px 0 rgba(0,0,0,0.08);
+            position: relative;
+        }
+
+        .tile:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 0 rgba(0,0,0,0.1);
+        }
+
+        .tile:active { cursor: grabbing; }
+        .tile.dragging { opacity: 0.3; transform: scale(0.97); }
+
+        /* In columns, tiles are full width */
+        .col-drop-zone .tile { width: 100%; }
+
+        .tile-icon {
+            width: 34px;
+            height: 34px;
+            background: var(--navy);
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .tile-body { flex: 1; }
+
+        .tile-name {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 19px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--navy);
+            line-height: 1.1;
+        }
+
+        .tile-desc {
+            font-size: 13px;
+            color: var(--mid-grey);
+            margin-top: 3px;
+            line-height: 1.4;
+        }
+
+        /* ── REVEALED STATES ── */
+        .tile.correct {
+            border-left-color: var(--correct);
+            background: #f0fdf4;
+        }
+
+        .tile.incorrect {
+            border-left-color: var(--incorrect);
+            background: #fef2f2;
+        }
+
+        .tile-verdict {
+            display: none;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 2px 8px;
+            border-radius: 2px;
+            flex-shrink: 0;
+            align-self: flex-start;
+            margin-top: 2px;
+        }
+
+        .tile.correct  .tile-verdict { display: block; background: var(--correct);  color: var(--white); }
+        .tile.incorrect .tile-verdict { display: block; background: var(--incorrect); color: var(--white); }
+
+        .tile-reason {
+            display: none;
+            font-size: 13px;
+            color: var(--navy);
+            margin-top: 6px;
+            line-height: 1.45;
+            font-style: italic;
+            border-top: 1px solid var(--light-grey);
+            padding-top: 6px;
+        }
+
+        .tile.correct .tile-reason,
+        .tile.incorrect .tile-reason { display: block; }
+
+        /* ── CONTROLS ── */
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .reveal-btn {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            background: var(--navy);
+            color: var(--white);
+            border: none;
+            padding: 13px 32px;
+            cursor: pointer;
+            transition: background 0.15s;
+            border-left: 6px solid var(--pink);
+        }
+
+        .reveal-btn:hover  { background: #2e3472; }
+        .reveal-btn:active { background: var(--pink); }
+        .reveal-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .reset-btn {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            background: transparent;
+            color: var(--mid-grey);
+            border: 2px solid var(--light-grey);
+            padding: 13px 26px;
+            cursor: pointer;
+            transition: border-color 0.15s, color 0.15s;
+        }
+
+        .reset-btn:hover { border-color: #aaa; color: var(--navy); }
+
+        .score-badge {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--mid-grey);
+            display: none;
+        }
+
+        .score-badge.show { display: block; }
+        .score-badge.all  { color: var(--correct); }
+        .score-badge.some { color: var(--incorrect); }
+
+        /* ── HINT BAR ── */
+        .hint-bar {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--mid-grey);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hint-bar::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--pink);
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <p class="sheet-label">Networks — Protocols</p>
+    <h1 class="sheet-title">Which Protocol <span>Fits?</span></h1>
+
+    <div class="framing-note">
+        <div class="framing-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="10" r="8" stroke="white" stroke-width="2"/>
+                <line x1="10" y1="9" x2="10" y2="14" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+                <circle cx="10" cy="6.5" r="1.2" fill="white"/>
+            </svg>
+        </div>
+        <div class="framing-text">
+            <strong>Prediction activity</strong>
+            <p>Before reading further, make your best guess. Sort each scenario into TCP or UDP based on what you already know. There are no penalties for wrong answers here — this is about activating your thinking before the lesson confirms it.</p>
+        </div>
+    </div>
+
+    <p class="pool-label">Scenarios — drag each one into a column below</p>
+
+    <div class="tile-pool pool droppable-pool" id="tile-pool">
+        <div class="tile draggable" draggable="true"
+             data-id="email"
+             data-correct="tcp"
+             data-reason="Every word in an email must arrive intact. A missing sentence would make the message confusing or misleading — so TCP's guaranteed delivery is essential.">
+            <div class="tile-icon">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <rect x="2" y="4" width="16" height="12" rx="1.5" stroke="white" stroke-width="1.8"/>
+                    <polyline points="2,5 10,11 18,5" stroke="white" stroke-width="1.8" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="tile-body">
+                <div class="tile-name">Sending an Email</div>
+                <div class="tile-desc">A message composed and sent to another person's inbox</div>
+                <div class="tile-reason"></div>
+            </div>
+            <div class="tile-verdict"></div>
+        </div>
+
+        <div class="tile draggable" draggable="true"
+             data-id="videocall"
+             data-correct="udp"
+             data-reason="A dropped video frame is barely noticeable and the call moves on. Stopping to resend old frames would cause lag and make the conversation unusable.">
+            <div class="tile-icon">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <rect x="1" y="5" width="13" height="10" rx="1.5" stroke="white" stroke-width="1.8"/>
+                    <polyline points="14,8 19,5 19,15 14,12" stroke="white" stroke-width="1.8" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="tile-body">
+                <div class="tile-name">Live Video Call</div>
+                <div class="tile-desc">A real-time face-to-face call between two people</div>
+                <div class="tile-reason"></div>
+            </div>
+            <div class="tile-verdict"></div>
+        </div>
+
+        <div class="tile draggable" draggable="true"
+             data-id="download"
+             data-correct="tcp"
+             data-reason="A file with missing chunks would be corrupt and unusable. Every byte must arrive in order before the download is considered complete.">
+            <div class="tile-icon">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M10 3 L10 13 M6 9 L10 13 L14 9" stroke="white" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+                    <line x1="3" y1="17" x2="17" y2="17" stroke="white" stroke-width="1.9" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <div class="tile-body">
+                <div class="tile-name">Downloading a File</div>
+                <div class="tile-desc">Saving a large document or program to your computer</div>
+                <div class="tile-reason"></div>
+            </div>
+            <div class="tile-verdict"></div>
+        </div>
+
+        <div class="tile draggable" draggable="true"
+             data-id="gaming"
+             data-correct="udp"
+             data-reason="Online games need positions and actions to update many times per second. A tiny lag from resending old packets would make the game feel broken — speed matters far more than perfection.">
+            <div class="tile-icon">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <rect x="2" y="6" width="16" height="10" rx="3" stroke="white" stroke-width="1.8"/>
+                    <line x1="6" y1="11" x2="8" y2="11" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+                    <line x1="7" y1="10" x2="7" y2="12" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+                    <circle cx="13" cy="10" r="1" fill="white"/>
+                    <circle cx="13" cy="13" r="1" fill="white"/>
+                </svg>
+            </div>
+            <div class="tile-body">
+                <div class="tile-name">Online Multiplayer Game</div>
+                <div class="tile-desc">A fast-paced game where players interact in real time</div>
+                <div class="tile-reason"></div>
+            </div>
+            <div class="tile-verdict"></div>
+        </div>
+
+        <div class="tile draggable" draggable="true"
+             data-id="webpage"
+             data-correct="tcp"
+             data-reason="If parts of a webpage fail to arrive, images break, text disappears, and scripts stop working. TCP ensures the complete page loads correctly every time.">
+            <div class="tile-icon">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <rect x="2" y="3" width="16" height="14" rx="1.5" stroke="white" stroke-width="1.8"/>
+                    <line x1="2" y1="7" x2="18" y2="7" stroke="white" stroke-width="1.6"/>
+                    <circle cx="5" cy="5" r="1" fill="white"/>
+                    <circle cx="8.5" cy="5" r="1" fill="white"/>
+                    <line x1="5" y1="10.5" x2="15" y2="10.5" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+                    <line x1="5" y1="13.5" x2="12" y2="13.5" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <div class="tile-body">
+                <div class="tile-name">Loading a Webpage</div>
+                <div class="tile-desc">A browser requesting and displaying a website's content</div>
+                <div class="tile-reason"></div>
+            </div>
+            <div class="tile-verdict"></div>
+        </div>
+    </div>
+
+    <p class="hint-bar">Drop each scenario into the correct column</p>
+
+    <div class="columns">
+
+        <div class="column col-tcp">
+            <div class="col-header">
+                <div>
+                    <div class="col-acronym">TCP</div>
+                    <div class="col-fullname">Transmission Control Protocol</div>
+                </div>
+                <div class="col-meta" style="text-align:right;">
+                    <div class="col-tagline">Reliable &amp; Complete</div>
+                </div>
+            </div>
+            <div class="col-drop-zone droppable-col" id="col-tcp" data-col="tcp"></div>
+        </div>
+
+        <div class="column col-udp">
+            <div class="col-header">
+                <div>
+                    <div class="col-acronym">UDP</div>
+                    <div class="col-fullname">User Datagram Protocol</div>
+                </div>
+                <div class="col-meta" style="text-align:right;">
+                    <div class="col-tagline">Fast &amp; Continuous</div>
+                </div>
+            </div>
+            <div class="col-drop-zone droppable-col" id="col-udp" data-col="udp"></div>
+        </div>
+
+    </div>
+
+    <div class="controls">
+        <button class="reveal-btn" id="reveal-btn" onclick="revealAnswers()">Reveal Answers</button>
+        <button class="reset-btn" onclick="resetAll()">Reset</button>
+        <span class="score-badge" id="score-badge"></span>
+    </div>
+
+<script>
+    let draggedTile = null;
+    let revealed = false;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.draggable').forEach(t => {
+            t.addEventListener('dragstart', onDragStart);
+            t.addEventListener('dragend',   onDragEnd);
+        });
+
+        document.querySelectorAll('.droppable-col, .droppable-pool').forEach(zone => {
+            zone.addEventListener('dragover',  onDragOver);
+            zone.addEventListener('dragleave', onDragLeave);
+            zone.addEventListener('drop',      onDrop);
+        });
+    });
+
+    function onDragStart(e) {
+        if (revealed) { e.preventDefault(); return; }
+        draggedTile = e.target.closest('.tile');
+        e.dataTransfer.effectAllowed = 'move';
+        setTimeout(() => { if (draggedTile) draggedTile.classList.add('dragging'); }, 0);
+    }
+
+    function onDragEnd(e) {
+        if (draggedTile) draggedTile.classList.remove('dragging');
+        draggedTile = null;
+        document.querySelectorAll('.drag-over').forEach(z => z.classList.remove('drag-over'));
+    }
+
+    function onDragOver(e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        e.currentTarget.classList.add('drag-over');
+    }
+
+    function onDragLeave(e) {
+        e.currentTarget.classList.remove('drag-over');
+    }
+
+    function onDrop(e) {
+        e.preventDefault();
+        e.currentTarget.classList.remove('drag-over');
+        if (!draggedTile || revealed) return;
+
+        const target = e.currentTarget;
+
+        // Don't drop back onto same parent
+        if (draggedTile.parentElement === target) return;
+
+        target.appendChild(draggedTile);
+        updateRevealBtn();
+    }
+
+    function updateRevealBtn() {
+        const all = document.querySelectorAll('.tile');
+        const inPool = document.querySelectorAll('#tile-pool .tile').length;
+        const btn = document.getElementById('reveal-btn');
+        btn.disabled = inPool > 0;
+        if (inPool > 0) {
+            btn.textContent = `Place all ${inPool} remaining scenario${inPool > 1 ? 's' : ''} first`;
+        } else {
+            btn.textContent = 'Reveal Answers';
+        }
+    }
+
+    function revealAnswers() {
+        if (revealed) return;
+        revealed = true;
+
+        let correct = 0;
+        const total = document.querySelectorAll('.tile').length;
+
+        document.querySelectorAll('.col-drop-zone').forEach(col => {
+            const colId = col.dataset.col;
+            col.querySelectorAll('.tile').forEach(tile => {
+                const isCorrect = tile.dataset.correct === colId;
+                tile.classList.add(isCorrect ? 'correct' : 'incorrect');
+                tile.querySelector('.tile-verdict').textContent = isCorrect ? '\u2713 Correct' : '\u2717 Incorrect';
+                tile.querySelector('.tile-reason').textContent  = tile.dataset.reason;
+                tile.draggable = false;
+                tile.style.cursor = 'default';
+                if (isCorrect) correct++;
+            });
+        });
+
+        const badge = document.getElementById('score-badge');
+        badge.classList.add('show');
+
+        if (correct === total) {
+            badge.textContent = `\u2713 ${correct} / ${total} correct`;
+            badge.classList.add('all');
+        } else {
+            badge.textContent = `${correct} / ${total} correct — review the red tiles`;
+            badge.classList.add('some');
+        }
+
+        document.getElementById('reveal-btn').disabled = true;
+        document.getElementById('reveal-btn').textContent = 'Answers Revealed';
+    }
+
+    function resetAll() {
+        revealed = false;
+        const pool = document.getElementById('tile-pool');
+
+        document.querySelectorAll('.tile').forEach(tile => {
+            tile.classList.remove('correct', 'incorrect', 'dragging');
+            tile.draggable = true;
+            tile.style.cursor = '';
+            tile.querySelector('.tile-verdict').textContent = '';
+            tile.querySelector('.tile-reason').textContent  = '';
+            pool.appendChild(tile);
+        });
+
+        const badge = document.getElementById('score-badge');
+        badge.className = 'score-badge';
+        badge.textContent = '';
+
+        const btn = document.getElementById('reveal-btn');
+        btn.disabled = false;
+        btn.textContent = 'Reveal Answers';
+        updateRevealBtn();
+    }
+
+    // Initialise button state
+    updateRevealBtn();
+</script>
+</body>
+</html>
