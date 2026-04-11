@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>House Thermal Simulator</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Barlow+Condensed:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+    --navy: #1b1f45;
+    --pink: #ea008a;
+    --white: #ffffff;
+    --off-white: #f5f4f0;
+    --light-grey: #e2e0da;
+    --mid-grey: #9a9a9a;
+    --accept: #1a6e6e;
+    --accept-light: #e6f7f5;
+    --cool-1: #eff6ff;
+    --cool-2: #bfdbfe;
+    --warm-1: #fef3c7;
+    --warm-2: #fde68a;
+    --hot-1: #fed7aa;
+    --hot-2: #fb923c;
+    --scorching: #ef4444;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; font-family: 'Barlow', sans-serif; background: var(--off-white); color: var(--navy); overflow-x: hidden; }
+
+.placemat { min-height: 100vh; display: flex; flex-direction: column; padding: 28px 32px 24px; gap: 0; }
+
+.mat-header { display: flex; align-items: flex-end; justify-content: space-between; padding-bottom: 14px; border-bottom: 4px solid var(--navy); margin-bottom: 16px; gap: 20px; flex-wrap: wrap; }
+.sheet-label { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--pink); margin-bottom: 2px; }
+.sheet-title { font-family: 'Barlow Condensed', sans-serif; font-size: 36px; font-weight: 900; text-transform: uppercase; color: var(--navy); letter-spacing: 0.01em; line-height: 1; }
+.header-note { font-size: 13px; font-style: italic; color: var(--mid-grey); max-width: 360px; text-align: right; line-height: 1.45; }
+
+.formula-bar { background: var(--navy); padding: 9px 18px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.formula-plain { font-family: 'Barlow', sans-serif; font-size: 13px; font-weight: 400; font-style: italic; color: rgba(255,255,255,0.55); }
+.formula-pill { font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; background: var(--pink); color: var(--white); padding: 3px 9px 2px; }
+
+.main-grid { display: grid; grid-template-columns: 1fr 300px; gap: 16px; flex: 1; }
+
+/* FLOORPLAN */
+.floorplan-panel { background: var(--white); border: 2px solid var(--light-grey); border-top: 5px solid var(--pink); padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+
+.floorplan-wrap { position: relative; flex: 1; min-height: 420px; }
+
+.fp-compass { position: absolute; top: 12px; left: 12px; width: 48px; height: 48px; z-index: 10; }
+.fp-compass svg { width: 100%; height: 100%; }
+
+.fp-time-badge { position: absolute; top: 12px; right: 12px; background: var(--navy); color: var(--white); font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 900; padding: 6px 14px 5px; letter-spacing: 0.05em; z-index: 10; }
+
+#floorCanvas { display: block; width: 100%; height: 100%; }
+
+/* CHART */
+.chart-wrap { height: 90px; position: relative; }
+.chart-wrap canvas { width: 100%; height: 100%; display: block; }
+.chart-label { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--mid-grey); margin-bottom: 6px; }
+
+/* CONTROLS PANEL */
+.controls-panel { display: flex; flex-direction: column; gap: 12px; }
+
+.control-card { background: var(--white); border: 2px solid var(--light-grey); padding: 16px 18px; }
+.control-card-label { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--pink); margin-bottom: 10px; }
+
+.season-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.season-btn { font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.07em; padding: 11px 10px; border: 2.5px solid var(--light-grey); background: transparent; color: var(--mid-grey); cursor: pointer; border-radius: 2px; transition: all 0.18s; }
+.season-btn:hover { border-color: var(--navy); color: var(--navy); }
+.season-btn.active-summer { background: #fef3c7; border-color: #f59e0b; color: #92400e; }
+.season-btn.active-winter { background: #eff6ff; border-color: #60a5fa; color: #1e40af; }
+
+.time-display { font-family: 'Barlow Condensed', sans-serif; font-size: 32px; font-weight: 900; color: var(--navy); letter-spacing: 0.04em; margin-bottom: 10px; }
+.time-display span { font-size: 16px; font-weight: 600; color: var(--mid-grey); }
+
+input[type=range] { width: 100%; height: 6px; -webkit-appearance: none; appearance: none; background: var(--light-grey); border-radius: 3px; outline: none; cursor: pointer; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--pink); border: 3px solid var(--white); box-shadow: 0 2px 8px rgba(0,0,0,0.2); cursor: pointer; }
+input[type=range]::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: var(--pink); border: 3px solid var(--white); cursor: pointer; }
+.slider-labels { display: flex; justify-content: space-between; margin-top: 6px; font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: var(--mid-grey); }
+
+.play-btn { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; background: var(--navy); color: var(--white); border: none; padding: 12px 18px; cursor: pointer; width: 100%; border-radius: 2px; transition: background 0.15s, transform 0.12s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.play-btn:hover { background: var(--pink); transform: translateY(-2px); }
+.speed-btns { display: flex; gap: 6px; }
+.speed-btn { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; padding: 6px 12px; border: 2px solid var(--light-grey); background: transparent; color: var(--mid-grey); cursor: pointer; border-radius: 2px; transition: all 0.15s; flex: 1; }
+.speed-btn.active { background: var(--navy); border-color: var(--navy); color: var(--white); }
+.speed-btn:hover:not(.active) { border-color: var(--navy); color: var(--navy); }
+
+/* ROOM TEMP CARDS */
+.room-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.room-card { padding: 10px 12px; border: 2px solid var(--light-grey); border-radius: 2px; transition: all 0.4s ease; }
+.room-card-name { font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 2px; transition: color 0.4s; }
+.room-card-temp { font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 900; line-height: 1; margin-bottom: 4px; transition: color 0.4s; }
+.room-card-status { font-size: 11px; font-weight: 500; line-height: 1.3; transition: color 0.4s; }
+
+/* SLEEP RATING */
+.sleep-rows { display: flex; flex-direction: column; gap: 6px; }
+.sleep-row { display: flex; align-items: center; gap: 8px; }
+.sleep-dir { font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; width: 36px; color: var(--navy); }
+.sleep-bar-bg { flex: 1; height: 10px; background: var(--light-grey); border-radius: 1px; overflow: hidden; }
+.sleep-bar-fill { height: 100%; border-radius: 1px; transition: width 0.5s ease, background 0.5s ease; }
+.sleep-label { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; width: 56px; text-align: right; transition: color 0.4s; }
+
+/* HEAT KEY */
+.heat-key { display: flex; gap: 0; height: 12px; border-radius: 2px; overflow: hidden; margin-bottom: 6px; }
+.heat-key-seg { flex: 1; }
+.heat-key-labels { display: flex; justify-content: space-between; font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; color: var(--mid-grey); letter-spacing: 0.08em; }
+
+.status-bar { border-top: 2px solid var(--light-grey); margin-top: 14px; padding-top: 10px; display: flex; align-items: center; gap: 10px; }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--pink); animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+.status-text { font-family: 'Barlow Condensed', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid-grey); }
+
+@media (max-width: 760px) {
+    .main-grid { grid-template-columns: 1fr; }
+    .placemat { padding: 16px; }
+}
+</style>
+</head>
+<body>
+<div class="placemat">
+    <div class="mat-header">
+        <div>
+            <p class="sheet-label">Architecture &amp; Interior Design — Passive Solar</p>
+            <h1 class="sheet-title">House Thermal Simulator</h1>
+        </div>
+        <p class="header-note">Brisbane, Queensland — Southern Hemisphere.<br>Drag the slider or press Play to watch heat build up through the day.</p>
+    </div>
+
+    <div class="formula-bar">
+        <span class="formula-plain">Key question:</span>
+        <span class="formula-pill">Which rooms overheat?</span>
+        <span class="formula-pill">When do they peak?</span>
+        <span class="formula-pill">Which room is coolest at bedtime?</span>
+    </div>
+
+    <div class="main-grid">
+
+        <div class="floorplan-panel">
+            <div class="floorplan-wrap" id="fpWrap">
+                <div class="fp-time-badge" id="fpTimeBadge">12:00 PM</div>
+                <svg class="fp-compass" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="24" cy="24" r="22" fill="rgba(27,31,69,0.85)" stroke="none"/>
+                    <line x1="24" y1="24" x2="24" y2="6" stroke="#ea008a" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="24" y1="24" x2="24" y2="42" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="24" y1="24" x2="6" y2="24" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="24" y1="24" x2="42" y2="24" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" stroke-linecap="round"/>
+                    <text x="24" y="5" font-family="Barlow Condensed,sans-serif" font-size="10" font-weight="800" fill="#ea008a" text-anchor="middle" dominant-baseline="auto">N</text>
+                    <text x="24" y="46" font-family="Barlow Condensed,sans-serif" font-size="9" font-weight="700" fill="rgba(255,255,255,0.6)" text-anchor="middle">S</text>
+                    <text x="3" y="28" font-family="Barlow Condensed,sans-serif" font-size="9" font-weight="700" fill="rgba(255,255,255,0.6)" text-anchor="middle">W</text>
+                    <text x="45" y="28" font-family="Barlow Condensed,sans-serif" font-size="9" font-weight="700" fill="rgba(255,255,255,0.6)" text-anchor="middle">E</text>
+                </svg>
+                <canvas id="floorCanvas"></canvas>
+            </div>
+
+            <div>
+                <p class="chart-label">Wall temperature through the day</p>
+                <div class="chart-wrap">
+                    <canvas id="chartCanvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls-panel">
+
+            <div class="control-card">
+                <p class="control-card-label">Season</p>
+                <div class="season-btns">
+                    <button class="season-btn active-summer" id="btnSummer" onclick="setSeason('summer')">&#9728; Summer</button>
+                    <button class="season-btn" id="btnWinter" onclick="setSeason('winter')">&#10052; Winter</button>
+                </div>
+            </div>
+
+            <div class="control-card">
+                <p class="control-card-label">Time of Day</p>
+                <div class="time-display" id="timeDisplay">12:00 <span>PM</span></div>
+                <input type="range" id="timeSlider" min="0" max="23.9" step="0.1" value="12" oninput="onSlider()">
+                <div class="slider-labels"><span>12 AM</span><span>12 PM</span><span>11 PM</span></div>
+            </div>
+
+            <div class="control-card">
+                <p class="control-card-label">Animation</p>
+                <button class="play-btn" id="playBtn" onclick="togglePlay()">
+                    <span id="playIcon">&#9654;</span>
+                    <span id="playLabel">Play Day</span>
+                </button>
+                <div style="margin-top:10px;">
+                    <p class="control-card-label" style="margin-bottom:6px;">Speed</p>
+                    <div class="speed-btns">
+                        <button class="speed-btn" onclick="setSpeed(1,this)">1x</button>
+                        <button class="speed-btn active" onclick="setSpeed(2,this)">2x</button>
+                        <button class="speed-btn" onclick="setSpeed(4,this)">4x</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-card">
+                <p class="control-card-label">Room Temperatures</p>
+                <div class="room-cards">
+                    <div class="room-card" id="card-north">
+                        <p class="room-card-name">North</p>
+                        <p class="room-card-temp" id="temp-north">24°</p>
+                        <p class="room-card-status" id="status-north">Warming</p>
+                    </div>
+                    <div class="room-card" id="card-east">
+                        <p class="room-card-name">East</p>
+                        <p class="room-card-temp" id="temp-east">24°</p>
+                        <p class="room-card-status" id="status-east">Morning sun</p>
+                    </div>
+                    <div class="room-card" id="card-west">
+                        <p class="room-card-name">West</p>
+                        <p class="room-card-temp" id="temp-west">24°</p>
+                        <p class="room-card-status" id="status-west">Heating up</p>
+                    </div>
+                    <div class="room-card" id="card-south">
+                        <p class="room-card-name">South</p>
+                        <p class="room-card-temp" id="temp-south">22°</p>
+                        <p class="room-card-status" id="status-south">Stays cool</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-card">
+                <p class="control-card-label">Sleep Comfort at 10 PM</p>
+                <div class="sleep-rows" id="sleepRatings"></div>
+            </div>
+
+            <div class="control-card">
+                <p class="control-card-label">Heat Scale</p>
+                <div class="heat-key">
+                    <div class="heat-key-seg" style="background:#bfdbfe;"></div>
+                    <div class="heat-key-seg" style="background:#a5f3fc;"></div>
+                    <div class="heat-key-seg" style="background:#fef08a;"></div>
+                    <div class="heat-key-seg" style="background:#fde68a;"></div>
+                    <div class="heat-key-seg" style="background:#fed7aa;"></div>
+                    <div class="heat-key-seg" style="background:#fb923c;"></div>
+                    <div class="heat-key-seg" style="background:#ef4444;"></div>
+                </div>
+                <div class="heat-key-labels">
+                    <span>Cool</span>
+                    <span>Warm</span>
+                    <span>Hot</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="status-bar">
+        <div class="status-dot"></div>
+        <span class="status-text" id="statusText">Drag the time slider or press Play to watch walls heat up and cool down</span>
+    </div>
+</div>
+
+<script>
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let season = 'summer';
+let timeH = 12;
+let playing = false;
+let speed = 2;
+let lastTs = null;
+let animId = null;
+
+// ─── THERMAL MODEL ───────────────────────────────────────────────────────────
+// Returns wall temperature (°C) for a room facing a given direction at time t (0–24)
+// Models solar gain + thermal mass lag + overnight cooling
+function getRoomTemp(dir, t, sea) {
+    const base = sea === 'summer' ? 22 : 16;
+    const amb  = sea === 'summer' ? 30 : 22; // peak ambient
+
+    // Thermal profiles: [solarPeakHour, solarMagnitude, lagHours]
+    // lagHours: how long walls keep re-radiating heat after sun moves off
+    const profiles = {
+        summer: {
+            north: { peak: 13,  mag: 8,  lag: 3.5 },
+            east:  { peak: 9,   mag: 6,  lag: 2.5 },
+            west:  { peak: 16,  mag: 12, lag: 5   },
+            south: { peak: 14,  mag: 1.5,lag: 1   },
+        },
+        winter: {
+            north: { peak: 13,  mag: 5,  lag: 3   },
+            east:  { peak: 10,  mag: 3,  lag: 2   },
+            west:  { peak: 15,  mag: 4,  lag: 3.5 },
+            south: { peak: 13,  mag: 0.8,lag: 1   },
+        }
+    };
+
+    const p = profiles[sea][dir];
+    // Wrap time so we can model overnight correctly (shift to -12..12 range from solar peak)
+    let dt = t - p.peak;
+    if (dt > 12)  dt -= 24;
+    if (dt < -12) dt += 24;
+
+    // Asymmetric bell: steeper rise, slower decay (thermal lag)
+    let solar;
+    if (dt <= 0) {
+        // Before peak: gaussian rise over ~6h window
+        solar = p.mag * Math.exp(-0.5 * Math.pow(dt / 3.5, 2));
+    } else {
+        // After peak: slower decay due to thermal mass
+        solar = p.mag * Math.exp(-0.5 * Math.pow(dt / (3.5 + p.lag), 2));
+    }
+
+    // Ambient diurnal variation: coolest at 5am, warmest at 3pm
+    const ambDt = t - 15;
+    const ambWrapped = ambDt > 12 ? ambDt - 24 : ambDt < -12 ? ambDt + 24 : ambDt;
+    const ambVar = (amb - base) * Math.exp(-0.5 * Math.pow(ambWrapped / 6, 2));
+
+    return base + ambVar * 0.4 + solar;
+}
+
+// Pre-compute all 24h for chart
+function getTempCurve(dir, sea) {
+    const pts = [];
+    for (let t = 0; t <= 24; t += 0.25) {
+        pts.push({ t, temp: getRoomTemp(dir, t, sea) });
+    }
+    return pts;
+}
+
+// ─── COLOUR MAPPING ──────────────────────────────────────────────────────────
+function tempToColor(temp, sea) {
+    const coldMin = sea === 'summer' ? 21 : 15;
+    const hotMax  = sea === 'summer' ? 36 : 26;
+    const t = Math.max(0, Math.min(1, (temp - coldMin) / (hotMax - coldMin)));
+
+    // Cool blue → yellow → orange → red
+    const stops = [
+        [0.00, [191,219,254]],
+        [0.20, [165,243,252]],
+        [0.40, [254,240,138]],
+        [0.55, [253,230,138]],
+        [0.70, [254,215,170]],
+        [0.85, [251,146,60]],
+        [1.00, [239,68,68]],
+    ];
+    let i = 0;
+    while (i < stops.length - 1 && stops[i+1][0] < t) i++;
+    const lo = stops[i], hi = stops[Math.min(i+1, stops.length-1)];
+    const f = lo[0] === hi[0] ? 0 : (t - lo[0]) / (hi[0] - lo[0]);
+    const r = Math.round(lo[1][0] + (hi[1][0] - lo[1][0]) * f);
+    const g = Math.round(lo[1][1] + (hi[1][1] - lo[1][1]) * f);
+    const b = Math.round(lo[1][2] + (hi[1][2] - lo[1][2]) * f);
+    return { r, g, b, css: `rgb(${r},${g},${b})`, alpha: 0.82 };
+}
+
+function tempIntensity(temp, sea) {
+    const coldMin = sea === 'summer' ? 21 : 15;
+    const hotMax  = sea === 'summer' ? 36 : 26;
+    return Math.max(0, Math.min(1, (temp - coldMin) / (hotMax - coldMin)));
+}
+
+// ─── FLOOR PLAN CANVAS ───────────────────────────────────────────────────────
+const fpCanvas = document.getElementById('floorCanvas');
+const fpCtx = fpCanvas.getContext('2d');
+
+function resizeFloorCanvas() {
+    const wrap = document.getElementById('fpWrap');
+    fpCanvas.width  = wrap.clientWidth;
+    fpCanvas.height = wrap.clientHeight;
+    drawFloorPlan();
+}
+
+function drawFloorPlan() {
+    const W = fpCanvas.width, H = fpCanvas.height;
+    fpCtx.clearRect(0, 0, W, H);
+
+    const cx = W / 2, cy = H / 2 + 10;
+    const hw = Math.min(W * 0.32, 160);
+    const hh = Math.min(H * 0.36, 140);
+
+    const temps = {
+        north: getRoomTemp('north', timeH, season),
+        east:  getRoomTemp('east',  timeH, season),
+        west:  getRoomTemp('west',  timeH, season),
+        south: getRoomTemp('south', timeH, season),
+    };
+
+    // Background floor
+    fpCtx.fillStyle = '#f8fafc';
+    fpCtx.fillRect(cx - hw, cy - hh, hw*2, hh*2);
+
+    // Room quadrants with heat colours
+    const rooms = [
+        { dir: 'north', x: cx,      y: cy - hh, w: hw,    h: hh,    label: 'LIVING ROOM',  sub: 'North-facing',  align: 'center', tx: cx + hw/2, ty: cy - hh/2 },
+        { dir: 'east',  x: cx,      y: cy,       w: hw,    h: hh,    label: 'BEDROOM',      sub: 'East-facing',   align: 'center', tx: cx + hw/2, ty: cy + hh/2 },
+        { dir: 'west',  x: cx - hw, y: cy - hh,  w: hw,    h: hh,    label: 'BEDROOM',      sub: 'West-facing',   align: 'center', tx: cx - hw/2, ty: cy - hh/2 },
+        { dir: 'south', x: cx - hw, y: cy,       w: hw,    h: hh,    label: 'GARAGE',       sub: 'South-facing',  align: 'center', tx: cx - hw/2, ty: cy + hh/2 },
+    ];
+
+    rooms.forEach(r => {
+        const col = tempToColor(temps[r.dir], season);
+        // Fill with heat colour
+        fpCtx.fillStyle = col.css;
+        fpCtx.globalAlpha = col.alpha;
+        fpCtx.fillRect(r.x, r.y, r.w, r.h);
+        fpCtx.globalAlpha = 1;
+
+        // Subtle radial glow at centre to show heat intensity
+        const intensity = tempIntensity(temps[r.dir], season);
+        if (intensity > 0.3) {
+            const grd = fpCtx.createRadialGradient(r.tx, r.ty, 0, r.tx, r.ty, Math.min(r.w, r.h) * 0.55);
+            grd.addColorStop(0, `rgba(251,113,2,${intensity * 0.35})`);
+            grd.addColorStop(1, 'rgba(251,113,2,0)');
+            fpCtx.fillStyle = grd;
+            fpCtx.fillRect(r.x, r.y, r.w, r.h);
+        }
+    });
+
+    // Grid lines (room dividers)
+    fpCtx.strokeStyle = 'rgba(27,31,69,0.18)';
+    fpCtx.lineWidth = 1.5;
+    fpCtx.setLineDash([]);
+    fpCtx.beginPath();
+    fpCtx.moveTo(cx, cy - hh); fpCtx.lineTo(cx, cy + hh);
+    fpCtx.moveTo(cx - hw, cy); fpCtx.lineTo(cx + hw, cy);
+    fpCtx.stroke();
+
+    // House border
+    fpCtx.strokeStyle = '#1b1f45';
+    fpCtx.lineWidth = 3;
+    fpCtx.strokeRect(cx - hw, cy - hh, hw*2, hh*2);
+
+    // Pink accent top border
+    fpCtx.strokeStyle = '#ea008a';
+    fpCtx.lineWidth = 5;
+    fpCtx.beginPath();
+    fpCtx.moveTo(cx - hw, cy - hh); fpCtx.lineTo(cx + hw, cy - hh);
+    fpCtx.stroke();
+
+    // Room labels + temp
+    const font1 = `800 ${Math.max(9, Math.min(12, hw/14))}px 'Barlow Condensed', sans-serif`;
+    const font2 = `italic ${Math.max(9,Math.min(10, hw/16))}px 'Barlow', sans-serif`;
+    const font3 = `900 ${Math.max(16,Math.min(22, hw/8))}px 'Barlow Condensed', sans-serif`;
+
+    rooms.forEach(r => {
+        const t = temps[r.dir];
+        const intensity = tempIntensity(t, season);
+        const textCol = intensity > 0.6 ? '#7c2d12' : intensity > 0.3 ? '#78350f' : '#1b1f45';
+        const subCol  = intensity > 0.4 ? '#92400e' : '#94a3b8';
+
+        fpCtx.textAlign = 'center';
+        fpCtx.fillStyle = textCol;
+        fpCtx.font = font1;
+        fpCtx.fillText(r.label, r.tx, r.ty - 8);
+
+        fpCtx.fillStyle = subCol;
+        fpCtx.font = font2;
+        fpCtx.fillText(r.sub, r.tx, r.ty + 5);
+
+        fpCtx.fillStyle = textCol;
+        fpCtx.font = font3;
+        fpCtx.fillText(`${Math.round(t)}°C`, r.tx, r.ty + 22);
+    });
+
+    // Cardinal direction labels on exterior
+    const labelPad = 14;
+    fpCtx.font = `700 11px 'Barlow Condensed', sans-serif`;
+    fpCtx.fillStyle = 'rgba(27,31,69,0.28)';
+    fpCtx.textAlign = 'center';
+    fpCtx.fillText('NORTH', cx, cy - hh - labelPad);
+    fpCtx.fillText('SOUTH', cx, cy + hh + labelPad + 4);
+    fpCtx.save();
+    fpCtx.translate(cx - hw - labelPad, cy); fpCtx.rotate(-Math.PI/2);
+    fpCtx.fillText('WEST', 0, 0); fpCtx.restore();
+    fpCtx.save();
+    fpCtx.translate(cx + hw + labelPad, cy); fpCtx.rotate(Math.PI/2);
+    fpCtx.fillText('EAST', 0, 0); fpCtx.restore();
+
+    // Sun direction indicator (arrow on outer ring showing sun side)
+    if (timeH >= 6 && timeH <= 18) {
+        drawSunArrow(cx, cy, hw, hh, temps);
+    }
+}
+
+function drawSunArrow(cx, cy, hw, hh, temps) {
+    // Determine which face is currently gaining most solar heat
+    // Based on time: morning=east, midday=north, afternoon=west
+    const t = timeH;
+    let angle = 0; // angle in canvas where 0=up=north
+    if (t < 9) angle = Math.PI/2; // east
+    else if (t < 11) angle = Math.PI/4; // NE
+    else if (t < 13) angle = 0; // north
+    else if (t < 15) angle = -Math.PI/4; // NW — wait, that's wrong for Brisbane
+    // In Brisbane sun is to the north. Morning it rises in east, arcs to north, sets in west.
+    // For the arrow: at t=6 sun is east (right in canvas), t=12 sun is north (up in canvas), t=18 west (left)
+    const frac = (t - 6) / 12; // 0 at 6am, 1 at 6pm
+    // Arc from east (PI/2) through north (0) to west (-PI/2 = 3PI/2)
+    angle = Math.PI/2 - frac * Math.PI; // east to west via north
+
+    const orbitR = Math.max(hw, hh) + 52;
+    const sx = cx + Math.sin(angle) * orbitR;
+    const sy = cy - Math.cos(angle) * orbitR;
+
+    const sunCol = season === 'summer' ? '#f59e0b' : '#93c5fd';
+    fpCtx.save();
+    const grd = fpCtx.createRadialGradient(sx, sy, 0, sx, sy, 28);
+    grd.addColorStop(0, season === 'summer' ? 'rgba(245,158,11,0.35)' : 'rgba(147,197,253,0.35)');
+    grd.addColorStop(1, 'rgba(0,0,0,0)');
+    fpCtx.fillStyle = grd;
+    fpCtx.beginPath(); fpCtx.arc(sx, sy, 28, 0, Math.PI*2); fpCtx.fill();
+
+    fpCtx.beginPath(); fpCtx.arc(sx, sy, 11, 0, Math.PI*2);
+    fpCtx.fillStyle = sunCol; fpCtx.fill();
+    fpCtx.strokeStyle = '#fff'; fpCtx.lineWidth = 2; fpCtx.stroke();
+
+    // Rays
+    fpCtx.strokeStyle = sunCol; fpCtx.lineWidth = 1.5; fpCtx.globalAlpha = 0.7;
+    for (let i = 0; i < 8; i++) {
+        const a = (i/8)*Math.PI*2;
+        fpCtx.beginPath();
+        fpCtx.moveTo(sx + Math.cos(a)*13, sy + Math.sin(a)*13);
+        fpCtx.lineTo(sx + Math.cos(a)*20, sy + Math.sin(a)*20);
+        fpCtx.stroke();
+    }
+    fpCtx.globalAlpha = 1;
+
+    // Orbit arc (dashed)
+    fpCtx.setLineDash([4,7]);
+    fpCtx.strokeStyle = 'rgba(100,100,120,0.2)';
+    fpCtx.lineWidth = 1.5;
+    fpCtx.beginPath();
+    fpCtx.arc(cx, cy, orbitR, -Math.PI/2 - Math.PI/2, -Math.PI/2 + Math.PI/2); // from east to west via north
+    fpCtx.stroke();
+    fpCtx.setLineDash([]);
+    fpCtx.restore();
+}
+
+// ─── TEMPERATURE CHART ───────────────────────────────────────────────────────
+const chartCanvas = document.getElementById('chartCanvas');
+const chartCtx = chartCanvas.getContext('2d');
+
+function resizeChartCanvas() {
+    const wrap = chartCanvas.parentElement;
+    chartCanvas.width  = wrap.clientWidth;
+    chartCanvas.height = wrap.clientHeight;
+    drawChart();
+}
+
+function drawChart() {
+    const W = chartCanvas.width, H = chartCanvas.height;
+    chartCtx.clearRect(0, 0, W, H);
+
+    const padL = 36, padR = 12, padT = 8, padB = 20;
+    const cW = W - padL - padR, cH = H - padT - padB;
+
+    const dirs = ['north','east','west','south'];
+    const colors = { north:'#1d4ed8', east:'#059669', west:'#ea008a', south:'#6366f1' };
+    const labels = { north:'N', east:'E', west:'W', south:'S' };
+
+    // Compute ranges
+    let minT = 99, maxT = -99;
+    dirs.forEach(d => {
+        getTempCurve(d, season).forEach(pt => {
+            if (pt.temp < minT) minT = pt.temp;
+            if (pt.temp > maxT) maxT = pt.temp;
+        });
+    });
+    minT = Math.floor(minT - 1);
+    maxT = Math.ceil(maxT + 1);
+
+    const xScale = t => padL + (t / 24) * cW;
+    const yScale = v => padT + cH - ((v - minT) / (maxT - minT)) * cH;
+
+    // Grid lines
+    chartCtx.strokeStyle = 'rgba(27,31,69,0.06)';
+    chartCtx.lineWidth = 1;
+    for (let h = 0; h <= 24; h += 6) {
+        chartCtx.beginPath();
+        chartCtx.moveTo(xScale(h), padT);
+        chartCtx.lineTo(xScale(h), padT + cH);
+        chartCtx.stroke();
+    }
+
+    // Axis labels
+    chartCtx.fillStyle = '#9a9a9a';
+    chartCtx.font = "700 9px 'Barlow Condensed', sans-serif";
+    chartCtx.textAlign = 'center';
+    ['12A','6A','12P','6P','12A'].forEach((lbl, i) => {
+        chartCtx.fillText(lbl, xScale(i * 6), H - 4);
+    });
+    chartCtx.textAlign = 'right';
+    [minT, Math.round((minT+maxT)/2), maxT].forEach(v => {
+        chartCtx.fillText(`${v}°`, padL - 3, yScale(v) + 3);
+    });
+
+    // Curves
+    dirs.forEach(d => {
+        const pts = getTempCurve(d, season);
+        chartCtx.beginPath();
+        pts.forEach((pt, i) => {
+            const x = xScale(pt.t), y = yScale(pt.temp);
+            i === 0 ? chartCtx.moveTo(x, y) : chartCtx.lineTo(x, y);
+        });
+        chartCtx.strokeStyle = colors[d];
+        chartCtx.lineWidth = d === 'west' ? 2.5 : 1.5;
+        chartCtx.globalAlpha = d === 'west' ? 1 : 0.7;
+        chartCtx.stroke();
+        chartCtx.globalAlpha = 1;
+    });
+
+    // Current time vertical line
+    chartCtx.strokeStyle = '#ea008a';
+    chartCtx.lineWidth = 2;
+    chartCtx.setLineDash([4, 5]);
+    const tx = xScale(timeH);
+    chartCtx.beginPath();
+    chartCtx.moveTo(tx, padT);
+    chartCtx.lineTo(tx, padT + cH);
+    chartCtx.stroke();
+    chartCtx.setLineDash([]);
+
+    // Legend
+    let lx = padL + 4;
+    dirs.forEach(d => {
+        chartCtx.fillStyle = colors[d];
+        chartCtx.fillRect(lx, padT + 2, 14, 7);
+        chartCtx.fillStyle = '#334155';
+        chartCtx.font = "700 9px 'Barlow Condensed', sans-serif";
+        chartCtx.textAlign = 'left';
+        chartCtx.fillText(labels[d], lx + 16, padT + 9);
+        lx += 34;
+    });
+}
+
+// ─── UI UPDATES ──────────────────────────────────────────────────────────────
+const roomStatusMessages = {
+    summer: {
+        north: t => t < 24 ? 'Warming gently' : t < 27 ? 'Warm — all day sun' : t < 30 ? 'Hot — stays stuffy' : 'Very hot',
+        east:  t => t < 24 ? 'Cool — shaded' : t < 27 ? 'Morning sun' : t < 29 ? 'Heating from sun' : 'Hot — morning peak',
+        west:  t => t < 24 ? 'Cool — not yet' : t < 27 ? 'Starting to heat' : t < 31 ? 'Afternoon sun — hot' : 'Very hot — worst room',
+        south: t => t < 22 ? 'Cool — no sun' : t < 24 ? 'Comfortable' : 'Slightly warm',
+    },
+    winter: {
+        north: t => t < 18 ? 'Cool — morning' : t < 21 ? 'Pleasant winter sun' : 'Warm from sun',
+        east:  t => t < 17 ? 'Cool — shaded' : t < 20 ? 'Mild morning light' : 'Warm from morning',
+        west:  t => t < 17 ? 'Cool — not yet' : t < 20 ? 'Mild afternoon' : 'Warmed by afternoon',
+        south: t => t < 16 ? 'Cold — no sun' : 'Cool throughout',
+    }
+};
+
+function updateUI() {
+    const h  = Math.floor(timeH);
+    const m  = Math.round((timeH - h) * 60);
+    const am = h < 12 ? 'AM' : 'PM';
+    const dh = h === 0 ? 12 : h <= 12 ? h : h - 12;
+    const timeStr = `${String(dh).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+    document.getElementById('timeDisplay').innerHTML = `${timeStr} <span>${am}</span>`;
+    document.getElementById('fpTimeBadge').textContent = `${timeStr} ${am}`;
+    document.getElementById('timeSlider').value = timeH;
+
+    const dirs = ['north','east','west','south'];
+    dirs.forEach(d => {
+        const t = getRoomTemp(d, timeH, season);
+        const card = document.getElementById(`card-${d}`);
+        const col = tempToColor(t, season);
+        card.style.background = col.css;
+        card.style.borderColor = col.css;
+        const intensity = tempIntensity(t, season);
+        const textCol = intensity > 0.55 ? '#7c2d12' : '#1b1f45';
+        const subCol  = intensity > 0.4  ? '#92400e' : '#64748b';
+        card.querySelector('.room-card-name').style.color = textCol;
+        card.querySelector('.room-card-temp').style.color = textCol;
+        document.getElementById(`temp-${d}`).textContent = `${Math.round(t)}°C`;
+        card.querySelector('.room-card-status').style.color = subCol;
+        card.querySelector('.room-card-status').textContent = roomStatusMessages[season][d](t);
+    });
+
+    updateSleepRatings();
+    drawFloorPlan();
+    drawChart();
+    updateStatusText();
+}
+
+function updateSleepRatings() {
+    // Evaluate how comfortable each room is at 10pm (typical bedtime)
+    const bedtime = 22;
+    const data = [
+        { dir: 'north', label: 'North' },
+        { dir: 'east',  label: 'East'  },
+        { dir: 'west',  label: 'West'  },
+        { dir: 'south', label: 'South' },
+    ];
+
+    const cold = season === 'summer' ? 21 : 14;
+    const hot  = season === 'summer' ? 35 : 25;
+
+    const container = document.getElementById('sleepRatings');
+    container.innerHTML = '';
+
+    data.forEach(({ dir, label }) => {
+        const t = getRoomTemp(dir, bedtime, season);
+        // Comfort: ideal ~22-24°C. Too hot = bad. Too cold = slightly bad.
+        const idealLow = season === 'summer' ? 21 : 18;
+        const idealHigh = season === 'summer' ? 25 : 22;
+        let comfort;
+        if (t >= idealLow && t <= idealHigh) {
+            comfort = 1.0;
+        } else if (t > idealHigh) {
+            comfort = Math.max(0, 1 - (t - idealHigh) / 10);
+        } else {
+            comfort = Math.max(0.3, 1 - (idealLow - t) / 8);
+        }
+
+        const barColor = comfort > 0.75 ? '#1a6e6e' : comfort > 0.45 ? '#d97706' : '#dc2626';
+        const labelText = comfort > 0.75 ? 'Good' : comfort > 0.45 ? 'Fair' : 'Poor';
+        const labelColor = comfort > 0.75 ? '#1a6e6e' : comfort > 0.45 ? '#d97706' : '#dc2626';
+
+        const row = document.createElement('div');
+        row.className = 'sleep-row';
+        row.innerHTML = `
+            <span class="sleep-dir">${label}</span>
+            <div class="sleep-bar-bg"><div class="sleep-bar-fill" style="width:${Math.round(comfort*100)}%;background:${barColor};"></div></div>
+            <span class="sleep-label" style="color:${labelColor};">${labelText} (${Math.round(t)}°)</span>
+        `;
+        container.appendChild(row);
+    });
+}
+
+function updateStatusText() {
+    const hour = Math.floor(timeH);
+    let msg;
+    if (hour < 6 || hour >= 20) {
+        msg = 'Night — walls slowly releasing stored heat';
+    } else if (hour < 10) {
+        msg = 'Morning — east walls gaining sun first';
+    } else if (hour < 14) {
+        msg = 'Midday — north walls receiving most solar intensity';
+    } else if (hour < 18) {
+        msg = 'Afternoon — west walls absorbing intense sun (2–6 PM peak)';
+    } else {
+        msg = 'Evening — west walls still radiating stored heat';
+    }
+    document.getElementById('statusText').textContent = msg;
+}
+
+// ─── CONTROLS ────────────────────────────────────────────────────────────────
+function onSlider() {
+    timeH = parseFloat(document.getElementById('timeSlider').value);
+    updateUI();
+}
+
+function setSeason(s) {
+    season = s;
+    document.getElementById('btnSummer').className = 'season-btn' + (s === 'summer' ? ' active-summer' : '');
+    document.getElementById('btnWinter').className = 'season-btn' + (s === 'winter' ? ' active-winter' : '');
+    updateUI();
+}
+
+function togglePlay() {
+    playing = !playing;
+    document.getElementById('playIcon').textContent  = playing ? '\u23F8' : '\u25B6';
+    document.getElementById('playLabel').textContent = playing ? 'Pause' : 'Play Day';
+    if (playing) {
+        if (timeH >= 23.9) timeH = 0;
+        lastTs = null;
+        requestAnimationFrame(animate);
+    }
+}
+
+function setSpeed(s, el) {
+    speed = s;
+    document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+}
+
+function animate(ts) {
+    if (!playing) return;
+    if (lastTs) {
+        const dt = (ts - lastTs) / 1000;
+        timeH += dt * speed * 0.9;
+        if (timeH >= 24) {
+            timeH = 0;
+            playing = false;
+            document.getElementById('playIcon').textContent  = '\u25B6';
+            document.getElementById('playLabel').textContent = 'Play Day';
+        }
+    }
+    lastTs = ts;
+    updateUI();
+    requestAnimationFrame(animate);
+}
+
+// ─── RESIZE & INIT ───────────────────────────────────────────────────────────
+function onResize() {
+    resizeFloorCanvas();
+    resizeChartCanvas();
+}
+
+window.addEventListener('resize', onResize);
+
+// Initial render after fonts/layout settle
+setTimeout(() => {
+    onResize();
+    updateUI();
+}, 80);
+</script>
+</body>
+</html>
